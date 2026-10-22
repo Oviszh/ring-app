@@ -36,7 +36,7 @@
           </view>
 
           <view class="bar">
-            <view class="bar-fill" style="width: {{item.percent}}%;"></view>
+            <view class="bar-fill" style="width: {{item.percent + '%'}};"></view>
           </view>
 
           <view class="meta">日均 {{item.avgText}} · {{item.etaText}}</view>
@@ -57,7 +57,7 @@
             data-id="{{item.id}}"
             bindtap="goDetail"
           >
-            <text class="done-emoji">🎉</text>
+            <text class="done-emoji"></text>
             <text class="done-name">{{item.title}}</text>
             <text class="done-days">历时 {{item.days}} 天</text>
           </view>

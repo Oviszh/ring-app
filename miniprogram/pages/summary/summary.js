@@ -19,13 +19,13 @@ Page({
   },
 
   refresh() {
-    const practices = store.practices().map(practice => {
+    const practices = store.allPractices().map(practice => {
       const totals = store.practiceTotalsAll(practice.id)
 
       if (practice.type === 'time') {
         return {
           id: practice.id,
-          name: nameOf(practice),
+          name: nameOf(practice) + (practice.deleted ? '（已删除）' : ''),
           isTime: true,
           totalText: fmtMinutes(totals.durationMin || 0),
           timesText: `${totals.times} 座`
@@ -34,7 +34,7 @@ Page({
 
       return {
         id: practice.id,
-        name: nameOf(practice),
+        name: nameOf(practice) + (practice.deleted ? '（已删除）' : ''),
         isTime: false,
         totalText: fmtNum(totals.total),
         daysText: `修行 ${totals.days} 天`,

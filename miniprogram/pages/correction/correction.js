@@ -49,7 +49,7 @@ Page({
   onLoad(options) {
     const date = (options && options.date) || store.todayKey()
     const pid = (options && options.pid) || ''
-    const practice = pid ? store.getPractice(pid) : null
+    const practice = pid ? store.getPracticeAny(pid) : null
 
     const practiceName = practice ? nameOf(practice) : ''
     const dateLabel = fmtDayCN(date)
@@ -74,7 +74,7 @@ Page({
   },
 
   onShow() {
-    if (this.data.pid && store.getPractice(this.data.pid)) this.refresh()
+    if (this.data.pid && store.getPracticeAny(this.data.pid)) this.refresh()
   },
 
   // —— view-model ——

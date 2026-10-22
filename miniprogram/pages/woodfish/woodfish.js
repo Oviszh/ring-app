@@ -82,6 +82,7 @@ Page({
   onHide() {
     this._active = false
     this.stopTicker()
+    require('../../services/audio').destroy()
   },
 
   onUnload() {
@@ -139,6 +140,9 @@ Page({
 
     this.setData({
       ready: true,
+      sound: store.state.settings.sound !== false,
+      theme: store.state.settings.theme || 'muyu',
+      themeName: { muyu: '木鱼', lotus: '莲花', beads: '念珠' }[store.state.settings.theme || 'muyu'],
       ended: false,
       practiceName: practice.displayName || practice.name,
       unit,
@@ -146,12 +150,12 @@ Page({
       roundCount,
       roundText: fmtNum(roundCount),
       todayText,
-      elapsedText: isTime ? fmtClock(Date.now() - ctx.startTs) : '00:00',
+      elapsedText: isTime ? fmtClock(store.elapsed('phone')) : '00:00',
       reminderText: reminder ? this.reminderTextOf(reminder) : ''
     })
 
     this.syncTicker(isTime, reminder)
-    if (reminder && reminder.done) this.handleGoalDone(reminder)
+    if (reminder && reminder.done) store.pulse()
   },
 
   reminderTextOf(reminder) {
@@ -186,7 +190,7 @@ Page({
 
     const practice = store.getPractice(ctx.practiceId)
     if (practice && practice.type === 'time') {
-      const text = fmtClock(Date.now() - ctx.startTs)
+      const text = fmtClock(store.elapsed('phone'))
       if (text !== this.data.elapsedText) this.setData({ elapsedText: text })
     }
 
@@ -197,29 +201,7 @@ Page({
     }
     const text = this.reminderTextOf(reminder)
     if (text !== this.data.reminderText) this.setData({ reminderText: text })
-    if (reminder.done) this.handleGoalDone(reminder)
-  },
-
-  handleGoalDone(reminder) {
-    if (this._goalNotified) return
-    this._goalNotified = true
-
-    const ctx = store.context('phone')
-    if (!ctx) return
-    const count = ctx.roundCount || 0
-    const minutes = ctx.reminder ? ctx.reminder.value : 0
-    const content = reminder.type === 'count' ? `本次念了 ${count} 声` : `已念满 ${minutes} 分钟`
-
-    if (wx.vibrateLong) wx.vibrateLong()
-    wx.showModal({
-      title: '目标达成',
-      content,
-      showCancel: false,
-      confirmText: '知道了',
-      complete() {
-        try { store.cancelReminder('phone') } catch (e) {}
-      }
-    })
+    if (reminder.done) store.pulse()
   },
 
   // —— 点按 ——
@@ -231,7 +213,8 @@ Page({
       return
     }
     this.playTapAnim()
-    if (store.state.settings.vibrate && wx.vibrateShort) wx.vibrateShort({ type: 'light' })
+    require('../../services/audio').play(store.state.settings)
+    if (store.state.settings.vibrate && wx.vibrateShort && !store.getPractice(store.context('phone').practiceId).vibrateEvery) wx.vibrateShort({ type: 'light' })
   },
 
   playTapAnim() {
@@ -276,7 +259,7 @@ Page({
   onEndRound() {
     const ctx = store.context('phone')
     if (!ctx) return
-    const ms = Math.max(0, Date.now() - ctx.startTs)
+    const ms = Math.max(0, store.elapsed('phone'))
     try {
       store.endRound('phone')
     } catch (e) {
@@ -316,11 +299,12 @@ Page({
   readLastReminder() {
     let saved = null
     try {
-      saved = wx.getStorageSync('reminder_last')
+      saved = store.lastReminder()
     } catch (e) {
       saved = null
     }
-    const type = saved && (saved.type === 'time' || saved.type === 'count') ? saved.type : 'none'
+    const timeOnly = (this.data.isTime || (this._id && store.getPractice(this._id).type === 'time'))
+    const type = !timeOnly && saved && (saved.type === 'time' || saved.type === 'count') ? saved.type : 'none'
     const value = saved ? Number(saved.value) : 0
     const time = type === 'time' && TIME_OPTIONS.indexOf(value) >= 0 ? value : 30
     const count = type === 'count' && COUNT_OPTIONS.indexOf(value) >= 0 ? value : 500
@@ -370,7 +354,7 @@ Page({
       : type === 'count' ? { type: 'count', value: count } : null
 
     try {
-      wx.setStorageSync('reminder_last', type === 'none'
+      store.saveReminder( type === 'none'
         ? { type: 'none', value: 0 }
         : { type, value: type === 'time' ? time : count })
     } catch (e) {}
@@ -387,10 +371,10 @@ Page({
     }
 
     const ctx = store.context('phone')
-    if (ctx && ctx.roundCount > 0) {
+    if (ctx && (ctx.roundCount > 0 || ctx.reminder || this.data.isTime)) {
       wx.showModal({
         title: '重新一轮？',
-        content: '本轮计数将清零，今日累积不受影响。',
+        content: '将结束当前一轮并取消原提醒，今日累积不受影响。',
         confirmText: '确认',
         cancelText: '取消',
         success(res) { if (res.confirm) start() }
@@ -400,12 +384,9 @@ Page({
     }
   },
 
-  onSound() {
-    const names = { muyu: '木鱼', qing: '引磬', silent: '静音震动' }
-    const key = store.state.settings.soundName || 'muyu'
-    wx.showToast({ title: '音效：' + (names[key] || '木鱼'), icon: 'none' })
-  },
+  onSound() { store.setSetting('sound', !store.state.settings.sound); this.refresh() },
 
+  onCancelReminder() { wx.showModal({title:'取消本轮提醒？',content:'仅取消提醒，本轮计数继续。',success:r=>{if(r.confirm)store.cancelReminder('phone')}}) },
   onSettings() {
     wx.navigateTo({ url: '/pages/phone-settings/phone-settings' })
   }

@@ -47,6 +47,8 @@ Page({
   },
 
   onShow() {
+    const pid=getApp().globalData.calendarPid
+    if(pid) {this.setData({viewPid:pid});delete getApp().globalData.calendarPid}
     this.visible = true
     this.refresh()
   },
@@ -64,7 +66,7 @@ Page({
 
   refresh() {
     const today = store.todayKey()
-    const practices = store.practices()
+    const practices = store.allPractices()
     const options = [{ id: ALL, name: '全部功课' }].concat(
       practices.map(p => ({ id: p.id, name: nameOf(p) }))
     )
@@ -99,6 +101,7 @@ Page({
         future,
         today: date === today,
         warn: false,
+        dayText: String(d),
         numText: String(d),
         dot: 'none',
         glyph: DOT_GLYPH.none
@@ -125,7 +128,8 @@ Page({
     let targetText = ''
     let statsText = ''
     if (!viewAll && practice) {
-      const target = practice.dailyTarget
+      const todayTotal = store.dayTotals(today, practice.id)
+      const target = todayTotal ? todayTotal.target : null
       if (target !== null && target !== undefined) {
         const unit = practice.type === 'time' ? '分钟' : (practice.unit || '声')
         targetText = `目标 ${fmtNum(target)}${unit}`
@@ -170,7 +174,7 @@ Page({
       const prog = store.vowProgress(v.id)
       const title = (byId[v.practiceId] || '功课') + (v.name ? ` · ${v.name}` : '')
       if (!prog) {
-        return { id: v.id, title, totalText: '0', targetText: fmtNum(v.targetTotal), percent: 0, subText: '' }
+        return { id: v.id, title, totalText: '0', targetText: fmtNum(v.targetTotal), percent: 0, barStyle: 'width: 0%;', subText: '' }
       }
       const sub = prog.done
         ? '已圆满'
@@ -181,6 +185,7 @@ Page({
         totalText: fmtNum(prog.total),
         targetText: fmtNum(prog.target),
         percent: prog.percent,
+        barStyle: `width: ${prog.percent}%;`,
         subText: sub
       }
     })

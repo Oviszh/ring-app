@@ -82,3 +82,5 @@
   line-height: 1;
   color: var(--c-ink-secondary);
 }
+
+.profile-card { display:flex; align-items:center; padding:36rpx; border-radius:28rpx; background:#E8EDE5; } .profile-mark { width:100rpx; height:100rpx; line-height:100rpx; border:1rpx solid #97A791; border-radius:50%; text-align:center; font-family:serif; font-size:42rpx; margin-right:28rpx; } .profile-title { font-size:40rpx; font-family:'Songti SC',serif; } .local-note { font-size:26rpx; color:#687267; padding:24rpx 4rpx 8rpx; line-height:1.8; } .list { border:none; margin-top:28rpx; } .row { min-height:112rpx; padding:26rpx 28rpx; } .row-sub { font-size:26rpx; color:#687267; margin-top:4rpx; }

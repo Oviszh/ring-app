@@ -1,32 +1,39 @@
-/* 设计变量：老年用户可读性优先 —— 大字号、大按钮、高对比 */
-:root {
-  /* 颜色 */
-  --c-bg: #F7F3EC;          /* 米白底 */
-  --c-card: #FFFDF9;        /* 卡片底 */
-  --c-ink: #2B2620;         /* 主文字 */
-  --c-ink-secondary: #6E655B; /* 次要文字 */
-  --c-primary: #B4552D;     /* 主色（赭红） */
-  --c-primary-weak: #F0E2D8;
-  --c-led: #E8743B;         /* LED 数码管数字 */
-  --c-success: #3E7C4F;
-  --c-danger: #B3372D;
-  --c-border: #E5DCD0;
-
-  /* 字号（大） */
-  --fs-hero: 96rpx;    /* LED 大数字 */
+/* 小程序以 page 为样式根节点。设计变量在所有页面继承。 */
+page {
+  --c-bg: #F6F5F0;
+  --c-card: #FDFCF9;
+  --c-ink: #26372E;
+  --c-ink-secondary: #687267;
+  --c-primary: #304D40;
+  --c-primary-weak: #E8EDE5;
+  --c-led: #304D40;
+  --c-success: #385D48;
+  --c-danger: #A14336;
+  --c-border: #DEE2D8;
+  --fs-hero: 112rpx;
   --fs-title: 40rpx;
   --fs-body: 34rpx;
   --fs-small: 28rpx;
-
-  /* 尺寸 */
-  --btn-height: 104rpx;
-  --radius: 20rpx;
-  --space: 24rpx;
+  --btn-height: 100rpx;
+  --radius: 28rpx;
+  --space: 32rpx;
+  background: #F6F5F0;
+  color: #26372E;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  font-size: 34rpx;
+  line-height: 1.6;
 }
-
-page {
-  background: var(--c-bg);
-  color: var(--c-ink);
-  font-size: var(--fs-body);
-  line-height: 1.5;
-}
+button { font-weight: 500; }
+button::after { border: none; }
+button[disabled] { opacity: .45; }
+input { min-height: 88rpx; }
+.page { padding-bottom: calc(48rpx + env(safe-area-inset-bottom)); }
+.page-heading { font-size: 54rpx; font-family: 'Songti SC', 'Noto Serif CJK SC', serif; font-weight: 600; letter-spacing: 3rpx; margin: 4rpx 0 36rpx; }
+.eyebrow { font-size: 26rpx; letter-spacing: 3rpx; color: #76735F; margin-top: 16rpx; }
+.muted { font-size: 28rpx; color: #687267; line-height: 1.8; }
+.card { background: #FDFCF9; border: 1rpx solid #DEE2D8; border-radius: 28rpx; }
+.card-title { font-size: 36rpx; font-weight: 600; margin-bottom: 16rpx; }
+.primary,.secondary { min-height: 100rpx; line-height: 100rpx; border-radius: 20rpx; font-size: 32rpx; padding: 0 28rpx; }
+.primary { background: #304D40; color: #FFFFFF; }
+.secondary { background: #E8EDE5; color: #304D40; }
+.quiet-footer { color: #687267; font-size: 26rpx; text-align: center; margin: 56rpx 0 16rpx; letter-spacing: 3rpx; }

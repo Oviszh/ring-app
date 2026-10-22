@@ -8,6 +8,8 @@ const { genId, findPractice } = require('./state')
 function createVow(state, input, ts) {
   if (!findPractice(state, input.practiceId)) throw new Error('NO_PRACTICE')
   if (!(input.targetTotal > 0)) throw new Error('TARGET_POSITIVE')
+  input = Object.assign({ startDate: nextDay(state.currentDay), existingTotal: 0 }, input)
+  validateVow(input)
   const vow = {
     id: input.id || genId('vow', ts),
     practiceId: input.practiceId,
@@ -59,4 +61,10 @@ function vowProgress(state, vow, ts) {
   }
 }
 
-module.exports = { createVow, removeVow, vowProgress }
+function validateVow(v) {
+  if (!Number.isSafeInteger(v.targetTotal) || v.targetTotal <= 0) throw new Error('TARGET_POSITIVE')
+  if (!Number.isSafeInteger(v.existingTotal || 0) || (v.existingTotal || 0) < 0) throw new Error('BAD_EXISTING')
+  const { validDay } = require('./time')
+  if (!validDay(v.startDate) || (v.deadline && (!validDay(v.deadline) || v.deadline < v.startDate))) throw new Error('BAD_DATE')
+}
+module.exports = { validateVow, createVow, removeVow, vowProgress }

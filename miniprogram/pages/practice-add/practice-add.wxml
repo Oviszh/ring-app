@@ -1,7 +1,8 @@
 <!-- P5 添加功课：模糊搜索公共功课，无匹配时自建 -->
 <view class="page">
+ <view class="eyebrow">从熟悉的一项开始</view><view class="page-heading">添加功课</view>
   <view class="search-bar">
-    <text class="search-icon">🔍</text>
+    <text class="search-icon">⌕</text>
     <input
       class="search-input"
       value="{{keyword}}"
@@ -43,10 +44,19 @@
       <text class="create-plus">＋</text>
       <view class="row-main">
         <view class="create-name">创建自建功课「{{createName}}」</view>
-        <view class="create-sub">计数功课 · 每日 108 声</view>
+        <view class="create-sub">选择计数或计时，自定单位与目标</view>
       </view>
     </view>
   </view>
 
   <view class="empty-hint" wx:if="{{!results.length && !showCreate}}">没有可添加的功课</view>
 </view>
+
+<view wx:if="{{creating}}" class="create-mask" bindtap="closeCreate" catchtouchmove="noop"><view class="sheet create-sheet" catchtap="noop">
+ <view class="card-title">自建功课 · {{createName}}</view>
+ <view class="type-options"><button class="{{customType==='count'?'primary':'secondary'}}" data-type="count" bindtap="onType">计数</button><button class="{{customType==='time'?'primary':'secondary'}}" data-type="time" bindtap="onType">计时</button></view>
+ <picker wx:if="{{customType==='count'}}" range="{{units}}" value="{{unitIndex}}" bindchange="onUnit"><view class="custom-field">计数单位　{{units[unitIndex]}}　⌄</view></picker>
+ <view wx:else class="muted">计时功课只记录时长，单位为分钟。</view>
+ <view class="custom-field"><text>每日目标</text><input type="number" value="{{customTarget}}" placeholder="留空表示不设目标" bindinput="onCustomTarget" /></view>
+ <button class="primary" bindtap="saveCustom">添加功课</button><button class="secondary" bindtap="closeCreate">取消</button>
+</view></view>

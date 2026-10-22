@@ -23,7 +23,7 @@
 
     <block wx:if="{{hasTarget}}">
       <view class="progress">
-        <view class="progress-fill" style="width: {{percent}}%"></view>
+        <view class="progress-fill" style="width: {{percent + '%'}}"></view>
       </view>
       <view class="progress-meta">{{percent}}%</view>
     </block>
@@ -62,7 +62,7 @@
       </view>
       <view class="vow-nums">{{vow.totalText}} / {{vow.targetText}}</view>
       <view class="progress">
-        <view class="progress-fill" style="width: {{vow.percent}}%"></view>
+        <view class="progress-fill" style="width: {{vow.percent + '%'}}"></view>
       </view>
       <view class="vow-meta">{{vow.percent}}% · 日均 {{vow.avgText}}</view>
     </view>
@@ -97,14 +97,14 @@
       <view class="sheet-title">提醒目标（可选）</view>
       <view class="sheet-close" bindtap="closeSheet">✕</view>
     </view>
-    <view class="sheet-sub">到点按所选侧提醒：App 通知</view>
+    <view class="sheet-sub">仅小程序前台有效，切后台暂停</view>
     <view class="sheet-divider"></view>
 
     <view class="sheet-label">目标</view>
     <view class="chips">
       <view class="chip {{reminderType === 'none' ? 'chip-active' : ''}}" data-type="none" bindtap="onPickReminderType">不限</view>
       <view class="chip {{reminderType === 'time' ? 'chip-active' : ''}}" data-type="time" bindtap="onPickReminderType">按时间</view>
-      <view class="chip {{reminderType === 'count' ? 'chip-active' : ''}}" data-type="count" bindtap="onPickReminderType">按次数</view>
+      <view wx:if="{{!isTime}}" class="chip {{reminderType === 'count' ? 'chip-active' : ''}}" data-type="count" bindtap="onPickReminderType">按次数</view>
     </view>
 
     <block wx:if="{{reminderType === 'time'}}">

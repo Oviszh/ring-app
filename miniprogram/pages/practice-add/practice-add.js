@@ -29,7 +29,12 @@ Page({
     keyword: '',
     results: [],
     showCreate: false,
-    createName: ''
+    createName: '',
+    creating: false,
+    customType: 'count',
+    units: ['声', '遍', '座', '次'],
+    unitIndex: 0,
+    customTarget: '108'
   },
 
   onLoad() {
@@ -73,16 +78,22 @@ Page({
     this.finish()
   },
 
-  onCreate() {
-    const name = truncate(this.data.keyword.trim())
-    if (!name || alreadyAdded(name)) return
-    store.addPractice({
-      name,
-      type: DEFAULT_TYPE,
-      unit: DEFAULT_UNIT,
-      dailyTarget: DEFAULT_TARGET,
-      public: false
-    })
+  onCreate() { this.setData({creating:true}) },
+  closeCreate() { this.setData({creating:false}) },
+  noop() {},
+  onType(e) {
+    const type=e.currentTarget.dataset.type
+    this.setData({customType:type,customTarget:type==='time'?'30':'108'})
+  },
+  onUnit(e) { this.setData({unitIndex:Number(e.detail.value)}) },
+  onCustomTarget(e) {this.setData({customTarget:e.detail.value})},
+  saveCustom() {
+    const name=this.data.keyword.trim()
+    if(!name || name.length>MAX_NAME) {wx.showToast({title:'功课名请填写 1–12 个字',icon:'none'});return}
+    const target=this.data.customTarget.trim()==='' ? null : Number(this.data.customTarget)
+    if(target!==null && (!Number.isSafeInteger(target)||target<=0)) {wx.showToast({title:'目标请输入正整数',icon:'none'});return}
+    if(alreadyAdded(name)) {wx.showToast({title:'已添加这项功课',icon:'none'});return}
+    store.addPractice({name,type:this.data.customType,unit:this.data.customType==='time'?'分钟':this.data.units[this.data.unitIndex],dailyTarget:target,public:false})
     this.finish()
   },
 

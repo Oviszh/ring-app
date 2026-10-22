@@ -1,7 +1,7 @@
 'use strict'
 
 const { fmtNum, fmtDayCN } = require('../../utils/format')
-const { addDays } = require('../../services/domain')
+const { addDays } = require('../../services/domain/index')
 
 const store = getApp().globalData.store
 
@@ -61,7 +61,7 @@ Page({
       return
     }
 
-    const practice = store.getPractice(vow.practiceId)
+    const practice = store.getPracticeAny(vow.practiceId)
     const practiceName = practice ? nameOf(practice) : ''
     const unit = practice ? practice.unit || '声' : '声'
     const title = vowTitle(practiceName, vow.name)
@@ -94,9 +94,10 @@ Page({
     const bars = days.map(day => ({
       date: day.date,
       empty: day.total <= 0,
-      h: max > 0 && day.total > 0
-        ? Math.max(10, Math.round((day.total / max) * CHART_HEIGHT))
-        : 0
+      h: max > 0 && day.total > 0 ? Math.max(10, Math.round(day.total / max * CHART_HEIGHT)) : 0,
+      barStyle: (max > 0 && day.total > 0)
+        ? `height: ${Math.max(10, Math.round((day.total / max) * CHART_HEIGHT))}rpx;`
+        : 'height: 0rpx;'
     }))
 
     this.setData({
@@ -105,6 +106,7 @@ Page({
       totalText: fmtNum(progress.total),
       targetText: fmtNum(progress.target),
       percent: progress.percent,
+      barStyle: `width: ${progress.percent}%;`,
       unit,
       startDate: vow.startDate,
       deadline: vow.deadline || '',

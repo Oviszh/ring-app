@@ -12,6 +12,10 @@ function addAdjustment(state, input) {
   settleUpTo(state, ts)
   const source = input.source
   if (source !== SOURCES.RING && source !== SOURCES.PHONE) throw new Error('SOURCE_REQUIRED')
+  if (!Number.isSafeInteger(input.toValue)) throw new Error('BAD_AMOUNT')
+  if (!require('./time').validDay(input.date) || input.date > state.currentDay) throw new Error('BAD_DATE')
+  const p = state.practices.find(p => p.id === input.practiceId)
+  if (!p || p.type === 'time') throw new Error('NO_COUNT_PRACTICE')
   const current = sourceTotal(state, input.date, input.practiceId, source)
   const delta = input.toValue - current
   if (!(delta < 0)) throw new Error('REDUCE_ONLY')

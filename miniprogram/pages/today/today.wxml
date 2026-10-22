@@ -1,15 +1,18 @@
 <!-- P1 今日：空状态 P1-F / 仅手机计数 P1-E / 填报弹层 E3 -->
 <view class="page">
+  <view class="home-heading"><view><view class="eyebrow">{{dateLabel}} · 日常修持</view><view class="page-heading">今日修行</view></view><view class="seal">念</view></view>
   <!-- 空状态 P1-F：首次打开 / 功课都关闭了首页显示 -->
   <view wx:if="{{empty && !emptyHidden}}" class="empty-wrap">
-    <view class="empty-title">还没有功课</view>
-    <view class="empty-sub">添加一个常修的功课，开始今天的修行吧</view>
-    <button class="btn-primary empty-btn" bindtap="goPracticeAdd">＋ 添加功课</button>
+    <view class="enso"><view class="enso-core"></view></view><view class="empty-title">一念一行，日积月累</view>
+    <view class="empty-sub">从一项常修功课开始。
+手机计数，或随时填报，
+每一份用功都安稳留存。</view>
+    <button class="btn-primary empty-btn" bindtap="goPracticeAdd">添加第一项功课</button>
   </view>
   <view wx:elif="{{empty}}" class="empty-wrap">
     <view class="empty-title">首页还没有要显示的功课</view>
     <view class="empty-sub">到「配置」里打开功课的首页显示，或添加新功课</view>
-    <button class="btn-secondary empty-btn" bindtap="onConfig">配置 ›</button>
+    <button class="btn-secondary empty-btn" bindtap="onConfig">管理功课</button><button class="btn-secondary empty-btn" bindtap="openEntry">填报修行</button>
     <button class="btn-primary empty-btn empty-btn-second" bindtap="goPracticeAdd">＋ 添加功课</button>
   </view>
 
@@ -17,29 +20,29 @@
     <!-- P1-G 纯填报模式；否则为 P1-E 计数卡片 -->
     <view wx:if="{{fillOnly}}" class="fill-card">
       <view class="fill-title">当前以手动填报记录修行</view>
-      <button class="btn-primary fill-btn" bindtap="openEntry">✎ 填报今日数据</button>
+      <button class="btn-primary fill-btn" bindtap="openEntry">填报修行记录</button>
     </view>
     <view wx:else class="led-card">
       <view class="switch-row">
-        <view class="switch-btn {{canSwitch ? '' : 'switch-btn--disabled'}}" bindtap="onPrevPractice">◀</view>
+        <view class="switch-btn {{canSwitch ? '' : 'switch-btn--disabled'}}" bindtap="onPrevPractice">‹</view>
         <view class="practice-name">{{currentName}}</view>
-        <view class="switch-btn {{canSwitch ? '' : 'switch-btn--disabled'}}" bindtap="onNextPractice">▶</view>
+        <view class="switch-btn {{canSwitch ? '' : 'switch-btn--disabled'}}" bindtap="onNextPractice">›</view>
       </view>
 
       <view class="led-num">{{ledText}}</view>
-      <view class="led-caption">本轮 · 手机</view>
+      <view class="led-caption">{{isTime ? '本座分钟 · 手机' : '本轮计数 · 手机'}}</view>
       <view class="today-line">{{todayText}}</view>
 
-      <button wx:if="{{phoneEnabled}}" class="btn-primary led-enter" bindtap="goWoodfish">进入手机计数 →</button>
+      <button wx:if="{{phoneEnabled}}" class="btn-primary led-enter" bindtap="goWoodfish">{{isTime ? '进入静坐计时' : '开始念佛计数'}}</button>
 
-      <view class="entry-link" bindtap="openEntry">✎ 填报今日数据 ›</view>
+      <view class="entry-link" bindtap="openEntry">填报修行记录　＋</view>
     </view>
 
     <!-- 我的功课 -->
     <view class="section">
       <view class="section-head">
         <text class="section-title">我的功课</text>
-        <view class="section-action" bindtap="onConfig">配置 ›</view>
+        <view class="section-action" bindtap="onConfig">管理 ›</view>
       </view>
 
       <view
@@ -50,8 +53,7 @@
         bindtap="onPracticeTap"
       >
         <view wx:if="{{!fillOnly}}" class="dot {{item.current ? 'dot--on' : ''}}"></view>
-        <text class="row-name">{{item.name}}</text>
-        <text class="row-progress">{{item.progressText}}</text>
+        <view class="practice-main"><view class="row-name">{{item.name}}</view><view class="row-progress">{{item.progressText}}</view><view class="mini-track"><view class="mini-fill" style="width:{{item.percent}}%"></view></view></view>
         <text class="row-arrow">›</text>
       </view>
 
@@ -61,6 +63,7 @@
     <!-- P1-G 底部提示 -->
     <view wx:if="{{fillOnly}}" class="foot-link" bindtap="goSettings">计数入口已关闭 · 去设置开启 ›</view>
   </block>
+  <view class="quiet-footer">一心专念 · 日日相续</view>
 
   <!-- E3 填报弹层 -->
   <view
@@ -103,7 +106,7 @@
           class="amount-input"
           type="number"
           value="{{entryAmount}}"
-          placeholder="填本次新增数量，不是当天总数"
+          placeholder="本次新增数量"
           placeholder-class="amount-ph"
           bindinput="onEntryAmountInput"
         />
@@ -115,7 +118,7 @@
         <button class="btn-secondary btn-continue" bindtap="saveEntryAndContinue">保存并继续填报</button>
       </view>
 
-      <view class="sheet-note">说明：填报记为“手动”来源，计入今日累积与个人大愿；填错了可在当日详情中撤销；纠正误触请用“修正”。</view>
+      <view class="sheet-note">填报记为手动来源。计数填写本次新增数量；禅坐填写分钟数，每笔计一座。填错可在当日详情撤销。</view>
     </view>
   </view>
 </view>

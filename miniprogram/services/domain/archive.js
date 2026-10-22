@@ -38,9 +38,9 @@ function effectiveTarget(state, practiceId, date) {
   const practice = findPracticeAny(state, practiceId)
   if (!practice) return undefined
   if (date > state.currentDay) return null // 未来日期不算
-  if (date === state.currentDay) return practice.dailyTarget
   const row = state.archives[date] && state.archives[date][practiceId]
   if (row && row.targetSnapshot !== undefined) return row.targetSnapshot
+  if (date < dayKey(practice.createdAt) || (practice.deleted && date > (practice.deletedDate || state.currentDay))) return null
   return practice.dailyTarget
 }
 
@@ -68,7 +68,7 @@ function settleDay(state, date, ts) {
     if (e.date === date && !e.tombstone) ids.add(e.practiceId)
   }
 
-  const cap = Math.min(ts, endOfDayTs(startOfDayTs(parseDayTs(date))))
+  const cap = Math.min(ts, parseDayTs(nextDay(date)))
 
   for (const pid of ids) {
     const row = ensureRow(state, date, pid)
@@ -87,11 +87,12 @@ function settleDay(state, date, ts) {
       if (!ctx || ctx.practiceId !== pid) continue
       const practice = findPracticeAny(state, pid)
       if (!practice || practice.type !== PRACTICE_TYPES.TIME) continue
-      const from = Math.max(ctx.startTs, startOfDayTs(parseDayTs(date)))
+      const from = Math.max(ctx.creditedTs || ctx.startTs, parseDayTs(date))
       // 进行中会话视为持续到结算时刻（计时型无点按，lastTs 不更新）
-      const lastKnown = Math.max(ctx.lastTs === undefined ? ctx.startTs : ctx.lastTs, ts)
+      const lastKnown = ctx.pausedAt !== undefined ? ctx.pausedAt : ts
       const to = Math.min(lastKnown, cap)
       if (to > from) row.durationMin += (to - from) / 60000
+      ctx.creditedTs = Math.max(ctx.creditedTs || ctx.startTs, to)
     }
     row.version += 1
   }
@@ -139,6 +140,8 @@ function sourceTotal(state, date, practiceId, source) {
 function dayTotals(state, date, practiceId, ts) {
   const practice = findPracticeAny(state, practiceId)
   if (!practice || date > state.currentDay) return null
+  const hasRow = state.archives[date] && state.archives[date][practiceId]
+  if (!hasRow && (date < dayKey(practice.createdAt) || (practice.deleted && date > (practice.deletedDate || state.currentDay)))) return null
 
   let ringRaw = 0
   let phoneRaw = 0
@@ -170,6 +173,10 @@ function dayTotals(state, date, practiceId, ts) {
   const ring = ringRaw + adjustmentsSum(state, date, practiceId, SOURCES.RING)
   const phone = phoneRaw + adjustmentsSum(state, date, practiceId, SOURCES.PHONE)
   const isDuration = practice.type === PRACTICE_TYPES.TIME
+  if (isDuration) {
+    durationMin += manualTotal
+    times += state.entries.filter(e => e.date === date && e.practiceId === practiceId && !e.tombstone).reduce((n, e) => n + (e.times || 1), 0)
+  }
   const total = isDuration ? durationMin : ring + phone + manualTotal
   const target = effectiveTarget(state, practiceId, date)
 
@@ -191,8 +198,9 @@ function ongoingTimingMinutes(state, practiceId, ts) {
     if (!ctx || ctx.practiceId !== practiceId) continue
     const practice = findPracticeAny(state, practiceId)
     if (!practice || practice.type !== PRACTICE_TYPES.TIME) continue
-    const end = ctx.lastTs === undefined ? ts : Math.max(ctx.lastTs, ts)
-    if (end > ctx.startTs) minutes += (end - ctx.startTs) / 60000
+    const end = ctx.pausedAt !== undefined ? ctx.pausedAt : ts
+    const from = Math.max(ctx.creditedTs || ctx.startTs, parseDayTs(state.currentDay))
+    if (end > from) minutes += (end - from) / 60000
   }
   return minutes
 }

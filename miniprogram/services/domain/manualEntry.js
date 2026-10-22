@@ -9,14 +9,16 @@ function addEntry(state, input) {
   const ts = input.ts
   settleUpTo(state, ts)
   const amount = input.amount
-  if (!(amount > 0)) throw new Error('AMOUNT_POSITIVE')
+  if (!Number.isSafeInteger(amount) || amount <= 0) throw new Error('AMOUNT_POSITIVE')
   if (!findPractice(state, input.practiceId)) throw new Error('NO_PRACTICE')
   if (input.date > state.currentDay) throw new Error('FUTURE_DATE')
+  if (!require('./time').validDay(input.date)) throw new Error('BAD_DATE')
   const entry = {
     id: input.id || genId('me', ts),
     date: input.date,
     practiceId: input.practiceId,
     amount,
+    times: 1,
     createdAt: ts,
     tombstone: false
   }

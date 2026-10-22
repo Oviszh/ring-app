@@ -20,15 +20,16 @@ function startOfDayTs(ts) { return parseDay(dayKey(ts)).getTime() }
 
 function endOfDayTs(ts) { return startOfDayTs(ts) + DAY_MS - 1 }
 
-function nextDay(key) { return dayKey(parseDay(key).getTime() + DAY_MS) }
+function nextDay(key) { return addDays(key, 1) }
 
-function prevDay(key) { return dayKey(parseDay(key).getTime() - DAY_MS) }
+function prevDay(key) { return addDays(key, -1) }
 
 // aKey 到 bKey 相差的天数（b 在 a 之后为正）
 function diffDays(aKey, bKey) {
   return Math.round((parseDay(bKey) - parseDay(aKey)) / DAY_MS)
 }
 
-function addDays(key, n) { return dayKey(parseDay(key).getTime() + n * DAY_MS) }
+function addDays(key, n) { const d = parseDay(key); d.setDate(d.getDate() + n); return dayKey(d.getTime()) }
+function validDay(key) { return typeof key === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(key) && dayKey(parseDay(key).getTime()) === key }
 
-module.exports = { DAY_MS, dayKey, parseDay, startOfDayTs, endOfDayTs, nextDay, prevDay, diffDays, addDays }
+module.exports = { validDay, DAY_MS, dayKey, parseDay, startOfDayTs, endOfDayTs, nextDay, prevDay, diffDays, addDays }

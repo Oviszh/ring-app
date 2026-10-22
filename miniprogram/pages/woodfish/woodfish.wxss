@@ -297,3 +297,27 @@ button::after {
 .sheet-btn {
   margin-top: 36rpx;
 }
+
+.page { padding-top:4rpx; min-height:0; }
+.gear { font-size:28rpx; padding:16rpx 8rpx; }
+.practice-name { font-family:'Songti SC',serif; letter-spacing:3rpx; }
+.round-number,.timer { font-weight:300; font-size:116rpx; letter-spacing:-3rpx; margin-top:20rpx; }
+.woodfish { width:380rpx; height:380rpx; background:#E8EDE5; border:1rpx solid #C7D1C1; box-shadow:0 20rpx 60rpx rgba(48,77,64,.06); margin-top:18rpx; }
+.woodfish-inner { width:306rpx; height:306rpx; border:1rpx solid #B5C2AC; position:relative; flex-direction:column; }
+.woodfish-text { font-size:30rpx; font-weight:400; letter-spacing:6rpx; margin-top:28rpx; }
+.woodfish-symbol { width:120rpx; height:80rpx; border:2rpx solid #687D5C; border-radius:50%; position:relative; }
+.woodfish-symbol::after { content:''; width:80rpx; height:1rpx; background:#687D5C; position:absolute; top:38rpx; left:22rpx; transform:rotate(-16deg); }
+.theme-lotus .woodfish-symbol { border:none; }
+.theme-lotus .woodfish-symbol::after { display:none; }
+.theme-lotus .woodfish-symbol view { position:absolute; width:50rpx; height:80rpx; border:2rpx solid #687D5C; border-radius:80% 10% 80% 10%; left:34rpx; transform:rotate(-45deg); }
+.theme-lotus .woodfish-symbol view:first-child { left:0; transform:rotate(-85deg); }
+.theme-lotus .woodfish-symbol view:last-child { left:68rpx; transform:rotate(-5deg); }
+.theme-beads .woodfish-symbol { width:100rpx; height:100rpx; border:12rpx dotted #687D5C; border-radius:50%; }
+.theme-beads .woodfish-symbol::after { display:none; }
+.sound-row { margin-top:24rpx; }
+.sound-item { min-height:56rpx; line-height:56rpx; padding:8rpx 28rpx; background:#FDFCF9; border-radius:40rpx; }
+.foreground-note { margin:20rpx 0 0; font-size:24rpx; }
+.cancel-link { color:#304D40; font-size:28rpx; padding:16rpx; }
+.btn-main,.btn-ghost { border-radius:20rpx; font-size:32rpx; }
+.actions { margin-top:24rpx; }
+.sheet { max-height:85vh; overflow-y:auto; }

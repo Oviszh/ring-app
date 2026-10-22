@@ -60,7 +60,7 @@
 
     <view class="row">
       <view class="row-label">首页显示</view>
-      <switch class="big-switch" checked="{{showOnHome}}" color="#B4552D" bindchange="onShowOnHomeChange" />
+      <switch class="big-switch" checked="{{showOnHome}}" color="#304D40" bindchange="onShowOnHomeChange" />
     </view>
 
     <view wx:if="{{isTime}}" class="row">

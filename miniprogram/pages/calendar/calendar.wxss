@@ -287,3 +287,5 @@
   border: 2rpx dashed var(--c-border);
   border-radius: var(--radius);
 }
+
+.calendar { padding:20rpx 12rpx; border:none; } .cell { height:110rpx; border-width:1rpx; border-radius:18rpx; } .cell-date { font-size:26rpx; color:#687267; } .cell--total .cell-num { font-size:24rpx; } .cell--today { border-color:#304D40; } .calendar-legend { font-size:24rpx; color:#687267; margin:20rpx 0 40rpx; text-align:center; } .month-bar { background:#FDFCF9; border-radius:24rpx; } .vow-empty { border:1rpx solid #DEE2D8; } .vow-card { border:none; } .cell--future .cell-num { color:#92988D; }

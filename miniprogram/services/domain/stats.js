@@ -4,13 +4,12 @@ const { dayTotals } = require('./archive')
 
 // 日历「全部功课」口径的日状态：●全达标 ◐部分 ○有缺 ·无功课
 // 无每日目标的功课不参与"全部达标"判断
-function calendarDayStatus(state, date) {
+function calendarDayStatus(state, date, ts) {
   let anyTargeted = false
   let allMet = true
   let anyProgress = false
   for (const p of state.practices) {
-    if (p.deleted) continue
-    const t = dayTotals(state, date, p.id)
+    const t = dayTotals(state, date, p.id, ts)
     if (!t || t.target === null || t.target === undefined) continue
     anyTargeted = true
     if (t.status === 'met') {
@@ -42,7 +41,7 @@ function practiceTotalsAll(state, practiceId, ts) {
     times += t.times
     if (t.total > 0) days += 1
   }
-  for (const date of Object.keys(state.archives)) acc(dayTotals(state, date, practiceId))
+  for (const date of Object.keys(state.archives).filter(d => d < state.currentDay)) acc(dayTotals(state, date, practiceId))
   acc(dayTotals(state, state.currentDay, practiceId, ts))
   return { total: ring + phone + manual, ring, phone, manual, durationMin, times, days }
 }

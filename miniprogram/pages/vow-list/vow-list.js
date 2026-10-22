@@ -35,7 +35,7 @@ Page({
       const progress = store.vowProgress(vow.id)
       if (!progress) continue
 
-      const practice = store.getPractice(vow.practiceId)
+      const practice = store.getPracticeAny(vow.practiceId)
       const practiceName = practice ? nameOf(practice) : ''
       const title = vowTitle(practiceName, vow.name)
 
@@ -48,6 +48,7 @@ Page({
           totalText: fmtNum(progress.total),
           targetText: fmtNum(progress.target),
           percent: progress.percent,
+          barStyle: `width: ${progress.percent}%;`,
           avgText: fmtNum(progress.avgPerDay),
           etaText: progress.eta ? `预计 ${progress.eta.slice(0, 7)} 圆满` : '暂无估算'
         })

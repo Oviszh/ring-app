@@ -57,7 +57,7 @@ Page({
     for (const r of this.data.rows) if (r.expanded) expanded[r.id] = true
 
     const rows = []
-    for (const p of store.practices()) {
+    for (const p of store.allPractices()) {
       const t = store.dayTotals(date, p.id)
       if (!t) continue
       const hasTarget = t.target !== null && t.target !== undefined
@@ -93,8 +93,8 @@ Page({
     if (t.isDuration) {
       amountText = fmtMinutes(t.durationMin)
       targetText = hasTarget ? `/ ${fmtMinutes(t.target)}` : ''
-      icon = '✓'
-      statusClass = 'time'
+      icon = {met:'●',partial:'◐',missed:'○',none:'·'}[t.status]
+      statusClass = t.status
     } else {
       amountText = fmtNum(t.total)
       targetText = hasTarget ? `/ ${fmtNum(t.target)}` : ''
@@ -112,7 +112,7 @@ Page({
 
     return {
       id: p.id,
-      name: nameOf(p),
+      name: nameOf(p) + (p.deleted ? '（已删除）' : ''),
       unit: p.unit || '声',
       icon,
       statusClass,

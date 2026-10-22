@@ -10,7 +10,7 @@
       <view class="hero-unit">{{unit}}</view>
 
       <view class="bar">
-        <view class="bar-fill" style="width: {{percent}}%;"></view>
+        <view class="bar-fill" style="width: {{percent + '%'}};"></view>
       </view>
       <view class="percent">{{percent}}%</view>
     </view>
@@ -58,8 +58,8 @@
   </block>
 
   <view wx:else class="done-card">
-    <view class="done-title">🎉 已圆满</view>
+    <view class="done-title"> 已圆满</view>
     <view class="done-sub">{{totalText}} {{unit}} · 历时 {{days}} 天</view>
-    <button class="btn-primary" bindtap="goNewVow">再发新愿</button>
+    <button class="btn-primary" bindtap="goNewVow">再发新愿</button><view class="actions"><button class="btn-secondary" bindtap="goEdit">修改大愿</button><button class="btn-danger" bindtap="onDelete">删除大愿</button></view>
   </view>
 </view>

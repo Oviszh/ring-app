@@ -1,7 +1,7 @@
 'use strict'
 
 const { fmtNum } = require('../../utils/format')
-const { dayKey, addDays, diffDays } = require('../../services/domain')
+const { dayKey, addDays, diffDays } = require('../../services/domain/index')
 
 const store = getApp().globalData.store
 
@@ -152,7 +152,7 @@ Page({
     }
 
     const practices = this.practiceList()
-    const practice = store.getPractice(vow.practiceId)
+    const practice = store.getPracticeAny(vow.practiceId)
     const practiceName = practice ? nameOf(practice) : ''
     let index = practices.findIndex(p => p.id === vow.practiceId)
     if (index < 0) index = 0

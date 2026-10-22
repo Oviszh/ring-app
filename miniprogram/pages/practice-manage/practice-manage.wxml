@@ -29,7 +29,7 @@
         <switch
           class="switch"
           checked="{{item.showOnHome}}"
-          color="#B4552D"
+          color="#304D40"
           data-id="{{item.id}}"
           bindchange="onToggleShow"
         />

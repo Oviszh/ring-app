@@ -39,6 +39,8 @@ Page({
 
   // —— 列表入口 ——
 
+  goBackup() { navTo('/pages/backup/backup') },
+  goPractices() { navTo('/pages/practice-manage/practice-manage') },
   goVows() {
     navTo('/pages/vow-list/vow-list')
   },

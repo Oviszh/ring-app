@@ -28,15 +28,16 @@ Page({
   },
 
   onNotifications() {
-    wx.showToast({ title: '开发中', icon: 'none' })
+    wx.showModal({ title:'前台计时与提醒', content:'手机计数仅在小程序前台使用。切到后台时，计时和倒计时暂停；返回后继续。每轮可选择时长或次数提醒，达到目标后提醒一次，计数继续。', showCancel:false })
   },
 
   onAccount() {
     wx.showToast({ title: '下一阶段开放', icon: 'none' })
   },
 
+  onPhoneSettings() { wx.navigateTo({url:'/pages/phone-settings/phone-settings'}) },
   onBackup() {
-    wx.showToast({ title: '下一阶段开放', icon: 'none' })
+    wx.navigateTo({url:'/pages/backup/backup'})
   },
 
   onAbout() {

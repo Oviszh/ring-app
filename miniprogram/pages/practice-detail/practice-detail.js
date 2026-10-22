@@ -105,6 +105,7 @@ Page({
       return
     }
     this._active = true
+    this._starting = false
     this.refresh()
   },
 
@@ -154,7 +155,7 @@ Page({
     let statusText
     if (isCurrent) {
       statusText = isTime
-        ? `● 本轮计时中 · 手机 · 已计 ${Math.max(0, Math.floor((Date.now() - ctx.startTs) / 60000))}分钟`
+        ? `● 本轮计时中 · 手机 · 已计 ${Math.max(0, Math.floor((store.elapsed('phone')) / 60000))}分钟`
         : `● 本轮计数中 · 手机 · 已计 ${fmtNum(roundCount)}`
     } else if (ctx) {
       const other = store.getPractice(ctx.practiceId)
@@ -177,6 +178,7 @@ Page({
           totalText: fmtNum(progress.total),
           targetText: fmtNum(progress.target),
           percent: progress.percent,
+          barStyle: `width: ${progress.percent}%;`,
           avgText: `${fmtNum(progress.avgPerDay)}${unit}`
         }
       }
@@ -304,7 +306,7 @@ Page({
 
     let statusText = this.data.statusText
     if (isTime) {
-      const minutes = Math.max(0, Math.floor((Date.now() - ctx.startTs) / 60000))
+      const minutes = Math.max(0, Math.floor((store.elapsed('phone')) / 60000))
       statusText = `● 本轮计时中 · 手机 · 已计 ${minutes}分钟`
     }
 
@@ -338,6 +340,7 @@ Page({
   },
 
   onHistory() {
+    getApp().globalData.calendarPid = this._id
     wx.switchTab({ url: '/pages/calendar/calendar' })
   },
 
@@ -353,12 +356,7 @@ Page({
   // —— 提醒目标 ——
 
   onCancelReminder() {
-    try {
-      store.cancelReminder(SIDE)
-    } catch (e) {
-      return
-    }
-    wx.showToast({ title: '已取消提醒', icon: 'none' })
+    wx.showModal({title:'取消本轮提醒？',content:'只取消提醒，本轮计数继续。',success:r=>{if(r.confirm)store.cancelReminder(SIDE)}})
   },
 
   onOpenSheet() {
@@ -377,11 +375,12 @@ Page({
   readLastReminder() {
     let saved = null
     try {
-      saved = wx.getStorageSync('reminder_last')
+      saved = store.lastReminder()
     } catch (e) {
       saved = null
     }
-    const type = saved && (saved.type === 'time' || saved.type === 'count') ? saved.type : 'none'
+    const timeOnly = (this.data.isTime || (this._id && store.getPractice(this._id).type === 'time'))
+    const type = !timeOnly && saved && (saved.type === 'time' || saved.type === 'count') ? saved.type : 'none'
     const value = saved ? Number(saved.value) : 0
     const time = type === 'time' && TIME_OPTIONS.indexOf(value) >= 0 ? value : 30
     const count = type === 'count' && COUNT_OPTIONS.indexOf(value) >= 0 ? value : 500
@@ -431,7 +430,7 @@ Page({
       : type === 'count' ? { type: 'count', value: count } : null
 
     try {
-      wx.setStorageSync('reminder_last', type === 'none'
+      store.saveReminder( type === 'none'
         ? { type: 'none', value: 0 }
         : { type, value: type === 'time' ? time : count })
     } catch (e) {}
@@ -451,20 +450,15 @@ Page({
         title: this.data.isTime ? '已开始计时' : '已开启新一轮',
         icon: 'none'
       })
-      clearTimeout(this._leaveTimer)
-      this._leaveTimer = setTimeout(() => {
-        wx.navigateBack({
-          delta: 1,
-          fail() { wx.switchTab({ url: '/pages/today/today' }) }
-        })
-      }, 600)
+      this._starting = false
+      wx.navigateTo({ url: '/pages/woodfish/woodfish' })
     }
 
     const ctx = store.context(SIDE)
-    if (ctx && ctx.practiceId === this._id && ctx.roundCount > 0) {
+    if (ctx && (ctx.roundCount > 0 || ctx.reminder || store.getPractice(ctx.practiceId).type === 'time')) {
       wx.showModal({
         title: '重新一轮？',
-        content: '本轮计数将清零，今日累积不受影响',
+        content: '将结束当前一轮并取消原提醒，今日累积不受影响',
         confirmText: '确认',
         cancelText: '取消',
         success: res => {

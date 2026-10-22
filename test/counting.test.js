@@ -106,7 +106,7 @@ test('计时型功课：锁计数，只计时；endRound 记时长与座数，�
   const y = domain.dayTotals(state, '2026-10-21', meditation.id)
   assert.ok(Math.abs(y.durationMin - 10) < 0.01, `昨天应约 10 分钟，实际 ${y.durationMin}`)
   const t2 = domain.dayTotals(state, '2026-10-22', meditation.id)
-  assert.ok(Math.abs(t2.durationMin - 20) < 0.01, `今天应约 20 分钟，实际 ${t2.durationMin}`)
+  assert.ok(Math.abs(t2.durationMin - 10) < 0.01, `今天应约 10 分钟，实际 ${t2.durationMin}`)
   assert.strictEqual(t2.times, 1)
 })
 

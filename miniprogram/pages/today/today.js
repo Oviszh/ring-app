@@ -59,15 +59,21 @@ Page({
   },
 
   onLoad() {
-    this.offStore = store.onChange(() => this.refresh())
+    this.offStore = store.onChange(() => { if (this._visible) this.refresh() })
     this.refresh()
   },
 
   onShow() {
+    this._visible = true
     this.refresh()
+    clearInterval(this._ticker)
+    this._ticker = setInterval(() => this.refresh(), 1000)
   },
 
+  onHide() { this._visible = false; clearInterval(this._ticker) },
+
   onUnload() {
+    clearInterval(this._ticker)
     if (this.offStore) this.offStore()
     this.offStore = null
   },
@@ -80,10 +86,11 @@ Page({
     const today = store.todayKey()
     const phoneEnabled = store.state.settings.phoneEnabled !== false
     // P1-G：戒指未绑定且手机计数入口关闭 → 只留手动填报
-    const fillOnly = !phoneEnabled && store.state.devices.length === 0
+    const fillOnly = !phoneEnabled
 
     if (!list.length) {
       this.setData({
+        dateLabel: fmtDayCN(today),
         empty: true,
         emptyHidden: all.length > 0,
         todayKey: today,
@@ -103,13 +110,16 @@ Page({
       id: p.id,
       name: nameOf(p),
       current: p.id === current.id,
-      progressText: this.progressText(store.dayTotals(today, p.id))
+      progressText: this.progressText(store.dayTotals(today, p.id)),
+      percent: (() => { const t = store.dayTotals(today,p.id); return t && t.target ? Math.min(100,t.total/t.target*100) : 0 })()
     }))
 
     const totals = store.dayTotals(today, current.id)
     const roundCount = ctx && ctx.practiceId === current.id ? ctx.roundCount : 0
 
     this.setData({
+      dateLabel: fmtDayCN(today),
+      isTime: current.type === 'time',
       empty: false,
       emptyHidden: false,
       todayKey: today,
@@ -117,10 +127,10 @@ Page({
       currentPracticeId: current.id,
       currentIndex: list.indexOf(current),
       canSwitch: list.length > 1,
-      ledText: fmtNum(roundCount),
+      ledText: current.type === 'time' ? (ctx && ctx.practiceId === current.id ? Math.floor(store.elapsed('phone') / 60000) : 0) : fmtNum(roundCount),
       todayText: totals.isDuration
         ? `今日 ${fmtMinutes(totals.durationMin)}`
-        : `今日累积 ${fmtNum(totals.total)}`,
+        : `手机今日 ${fmtNum(totals.phone)} ${current.unit}`,
       practices: rows,
       phoneEnabled,
       fillOnly
@@ -157,10 +167,10 @@ Page({
       this.refresh()
     }
 
-    if (ctx && ctx.roundCount > 0) {
+    if (ctx && (ctx.roundCount > 0 || ctx.reminder || store.getPractice(ctx.practiceId).type === 'time')) {
       wx.showModal({
         title: '切换功课？',
-        content: '切换功课将清零本轮计数，今日累积不受影响',
+        content: '切换将结束本轮并取消原提醒，今日累积不受影响',
         confirmText: '切换',
         cancelText: '取消',
         success: res => {
@@ -175,6 +185,8 @@ Page({
   // —— 跳转 ——
 
   goWoodfish() {
+    const ctx=store.context('phone')
+    if(!ctx) store.startRound('phone',this.data.currentPracticeId)
     wx.navigateTo({ url: '/pages/woodfish/woodfish' })
   },
 
@@ -257,7 +269,7 @@ Page({
 
   submitEntry(close) {
     const amount = Number(this.data.entryAmount)
-    if (!Number.isInteger(amount) || amount <= 0) {
+    if (!Number.isSafeInteger(amount) || amount <= 0) {
       wx.showToast({ title: '请输入大于 0 的整数', icon: 'none' })
       return
     }
@@ -277,7 +289,11 @@ Page({
 
     wx.showToast({ title: '已保存', icon: 'success' })
     if (close) this.closeEntry()
-    else this.setData({ entryAmount: '' })
+    else {
+      const index = (this.data.entryPracticeIndex + 1) % this.data.entryPractices.length
+      const next = this.data.entryPractices[index]
+      this.setData({ entryAmount: '', entryPracticeIndex:index, entryPracticeName:next.name, entryUnit:next.unit })
+    }
   },
 
   noop() {}
