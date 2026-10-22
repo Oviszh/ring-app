@@ -1,0 +1,42 @@
+<!-- P12-L 设备列表 -->
+<view class="page">
+
+  <block wx:if="{{devices.length}}">
+    <view class="card list-card">
+      <view
+        wx:for="{{devices}}"
+        wx:key="id"
+        class="row device-row"
+        hover-class="row-hover"
+        data-id="{{item.id}}"
+        bindtap="onOpen"
+      >
+        <view class="row-main">
+          <view class="row-title">{{item.name}}</view>
+          <view wx:if="{{item.meta}}" class="row-sub">{{item.meta}}</view>
+        </view>
+        <view class="badges">
+          <text wx:if="{{item.isCurrent}}" class="badge badge-primary">● 当前戒指</text>
+          <text wx:if="{{item.ownerMismatch}}" class="badge badge-warn">归属异常</text>
+          <text wx:if="{{item.batteryText}}" class="badge">🔋 {{item.batteryText}}</text>
+        </view>
+        <text class="row-arrow">›</text>
+      </view>
+    </view>
+
+    <button class="btn btn-primary btn-block" bindtap="goBind">＋ 绑定新戒指</button>
+
+    <view class="foot-note">一枚戒指同一时间只绑定一个用户，归最后绑定者；接力使用时新手机直接绑定并清空即可，原用户的 App 数据不受影响。</view>
+  </block>
+
+  <!-- P12-B 未绑定 -->
+  <block wx:else>
+    <view class="empty">
+      <view class="empty-mark">◎</view>
+      <view class="empty-title">还没有绑定戒指</view>
+      <button class="btn btn-primary btn-bind" bindtap="goBind">绑定戒指</button>
+      <view class="empty-link" bindtap="goPhoneCount">没有戒指也可以直接用手机计数 ›</view>
+    </view>
+  </block>
+
+</view>

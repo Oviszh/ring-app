@@ -1,149 +1,129 @@
-/* P10 修正记录 —— 大字号、大点击区 */
+/* P10 修正记录 —— 基于 app.wxss 设计系统 v2 */
 
-.page {
-  padding: var(--space);
-  padding-bottom: 48rpx;
-  box-sizing: border-box;
-}
+.head { padding: 4rpx 4rpx 20rpx; }
 
 .head-title {
-  padding: 0 8rpx 20rpx;
   font-size: var(--fs-title);
   font-weight: 600;
   color: var(--c-ink);
 }
 
-.card {
-  padding: var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
+.head-sub {
+  margin-top: 4rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
 }
 
 /* —— 当前值 —— */
 
-.current-line {
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-}
+.cur-card { text-align: center; }
 
-.current-num {
-  font-size: var(--fs-title);
-  font-weight: 700;
-  color: var(--c-ink);
-}
-
-.source-line {
-  margin-top: 8rpx;
+.cur-cap {
   font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
+}
+
+.cur-num {
+  margin: 12rpx 0 8rpx;
+  font-size: var(--fs-big);
+  font-weight: 600;
+  color: var(--c-led);
+  font-variant-numeric: tabular-nums;
+}
+
+.split {
+  display: flex;
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 2rpx solid var(--c-border);
+}
+
+.split-item {
+  flex: 1;
+  text-align: center;
+}
+
+.split-label {
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
+}
+
+.split-value {
+  margin-top: 2rpx;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
 }
 
 /* —— 来源选择 —— */
 
-.section-label {
-  margin: var(--space) 8rpx 12rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-ink);
-}
-
-.source-row {
-  display: flex;
-}
-
-.source-btn {
-  flex: 1;
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  text-align: center;
-  font-size: var(--fs-title);
-  font-weight: 600;
-  color: var(--c-ink-secondary);
-  background: var(--c-card);
-  border: 2rpx solid var(--c-border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
-}
-
-.source-btn--right {
-  margin-left: 20rpx;
-}
-
-.source-btn--on {
-  color: #fff;
-  background: var(--c-primary);
-  border-color: var(--c-primary);
-}
-
 .hint {
-  margin: 12rpx 8rpx 0;
-  font-size: var(--fs-small);
-  color: var(--c-led);
+  margin: 14rpx 4rpx 0;
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
+  line-height: 1.6;
 }
 
 /* —— 修改为 —— */
 
-.card--gap {
+.input-card {
   margin-top: var(--space);
+  text-align: center;
 }
 
-.field {
-  display: flex;
-  align-items: center;
-  min-height: var(--btn-height);
-  border-bottom: 1rpx solid var(--c-border);
-  box-sizing: border-box;
-}
-
-.field-label {
-  width: 150rpx;
-  flex-shrink: 0;
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-}
-
-.field-input {
-  flex: 1;
-  min-width: 0;
-  height: 96rpx;
-  font-size: var(--fs-title);
-  font-weight: 700;
-  color: var(--c-ink);
-}
-
-.field-ph {
+.input-cap {
   font-size: var(--fs-small);
-  font-weight: 400;
-  color: var(--c-ink-secondary);
-  opacity: 0.7;
+  color: var(--c-ink-2);
 }
 
-.field-unit {
-  width: 80rpx;
+.input-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 8rpx 0 4rpx;
+}
+
+.big-input {
+  flex: none;
+  width: 320rpx;
+  height: 120rpx;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: var(--fs-big);
+  font-weight: 600;
+  color: var(--c-led);
+  font-variant-numeric: tabular-nums;
+}
+
+.big-ph {
+  color: var(--c-ink-3);
+  font-weight: 300;
+}
+
+.input-unit {
   flex-shrink: 0;
-  text-align: right;
+  margin-left: 12rpx;
   font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
 .from-line {
-  margin-top: 12rpx;
   font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
 .delta {
-  margin-top: 12rpx;
-  font-size: var(--fs-body);
+  margin-top: 20rpx;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--c-primary);
 }
 
 .error {
-  margin-top: 12rpx;
-  font-size: var(--fs-body);
+  margin-top: 20rpx;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--c-danger);
 }
@@ -151,61 +131,28 @@
 /* —— 规则 —— */
 
 .rules {
-  margin: var(--space) 8rpx;
-  font-size: var(--fs-small);
+  margin: 8rpx 8rpx 32rpx;
+  font-size: var(--fs-mini);
   line-height: 1.7;
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
-/* —— 按钮 —— */
+/* —— 确认按钮 —— */
 
-.btn-primary {
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  margin: 0;
-  padding: 0 20rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: #fff;
-  background: var(--c-primary);
-  border-radius: var(--radius);
-  text-align: center;
-  box-sizing: border-box;
-}
+.btn-primary { width: 100%; }
 
-.btn-primary::after {
-  border: none;
-}
-
-.btn-primary--off {
-  color: var(--c-ink-secondary);
-  background: var(--c-border);
+.btn.off {
+  background: var(--c-track);
+  color: var(--c-ink-3);
 }
 
 /* —— 已有修正 —— */
 
-.adj-section {
-  margin-top: 40rpx;
-}
+.adj-title { margin-top: 44rpx; }
 
-.adj-head {
-  padding: 0 8rpx 12rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-ink);
-}
+.adj-card { padding-top: 4rpx; padding-bottom: 4rpx; }
 
-.adj-row {
-  display: flex;
-  align-items: center;
-  min-height: 96rpx;
-  padding: 0 var(--space);
-  margin-bottom: 12rpx;
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
-}
+.adj-row { padding: 20rpx 4rpx; }
 
 .adj-text {
   flex: 1;
@@ -214,22 +161,13 @@
   color: var(--c-ink);
 }
 
-.adj-restore {
+.btn-sm {
   flex-shrink: 0;
-  margin-left: 16rpx;
-  min-width: 128rpx;
-  height: 68rpx;
-  line-height: 68rpx;
-  text-align: center;
-  font-size: var(--fs-small);
-  color: var(--c-primary);
-  border: 2rpx solid var(--c-primary);
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 28rpx;
+  margin-left: 20rpx;
+  font-size: var(--fs-mini);
+  font-weight: 500;
   border-radius: 12rpx;
-  box-sizing: border-box;
 }
-
-/* 沉静的留白、细分隔与统一操作尺寸。 */
-.card,.list { border-color:#E2E5DC; box-shadow:none; }
-.btn-main,.btn-primary,.btn-save,.card-btn { border-radius:20rpx; font-weight:500; }
-.sheet { max-height:85vh; overflow-y:auto; padding-bottom:calc(32rpx + env(safe-area-inset-bottom)); }
-.sheet-close { min-width:72rpx; min-height:72rpx; text-align:center; line-height:72rpx; }

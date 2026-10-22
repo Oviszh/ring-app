@@ -1,39 +1,219 @@
-/* 小程序以 page 为样式根节点。设计变量在所有页面继承。 */
-page {
-  --c-bg: #F6F5F0;
-  --c-card: #FDFCF9;
-  --c-ink: #26372E;
-  --c-ink-secondary: #687267;
-  --c-primary: #304D40;
-  --c-primary-weak: #E8EDE5;
-  --c-led: #304D40;
-  --c-success: #385D48;
-  --c-danger: #A14336;
-  --c-border: #DEE2D8;
-  --fs-hero: 112rpx;
+/* ============================================================
+   设计系统 v2 —— 现代 · 简洁 · 大方 · 老年可读
+   用法：页面用 .page 包裹，卡片 .card，按钮 .btn-*，列表行 .row，
+   弹层 .sheet-mask + .sheet，进度条 .progress + .progress-fill，
+   分段选择 .seg + .seg-item，空状态 .empty。
+   ============================================================ */
+
+:root {
+  /* 色板 */
+  --c-bg: #F6F5F2;            /* 暖纸底 */
+  --c-card: #FFFFFF;
+  --c-ink: #1B1917;           /* 主文字 */
+  --c-ink-2: #8B857C;         /* 次要文字 */
+  --c-ink-3: #B8B2A8;         /* 弱化/占位 */
+  --c-primary: #C05B2A;       /* 朱砂赭 */
+  --c-primary-deep: #A34A20;
+  --c-primary-weak: #F8ECE3;
+  --c-led: #1B1917;           /* 大数字用墨色（现代感） */
+  --c-success: #3E7C4F;
+  --c-warn: #D08A2E;
+  --c-danger: #C2402F;
+  --c-border: #ECE8E1;
+  --c-track: #EFECE6;         /* 进度条轨道 */
+
+  /* 字号 */
+  --fs-hero: 136rpx;          /* 计数大数字 */
+  --fs-big: 56rpx;
   --fs-title: 40rpx;
   --fs-body: 34rpx;
   --fs-small: 28rpx;
-  --btn-height: 100rpx;
+  --fs-mini: 24rpx;
+
+  /* 尺寸 */
+  --btn-height: 108rpx;
   --radius: 28rpx;
-  --space: 32rpx;
-  background: #F6F5F0;
-  color: #26372E;
-  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
-  font-size: 34rpx;
-  line-height: 1.6;
+  --radius-sm: 18rpx;
+  --space: 28rpx;
+  --page-x: 32rpx;
 }
-button { font-weight: 500; }
-button::after { border: none; }
-button[disabled] { opacity: .45; }
-input { min-height: 88rpx; }
-.page { padding-bottom: calc(48rpx + env(safe-area-inset-bottom)); }
-.page-heading { font-size: 54rpx; font-family: 'Songti SC', 'Noto Serif CJK SC', serif; font-weight: 600; letter-spacing: 3rpx; margin: 4rpx 0 36rpx; }
-.eyebrow { font-size: 26rpx; letter-spacing: 3rpx; color: #76735F; margin-top: 16rpx; }
-.muted { font-size: 28rpx; color: #687267; line-height: 1.8; }
-.card { background: #FDFCF9; border: 1rpx solid #DEE2D8; border-radius: 28rpx; }
-.card-title { font-size: 36rpx; font-weight: 600; margin-bottom: 16rpx; }
-.primary,.secondary { min-height: 100rpx; line-height: 100rpx; border-radius: 20rpx; font-size: 32rpx; padding: 0 28rpx; }
-.primary { background: #304D40; color: #FFFFFF; }
-.secondary { background: #E8EDE5; color: #304D40; }
-.quiet-footer { color: #687267; font-size: 26rpx; text-align: center; margin: 56rpx 0 16rpx; letter-spacing: 3rpx; }
+
+page {
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+/* —— 页面容器 —— */
+.page { padding: var(--space) var(--page-x) 48rpx; }
+
+/* —— 卡片 —— */
+.card {
+  background: var(--c-card);
+  border-radius: var(--radius);
+  padding: 32rpx;
+  box-shadow: 0 2rpx 16rpx rgba(27, 25, 23, 0.05);
+  margin-bottom: var(--space);
+}
+
+.section-title {
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+  margin: 8rpx 4rpx 16rpx;
+  font-weight: 500;
+}
+
+/* —— 按钮 —— */
+.btn {
+  height: var(--btn-height);
+  line-height: var(--btn-height);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-body);
+  font-weight: 600;
+  text-align: center;
+}
+.btn::after { border: none; }
+
+.btn-primary { background: var(--c-primary); color: #fff; }
+.btn-primary.btn-hover, .btn-primary:active { background: var(--c-primary-deep); }
+
+.btn-ghost { background: var(--c-primary-weak); color: var(--c-primary); }
+
+.btn-plain {
+  background: var(--c-card);
+  color: var(--c-ink);
+  border: 2rpx solid var(--c-border);
+}
+
+.btn-danger { background: #FBEEEC; color: var(--c-danger); }
+
+.btn[disabled] { opacity: 0.45; }
+
+.btn-row { display: flex; gap: 24rpx; }
+.btn-row .btn { flex: 1; }
+
+/* —— 列表行（卡片内） —— */
+.row {
+  display: flex;
+  align-items: center;
+  min-height: 112rpx;
+  padding: 20rpx 4rpx;
+  border-bottom: 2rpx solid var(--c-border);
+}
+.row:last-child { border-bottom: none; }
+.row-main { flex: 1; min-width: 0; }
+.row-title { font-size: var(--fs-body); font-weight: 500; }
+.row-sub { font-size: var(--fs-small); color: var(--c-ink-2); margin-top: 2rpx; }
+.row-arrow { color: var(--c-ink-3); font-size: var(--fs-body); margin-left: 16rpx; }
+.row-right { margin-left: 16rpx; color: var(--c-ink-2); font-size: var(--fs-small); }
+
+/* —— 底部弹层 —— */
+.sheet-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(27, 25, 23, 0.45);
+  z-index: 90;
+}
+.sheet {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 91;
+  background: var(--c-card);
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 40rpx 32rpx calc(40rpx + env(safe-area-inset-bottom));
+}
+.sheet-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8rpx;
+}
+.sheet-sub {
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+  text-align: center;
+  margin-bottom: 28rpx;
+}
+.sheet-close {
+  position: absolute;
+  right: 28rpx; top: 28rpx;
+  width: 64rpx; height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  font-size: 36rpx;
+  color: var(--c-ink-3);
+}
+
+/* —— 进度条 —— */
+.progress {
+  height: 16rpx;
+  border-radius: 8rpx;
+  background: var(--c-track);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 8rpx;
+  background: var(--c-primary);
+}
+
+/* —— 分段选择器（页签/选项） —— */
+.seg {
+  display: flex;
+  background: var(--c-track);
+  border-radius: var(--radius-sm);
+  padding: 8rpx;
+}
+.seg-item {
+  flex: 1;
+  text-align: center;
+  height: 76rpx;
+  line-height: 76rpx;
+  border-radius: 12rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+}
+.seg-item.on {
+  background: var(--c-card);
+  color: var(--c-ink);
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(27, 25, 23, 0.08);
+}
+
+/* —— 选项胶囊（弹层里选值） —— */
+.chips { display: flex; gap: 20rpx; flex-wrap: wrap; }
+.chip {
+  min-width: 160rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+  text-align: center;
+  border-radius: 16rpx;
+  background: var(--c-track);
+  color: var(--c-ink);
+  font-size: var(--fs-body);
+  padding: 0 28rpx;
+}
+.chip.on { background: var(--c-primary); color: #fff; font-weight: 600; }
+
+/* —— 空状态 —— */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 48rpx;
+  text-align: center;
+}
+.empty-title { font-size: var(--fs-title); font-weight: 600; margin-bottom: 12rpx; }
+.empty-sub { font-size: var(--fs-body); color: var(--c-ink-2); margin-bottom: 56rpx; line-height: 1.6; }
+
+/* —— 徽标/状态点 —— */
+.badge {
+  font-size: var(--fs-mini);
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background: var(--c-track);
+  color: var(--c-ink-2);
+}
+.badge-primary { background: var(--c-primary-weak); color: var(--c-primary); }

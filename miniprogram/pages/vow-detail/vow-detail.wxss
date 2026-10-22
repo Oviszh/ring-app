@@ -1,17 +1,9 @@
-/* P8 大愿详情：大字号、大点击区 */
-.page {
-  padding: var(--space) var(--space) 64rpx;
-  box-sizing: border-box;
-}
+/* P8 大愿详情 —— 基于 app.wxss 设计系统 v2 */
 
-/* —— 进行中 —— */
-
+/* —— 大字进度 —— */
 .hero {
-  padding: 40rpx var(--space) var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
   text-align: center;
+  padding: 48rpx 32rpx 36rpx;
 }
 
 .hero-nums {
@@ -22,115 +14,79 @@
 }
 
 .hero-now {
-  font-size: 64rpx;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--c-primary);
-  font-family: "DIN Alternate", "Courier New", monospace;
+  font-size: var(--fs-big);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: 1rpx;
+  color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .hero-sep {
   margin: 0 12rpx;
-  font-size: 40rpx;
-  color: var(--c-ink-secondary);
+  font-size: var(--fs-body);
+  color: var(--c-ink-3);
 }
 
 .hero-target {
-  font-size: 44rpx;
-  font-weight: 600;
-  color: var(--c-ink-secondary);
-  font-family: "DIN Alternate", "Courier New", monospace;
+  font-size: var(--fs-body);
+  color: var(--c-ink-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .hero-unit {
-  margin-top: 4rpx;
+  margin-top: 6rpx;
   font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
-.bar {
-  height: 20rpx;
-  margin-top: 28rpx;
-  background: var(--c-primary-weak);
-  border-radius: 999rpx;
-  overflow: hidden;
-}
+.hero-progress { margin-top: 36rpx; }
 
-.bar-fill {
-  height: 100%;
-  background: var(--c-primary);
-  border-radius: 999rpx;
-}
-
-.percent {
-  margin-top: 12rpx;
+.hero-pct {
+  margin-top: 14rpx;
   text-align: right;
-  font-size: 36rpx;
+  font-size: var(--fs-small);
   font-weight: 600;
   color: var(--c-primary);
+  font-variant-numeric: tabular-nums;
 }
 
+/* —— 发愿信息 —— */
 .meta-card {
-  margin-top: 20rpx;
-  padding: 8rpx var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-}
-
-.meta-row {
-  display: flex;
-  align-items: flex-start;
-  min-height: 88rpx;
-  padding: 20rpx 0;
-  border-bottom: 1rpx solid var(--c-border);
-  box-sizing: border-box;
-}
-
-.meta-row:last-child {
-  border-bottom: none;
+  padding-top: 8rpx;
+  padding-bottom: 8rpx;
 }
 
 .meta-label {
-  width: 150rpx;
   flex: none;
+  width: 210rpx;
   font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
 .meta-value {
   flex: 1;
   min-width: 0;
   font-size: var(--fs-body);
+  font-weight: 500;
+  text-align: right;
   line-height: 1.5;
-  color: var(--c-ink);
 }
 
 /* —— 近 30 日柱状图 —— */
-
-.chart-card {
-  margin-top: 20rpx;
-  padding: var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-}
+.chart-card { padding-bottom: 28rpx; }
 
 .chart-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 24rpx;
 }
 
-.section-title {
-  font-size: var(--fs-body);
-  font-weight: 600;
-}
+.chart-head .section-title { margin: 0 0 28rpx 0; }
 
 .chart-max {
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
 }
 
 .chart {
@@ -148,115 +104,71 @@
 }
 
 .chart-bar {
-  width: 64%;
-  min-height: 2rpx;
+  width: 12rpx;
   background: var(--c-primary);
-  border-radius: 4rpx 4rpx 0 0;
+  border-radius: 6rpx 6rpx 2rpx 2rpx;
 }
 
 .chart-bar--zero {
-  min-height: 4rpx;
-  background: var(--c-border);
+  background: var(--c-track);
+  border-radius: 2rpx;
 }
 
 .chart-axis {
   display: flex;
   justify-content: space-between;
-  margin-top: 12rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  margin-top: 16rpx;
+  padding-top: 14rpx;
+  border-top: 2rpx solid var(--c-border);
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
 }
 
 /* —— 操作 —— */
+.actions { margin-top: 12rpx; }
 
-.actions {
-  display: flex;
-  margin-top: 40rpx;
-}
-
-.actions .btn-secondary,
-.actions .btn-danger {
-  flex: 1;
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  margin: 0;
-  padding: 0 16rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  border-radius: var(--radius);
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.actions .btn-secondary {
-  margin-right: 20rpx;
-  color: var(--c-primary);
-  background: var(--c-card);
-  border: 2rpx solid var(--c-primary);
-}
-
-.actions .btn-danger {
-  color: var(--c-danger);
-  background: var(--c-card);
-  border: 2rpx solid var(--c-danger);
-}
-
-.actions .btn-secondary::after,
-.actions .btn-danger::after {
-  border: none;
-}
-
-/* —— 已圆满 —— */
-
+/* —— 圆满态 —— */
 .done-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80rpx;
-  padding: 80rpx var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
+  text-align: center;
+  padding: 80rpx 40rpx 56rpx;
+  margin-top: 40rpx;
+}
+
+.done-emoji {
+  font-size: 88rpx;
+  line-height: 1;
+  margin-bottom: 24rpx;
 }
 
 .done-title {
-  font-size: 56rpx;
-  font-weight: 700;
+  font-size: var(--fs-title);
+  font-weight: 600;
   color: var(--c-success);
 }
 
 .done-sub {
-  margin-top: 20rpx;
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-  text-align: center;
+  margin-top: 16rpx;
+  font-size: var(--fs-big);
+  font-weight: 300;
+  color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
 }
 
-.btn-primary {
-  width: 100%;
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  margin: 64rpx 0 0;
-  padding: 0 20rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: #fff;
-  background: var(--c-primary);
-  border-radius: var(--radius);
-  text-align: center;
-  box-sizing: border-box;
+.done-meta {
+  margin-top: 8rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
 }
 
-.btn-primary::after {
-  border: none;
-}
-
-.done-card .btn-primary {
+.done-btn {
   width: 70%;
+  margin-top: 56rpx;
 }
 
-/* 沉静的留白、细分隔与统一操作尺寸。 */
-.card,.list { border-color:#E2E5DC; box-shadow:none; }
-.btn-main,.btn-primary,.btn-save,.card-btn { border-radius:20rpx; font-weight:500; }
-.sheet { max-height:85vh; overflow-y:auto; padding-bottom:calc(32rpx + env(safe-area-inset-bottom)); }
-.sheet-close { min-width:72rpx; min-height:72rpx; text-align:center; line-height:72rpx; }
+.done-actions {
+  width: 100%;
+  margin-top: 24rpx;
+}

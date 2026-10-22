@@ -1,184 +1,116 @@
-/* P11 新建 / 修改大愿：大字号、大点击区 */
-.page {
-  padding: var(--space) var(--space) 64rpx;
-  box-sizing: border-box;
-}
+/* P11 新建 / 修改大愿 —— 基于 app.wxss 设计系统 v2 */
 
-.card {
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  padding: 0 var(--space);
-}
+.form-page { padding-bottom: 220rpx; }
 
+.form-card { padding-top: 8rpx; padding-bottom: 8rpx; }
+
+picker { display: block; }
+
+/* —— 表单行：左标签、右控件 —— */
 .row {
-  padding: 8rpx 0 16rpx;
-  border-bottom: 1rpx solid var(--c-border);
-}
-
-.row:last-child {
+  padding: 24rpx 4rpx;
   border-bottom: none;
 }
 
-.picker {
-  display: block;
-}
-
-.field {
-  display: flex;
-  align-items: center;
-  min-height: var(--btn-height);
-  box-sizing: border-box;
-}
-
-.field-disabled {
-  opacity: 0.6;
-}
-
-.sub-field {
-  min-height: 88rpx;
-  margin-bottom: 8rpx;
-  padding: 0 20rpx;
-  background: var(--c-primary-weak);
-  border-radius: 12rpx;
-}
-
-.label {
-  width: 180rpx;
+.f-label {
   flex: none;
+  width: 190rpx;
   font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
-.value {
+.f-value {
   flex: 1;
   min-width: 0;
   font-size: var(--fs-body);
-  color: var(--c-ink);
+  font-weight: 500;
+  text-align: right;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.f-value.muted { color: var(--c-ink-2); font-weight: 400; }
 
-.arrow {
-  flex: none;
-  margin-left: 8rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
-
-.num-input {
+.f-input {
   flex: 1;
   min-width: 0;
-  height: 88rpx;
+  height: 72rpx;
   font-size: 44rpx;
-  font-weight: 700;
+  font-weight: 600;
+  text-align: right;
   color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
 }
+.f-input-text { font-size: var(--fs-body); font-weight: 500; }
 
-.text-input {
-  flex: 1;
-  min-width: 0;
-  height: 88rpx;
-  font-size: var(--fs-body);
-  color: var(--c-ink);
-}
-
-.ph {
+.f-ph {
   font-size: var(--fs-small);
   font-weight: 400;
-  color: var(--c-ink-secondary);
-  opacity: 0.7;
+  color: var(--c-ink-3);
 }
 
-.unit {
+.f-unit {
   flex: none;
   margin-left: 12rpx;
   font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
+/* —— 二级日期选择 —— */
+.sub-row {
+  display: flex;
+  align-items: center;
+  min-height: 96rpx;
+  margin: 0 0 16rpx;
+  padding: 0 24rpx;
+  background: var(--c-bg);
+  border-radius: var(--radius-sm);
+}
+
+/* —— 说明文字 —— */
 .note {
-  padding-left: 180rpx;
-  font-size: var(--fs-small);
-  line-height: 1.5;
-  color: var(--c-ink-secondary);
+  padding: 0 4rpx 18rpx 190rpx;
+  font-size: var(--fs-mini);
+  line-height: 1.6;
+  color: var(--c-ink-2);
 }
 
 .note-strong {
-  margin-top: 4rpx;
   color: var(--c-primary);
-}
-
-.submit {
-  width: 100%;
-  height: 112rpx;
-  line-height: 112rpx;
-  margin: 48rpx 0 0;
-  padding: 0;
-  font-size: var(--fs-title);
-  font-weight: 600;
-  color: #fff;
-  background: var(--c-primary);
-  border-radius: var(--radius);
-}
-
-.submit::after {
-  border: none;
+  font-weight: 500;
 }
 
 .foot-note {
-  margin-top: 24rpx;
+  padding: 8rpx 16rpx 0;
   text-align: center;
-  font-size: var(--fs-small);
-  line-height: 1.6;
-  color: var(--c-ink-secondary);
+  font-size: var(--fs-mini);
+  line-height: 1.7;
+  color: var(--c-ink-2);
 }
 
-.btn-primary {
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  margin: 0;
-  padding: 0 20rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: #fff;
-  background: var(--c-primary);
-  border-radius: var(--radius);
-  text-align: center;
-  box-sizing: border-box;
+/* —— 置底提交 —— */
+.submit-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20rpx 32rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: rgba(246, 245, 242, 0.96);
+  box-shadow: 0 -2rpx 16rpx rgba(27, 25, 23, 0.06);
 }
 
-.btn-primary::after {
-  border: none;
-}
-
-.empty-wrap {
+/* —— 空态 —— */
+.empty-mark {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: var(--c-primary-weak);
+  color: var(--c-primary);
+  font-size: 72rpx;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 160rpx var(--space);
+  justify-content: center;
+  margin-bottom: 40rpx;
 }
 
-.empty-title {
-  font-size: var(--fs-title);
-  font-weight: 600;
-  margin-bottom: 16rpx;
-}
-
-.empty-sub {
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-  margin-bottom: 64rpx;
-  text-align: center;
-}
-
-.empty-btn {
-  width: 60%;
-}
-
-/* 沉静的留白、细分隔与统一操作尺寸。 */
-.card,.list { border-color:#E2E5DC; box-shadow:none; }
-.btn-main,.btn-primary,.btn-save,.card-btn { border-radius:20rpx; font-weight:500; }
-.sheet { max-height:85vh; overflow-y:auto; padding-bottom:calc(32rpx + env(safe-area-inset-bottom)); }
-.sheet-close { min-width:72rpx; min-height:72rpx; text-align:center; line-height:72rpx; }
+.empty-btn { width: 60%; }

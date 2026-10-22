@@ -1,0 +1,65 @@
+/* P12-L 设备列表——白卡片、大留白、克制用色 */
+
+.list-card {
+  padding: 4rpx 32rpx;
+}
+
+.device-row {
+  padding: 24rpx 4rpx;
+}
+
+.row-hover {
+  background: var(--c-primary-weak);
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  max-width: 46%;
+  margin-left: 16rpx;
+}
+
+.badge-warn {
+  background: #FBEEE2;
+  color: var(--c-warn);
+}
+
+.btn-block {
+  width: 100%;
+  margin: 8rpx 0 0;
+}
+
+.foot-note {
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
+  line-height: 1.8;
+  padding: 32rpx 8rpx 0;
+}
+
+/* —— P12-B 空态 —— */
+.empty-mark {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: var(--c-primary-weak);
+  color: var(--c-primary);
+  font-size: 64rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40rpx;
+}
+
+.btn-bind {
+  width: 70%;
+  margin: 0 0 8rpx;
+}
+
+.empty-link {
+  margin-top: 40rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+}

@@ -13,5 +13,6 @@ module.exports = {
   ...require('./adjustment'),
   ...require('./vow'),
   ...require('./deviceSync'),
+  ...require('./device'),
   ...require('./stats')
 }

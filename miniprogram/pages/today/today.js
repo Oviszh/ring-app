@@ -1,33 +1,34 @@
-// 今日 Tab（P1）：空状态 P1-F；仅手机计数态 P1-E；纯填报模式 P1-G；填报弹层 E3
+// 今日 Tab（P1）：空状态 P1-F / 计数态（含戒指页签 P1-A）/ 纯填报 P1-G / 填报弹层 E3
 const { fmtNum, fmtDayCN, fmtMinutes } = require('../../utils/format')
 
 const store = getApp().globalData.store
-const PHONE = 'phone'
 
 function nameOf(practice) {
   return practice.displayName || practice.name
 }
 
-// 首页只显示 showOnHome 的功课；当前正在计数的功课即使被隐藏也保留在列表里
+// 首页只显示 showOnHome 的功课；正在计数的功课即使被隐藏也保留在列表里
 function visiblePractices() {
   const list = store.homePractices()
-  const ctx = store.context(PHONE)
-  const current = ctx ? store.getPractice(ctx.practiceId) : null
-  if (current && !list.some(p => p.id === current.id)) {
-    list.push(current)
-    list.sort((a, b) => a.sort - b.sort)
+  for (const side of ['ring', 'phone']) {
+    const ctx = store.context(side)
+    const current = ctx ? store.getPractice(ctx.practiceId) : null
+    if (current && !list.some(p => p.id === current.id)) {
+      list.push(current)
+      list.sort((a, b) => a.sort - b.sort)
+    }
   }
   return list
 }
 
-// 目标页尚未实现时给个明确提示，避免点了没反应
-function navTo(url) {
-  wx.navigateTo({
-    url,
-    fail() {
-      wx.showToast({ title: '页面开发中', icon: 'none' })
-    }
-  })
+function syncTextOf(device) {
+  if (!device || !device.lastSyncAt) return '未同步'
+  const diff = Date.now() - device.lastSyncAt
+  if (diff < 60000) return '刚刚同步'
+  if (diff < 3600000) return `${Math.floor(diff / 60000)} 分钟前同步`
+  const d = new Date(device.lastSyncAt)
+  const p = n => (n < 10 ? '0' + n : '' + n)
+  return `${p(d.getHours())}:${p(d.getMinutes())} 同步`
 }
 
 Page({
@@ -35,16 +36,26 @@ Page({
     empty: true,
     emptyHidden: false,
     todayKey: '',
+    dateLabel: '',
 
     phoneEnabled: true,
     fillOnly: false,
+
+    // 戒指页签
+    hasRing: false,
+    side: 'phone',
+    deviceName: '',
+    ringLocked: false,
+    syncText: '',
 
     currentName: '',
     currentPracticeId: '',
     currentIndex: 0,
     canSwitch: false,
     ledText: '0',
-    todayText: '今日累积 0',
+    ledCaption: '',
+    todayText: '',
+    isTime: false,
 
     practices: [],
 
@@ -84,9 +95,15 @@ Page({
     const all = store.practices()
     const list = visiblePractices()
     const today = store.todayKey()
+    const device = store.currentDevice()
+    const hasRing = !!device && store.state.settings.ringEnabled !== false
     const phoneEnabled = store.state.settings.phoneEnabled !== false
-    // P1-G：戒指未绑定且手机计数入口关闭 → 只留手动填报
-    const fillOnly = !phoneEnabled
+    // P1-G：戒指与手机计数入口都不可用 → 只留手动填报
+    const fillOnly = !hasRing && !phoneEnabled
+    // 当前查看侧：无戒指时固定手机；有戒指时记住用户选择
+    let side = this.data.side
+    if (!hasRing && side !== 'phone') side = 'phone'
+    if (hasRing && !side) side = 'ring'
 
     if (!list.length) {
       this.setData({
@@ -96,44 +113,57 @@ Page({
         todayKey: today,
         practices: [],
         entryVisible: false,
-        phoneEnabled,
-        fillOnly
+        hasRing, side, phoneEnabled, fillOnly,
+        deviceName: device ? device.name : '',
+        ringLocked: device ? !!device.locked : false,
+        syncText: syncTextOf(device)
       })
       return
     }
 
-    const ctx = store.context(PHONE)
+    const ctx = store.context(side)
     let current = ctx ? list.find(p => p.id === ctx.practiceId) : null
     if (!current) current = list[0]
 
-    const rows = list.map(p => ({
-      id: p.id,
-      name: nameOf(p),
-      current: p.id === current.id,
-      progressText: this.progressText(store.dayTotals(today, p.id)),
-      percent: (() => { const t = store.dayTotals(today,p.id); return t && t.target ? Math.min(100,t.total/t.target*100) : 0 })()
-    }))
+    const rows = list.map(p => {
+      const t = store.dayTotals(today, p.id)
+      return {
+        id: p.id,
+        name: nameOf(p),
+        current: p.id === current.id,
+        progressText: this.progressText(t),
+        barStyle: `width: ${t && t.target ? Math.min(100, Math.round(t.total / t.target * 100)) : 0}%;`
+      }
+    })
 
     const totals = store.dayTotals(today, current.id)
-    const roundCount = ctx && ctx.practiceId === current.id ? ctx.roundCount : 0
+    const isCurrentCtx = ctx && ctx.practiceId === current.id
+    const roundCount = isCurrentCtx ? ctx.roundCount : 0
+    const sideLabel = side === 'ring' ? '戒指' : '手机'
+    const isTime = current.type === 'time'
 
     this.setData({
       dateLabel: fmtDayCN(today),
-      isTime: current.type === 'time',
       empty: false,
       emptyHidden: false,
       todayKey: today,
+      hasRing, side, phoneEnabled, fillOnly,
+      deviceName: device ? device.name : '',
+      ringLocked: device ? !!device.locked : false,
+      syncText: syncTextOf(device),
       currentName: nameOf(current),
       currentPracticeId: current.id,
       currentIndex: list.indexOf(current),
       canSwitch: list.length > 1,
-      ledText: current.type === 'time' ? (ctx && ctx.practiceId === current.id ? Math.floor(store.elapsed('phone') / 60000) : 0) : fmtNum(roundCount),
-      todayText: totals.isDuration
+      isTime,
+      ledText: isTime
+        ? (isCurrentCtx ? Math.floor(store.elapsed(side) / 60000) : 0)
+        : fmtNum(roundCount),
+      ledCaption: isTime ? `本座分钟 · ${sideLabel}` : `本轮计数 · ${sideLabel}`,
+      todayText: totals && totals.isDuration
         ? `今日 ${fmtMinutes(totals.durationMin)}`
-        : `手机今日 ${fmtNum(totals.phone)} ${current.unit}`,
-      practices: rows,
-      phoneEnabled,
-      fillOnly
+        : `${sideLabel}今日 ${fmtNum(totals ? totals[side] : 0)} ${current.unit || '声'} · 全天 ${fmtNum(totals ? totals.total : 0)}`,
+      practices: rows
     })
   },
 
@@ -144,38 +174,76 @@ Page({
     return `今日 ${fmtNum(totals.total)}/${fmtNum(totals.target)}`
   },
 
+  // —— 戒指/手机页签 ——
+
+  onSideTab(e) {
+    const side = e.currentTarget.dataset.side
+    if (!side || side === this.data.side) return
+    this.setData({ side }, () => this.refresh())
+  },
+
+  onRingLock() {
+    const device = store.currentDevice()
+    if (!device) return
+    const target = !device.locked
+    wx.showModal({
+      title: target ? '锁定戒指？' : '解锁戒指？',
+      content: target ? '锁定后戒指触摸停用，防误触' : '解锁后恢复触摸计数',
+      confirmText: target ? '锁定' : '解锁',
+      success: res => {
+        if (!res.confirm) return
+        store.ringSetLocked(target).catch(() => {
+          wx.showToast({ title: '戒指未连接', icon: 'none' })
+        })
+      }
+    })
+  },
+
+  onRingSync() {
+    wx.showLoading({ title: '同步中', mask: true })
+    store.ringSync()
+      .then(r => {
+        wx.hideLoading()
+        wx.showToast({ title: r && r.ok ? '同步完成' : '戒指未连接', icon: 'none' })
+      })
+      .catch(() => {
+        wx.hideLoading()
+        wx.showToast({ title: '戒指未连接', icon: 'none' })
+      })
+  },
+
   // —— 切换当前功课（切换即清零本轮） ——
 
-  onPrevPractice() {
-    this.switchBy(-1)
-  },
-
-  onNextPractice() {
-    this.switchBy(1)
-  },
+  onPrevPractice() { this.switchBy(-1) },
+  onNextPractice() { this.switchBy(1) },
 
   switchBy(delta) {
     const list = visiblePractices()
     if (list.length < 2) return
 
+    const side = this.data.side
     const target = list[(this.data.currentIndex + delta + list.length) % list.length]
-    const ctx = store.context(PHONE)
+    const ctx = store.context(side)
     if (ctx && ctx.practiceId === target.id) return
 
     const start = () => {
-      store.startRound(PHONE, target.id)
+      if (side === 'ring') {
+        store.ringStartRound(target.id).catch(() => {
+          wx.showToast({ title: '戒指未连接', icon: 'none' })
+        })
+      } else {
+        store.startRound('phone', target.id)
+      }
       this.refresh()
     }
 
-    if (ctx && (ctx.roundCount > 0 || ctx.reminder || store.getPractice(ctx.practiceId).type === 'time')) {
+    if (ctx && (ctx.roundCount > 0 || ctx.reminder || (store.getPractice(ctx.practiceId) || {}).type === 'time')) {
       wx.showModal({
         title: '切换功课？',
         content: '切换将结束本轮并取消原提醒，今日累积不受影响',
         confirmText: '切换',
         cancelText: '取消',
-        success: res => {
-          if (res.confirm) start()
-        }
+        success: res => { if (res.confirm) start() }
       })
     } else {
       start()
@@ -185,8 +253,8 @@ Page({
   // —— 跳转 ——
 
   goWoodfish() {
-    const ctx=store.context('phone')
-    if(!ctx) store.startRound('phone',this.data.currentPracticeId)
+    const ctx = store.context('phone')
+    if (!ctx) store.startRound('phone', this.data.currentPracticeId)
     wx.navigateTo({ url: '/pages/woodfish/woodfish' })
   },
 
@@ -195,17 +263,17 @@ Page({
   },
 
   goSettings() {
-    navTo('/pages/settings/settings')
+    wx.navigateTo({ url: '/pages/settings/settings' })
   },
 
   onPracticeTap(e) {
     const id = e.currentTarget.dataset.id
     if (!id) return
-    navTo(`/pages/practice-detail/practice-detail?id=${id}`)
+    wx.navigateTo({ url: `/pages/practice-detail/practice-detail?id=${id}` })
   },
 
   onConfig() {
-    navTo('/pages/practice-manage/practice-manage')
+    wx.navigateTo({ url: '/pages/practice-manage/practice-manage' })
   },
 
   // —— E3 填报弹层 ——
@@ -259,13 +327,8 @@ Page({
     this.setData({ entryAmount: e.detail.value })
   },
 
-  saveEntry() {
-    this.submitEntry(true)
-  },
-
-  saveEntryAndContinue() {
-    this.submitEntry(false)
-  },
+  saveEntry() { this.submitEntry(true) },
+  saveEntryAndContinue() { this.submitEntry(false) },
 
   submitEntry(close) {
     const amount = Number(this.data.entryAmount)
@@ -292,7 +355,7 @@ Page({
     else {
       const index = (this.data.entryPracticeIndex + 1) % this.data.entryPractices.length
       const next = this.data.entryPractices[index]
-      this.setData({ entryAmount: '', entryPracticeIndex:index, entryPracticeName:next.name, entryUnit:next.unit })
+      this.setData({ entryAmount: '', entryPracticeIndex: index, entryPracticeName: next.name, entryUnit: next.unit })
     }
   },
 

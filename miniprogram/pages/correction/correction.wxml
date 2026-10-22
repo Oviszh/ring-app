@@ -1,25 +1,40 @@
 <!-- P10 修正记录：来源选择（戒指/手机）+ 只许减少 + 已有修正可恢复 -->
 <view class="page">
-  <view class="head-title">修正 · {{dateLabel}}<text wx:if="{{practiceName}}"> · {{practiceName}}</text></view>
-
-  <!-- 当前值 -->
-  <view class="card">
-    <view class="current-line">
-      当前：<text class="current-num">{{totalText}}</text>
-    </view>
-    <view class="source-line">戒指 {{ringText}} · 手机 {{phoneText}} · 手动 {{manualText}}</view>
+  <view class="head">
+    <view class="head-title">修正计数</view>
+    <view class="head-sub">{{dateLabel}}<text wx:if="{{practiceName}}"> · {{practiceName}}</text></view>
   </view>
 
-  <!-- 来源选择：AGENTS.md 要求必须有，定稿线框缺 -->
-  <view class="section-label">选择要修正的来源</view>
-  <view class="source-row">
+  <!-- 当前值 + 来源拆分 -->
+  <view class="card cur-card">
+    <view class="cur-cap">当日总数</view>
+    <view class="cur-num">{{totalText}}</view>
+    <view class="split">
+      <view class="split-item">
+        <view class="split-label">戒指</view>
+        <view class="split-value">{{ringText}}</view>
+      </view>
+      <view class="split-item">
+        <view class="split-label">手机</view>
+        <view class="split-value">{{phoneText}}</view>
+      </view>
+      <view class="split-item">
+        <view class="split-label">手动</view>
+        <view class="split-value">{{manualText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 来源选择（AGENTS.md 要求必须有，定稿线框缺） -->
+  <view class="section-title">选择要修正的来源</view>
+  <view class="seg">
     <view
-      class="source-btn {{source === 'ring' ? 'source-btn--on' : ''}}"
+      class="seg-item {{source === 'ring' ? 'on' : ''}}"
       data-source="ring"
       bindtap="onSourceTap"
     >戒指</view>
     <view
-      class="source-btn source-btn--right {{source === 'phone' ? 'source-btn--on' : ''}}"
+      class="seg-item {{source === 'phone' ? 'on' : ''}}"
       data-source="phone"
       bindtap="onSourceTap"
     >手机</view>
@@ -28,18 +43,18 @@
   <view wx:if="{{isDuration}}" class="hint">计时型功课只计时：戒指 / 手机计数恒为 0，通常无需修正</view>
 
   <!-- 修改为 -->
-  <view class="card card--gap">
-    <view class="field">
-      <text class="field-label">修改为</text>
+  <view class="card input-card">
+    <view class="input-cap">{{sourceLabel}}来源 · 修改为</view>
+    <view class="input-line">
       <input
-        class="field-input"
+        class="big-input"
         type="number"
         value="{{toValue}}"
-        placeholder="输入该来源修正后的净值"
-        placeholder-class="field-ph"
+        placeholder="0"
+        placeholder-class="big-ph"
         bindinput="onInput"
       />
-      <text class="field-unit">{{unit}}</text>
+      <text class="input-unit">{{unit}}</text>
     </view>
     <view class="from-line">{{sourceLabel}}来源当前 {{fromText}} {{unit}}</view>
 
@@ -50,14 +65,16 @@
   <!-- 规则说明（P10 定稿） -->
   <view class="rules">规则：戒指 / 手机计数只许减少；如需增加，请返回用「填报」。填报记本次新增数量、可整笔撤销；修正只用于纠错、可单独恢复。</view>
 
-  <button class="btn-primary {{canConfirm ? '' : 'btn-primary--off'}}" bindtap="onConfirm">确认修正</button>
+  <button class="btn btn-primary {{canConfirm ? '' : 'off'}}" bindtap="onConfirm">确认修正</button>
 
   <!-- 已有修正 -->
-  <view wx:if="{{adjustments.length}}" class="adj-section">
-    <view class="adj-head">该日已有修正</view>
-    <view wx:for="{{adjustments}}" wx:key="id" class="adj-row">
-      <text class="adj-text">{{item.text}}</text>
-      <view class="adj-restore" data-id="{{item.id}}" bindtap="onRestore">恢复</view>
+  <block wx:if="{{adjustments.length}}">
+    <view class="section-title adj-title">该日已有修正</view>
+    <view class="card adj-card">
+      <view wx:for="{{adjustments}}" wx:key="id" class="row adj-row">
+        <view class="adj-text">{{item.text}}</view>
+        <view class="btn btn-ghost btn-sm" data-id="{{item.id}}" catchtap="onRestore">恢复</view>
+      </view>
     </view>
-  </view>
+  </block>
 </view>

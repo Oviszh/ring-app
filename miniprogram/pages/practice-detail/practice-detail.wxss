@@ -1,422 +1,227 @@
-.page {
-  min-height: 100vh;
-  padding: 0 var(--space) 48rpx;
-  box-sizing: border-box;
-}
+/* 功课详情页（P3）—— 基于 app.wxss 设计系统 v2 */
 
 .topbar {
-  height: 72rpx;
+  height: 88rpx;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  margin-bottom: 4rpx;
 }
 
 .more {
   width: 88rpx;
-  height: 72rpx;
-  line-height: 64rpx;
+  height: 88rpx;
+  line-height: 80rpx;
   text-align: center;
-  font-size: 52rpx;
-  color: var(--c-ink-secondary);
+  font-size: 44rpx;
+  color: var(--c-ink-2);
+  border-radius: 50%;
 }
-
-.more-hover {
-  opacity: 0.6;
-}
+.more-hover { background: var(--c-card); }
 
 /* —— 状态区 —— */
-.status {
-  padding: 24rpx;
-  border-radius: var(--radius);
-  border: 1rpx solid var(--c-border);
-  background: var(--c-card);
-}
-
-.status--active {
-  background: var(--c-primary-weak);
-  border-color: var(--c-primary);
-}
+.status-card { padding: 28rpx 32rpx; }
+.status-card.is-active { background: var(--c-primary-weak); }
+.status-card.is-active .status-reminder .badge { background: var(--c-card); }
 
 .status-text {
   font-size: var(--fs-body);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.5;
 }
 
-.reminder-text {
-  margin-top: 12rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-primary);
+.status-reminder {
+  margin-top: 18rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
-
-.btn-cancel {
-  width: 100%;
-  height: 88rpx;
-  line-height: 84rpx;
-  margin: 20rpx 0 0;
-  padding: 0;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-primary);
-  background: var(--c-card);
-  border: 2rpx solid var(--c-primary);
-  border-radius: var(--radius);
-  box-sizing: border-box;
-}
-
-/* —— 卡片 —— */
-.card {
-  margin-top: var(--space);
-  padding: var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-}
-
-.card-label {
+.status-reminder .badge {
+  padding: 12rpx 20rpx;
   font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  text-align: center;
 }
-
-.card-title {
-  margin-bottom: 8rpx;
-  font-size: var(--fs-title);
-  font-weight: 600;
+.reminder-cancel {
+  margin-top: 6rpx;
+  min-height: 80rpx;
+  line-height: 80rpx;
+  font-size: var(--fs-small);
+  color: var(--c-primary);
 }
 
 /* —— 今日累积 —— */
+.card-label {
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+}
+
 .today-main {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  margin-top: 8rpx;
+  margin-top: 4rpx;
 }
-
 .today-total {
-  font-size: 88rpx;
+  font-size: var(--fs-big);
   line-height: 1.15;
-  font-weight: 700;
+  font-weight: 200;
+  letter-spacing: 1rpx;
   color: var(--c-led);
   font-variant-numeric: tabular-nums;
 }
-
 .today-target {
-  font-size: 48rpx;
-  font-weight: 600;
-  color: var(--c-ink-secondary);
+  margin-left: 12rpx;
+  font-size: var(--fs-body);
+  font-weight: 300;
+  color: var(--c-ink-2);
 }
-
 .today-unit {
   margin-left: 10rpx;
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-}
-
-.progress {
-  height: 22rpx;
-  margin-top: 20rpx;
-  background: var(--c-border);
-  border-radius: 999rpx;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--c-primary);
-  border-radius: 999rpx;
-  transition: width 200ms ease-out;
-}
-
-.progress-meta {
-  margin-top: 8rpx;
-  text-align: right;
   font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
 
-.breakdown {
-  margin-top: 16rpx;
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-}
-
-/* —— 开启新一轮 —— */
-.field {
+.today-progress {
   display: flex;
   align-items: center;
-  min-height: 104rpx;
-  border-top: 1rpx solid var(--c-border);
-  box-sizing: border-box;
+  gap: 20rpx;
+  margin-top: 24rpx;
+}
+.today-progress .progress { flex: 1; }
+.today-percent {
+  flex-shrink: 0;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+  font-variant-numeric: tabular-nums;
 }
 
-.field-tap {
+.today-breakdown { margin-top: 20rpx; }
+
+/* —— 开启新一轮 —— */
+.start-card { padding-bottom: 32rpx; }
+
+.card-title {
+  margin-bottom: 4rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+}
+
+.start-card .row { padding-left: 4rpx; padding-right: 4rpx; }
+.no-border { border-bottom: none; }
+
+.row-hover {
+  background: var(--c-primary-weak);
   border-radius: 12rpx;
 }
 
-.field-hover {
-  background: var(--c-primary-weak);
-}
-
-.field-label {
-  width: 190rpx;
-  flex-shrink: 0;
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-}
-
-.field-value {
-  flex: 1;
-  min-width: 0;
-  font-size: var(--fs-body);
-  color: var(--c-ink);
-}
-
-.field-arrow {
-  flex-shrink: 0;
-  margin-left: 8rpx;
-  font-size: 44rpx;
-  line-height: 1;
-  color: var(--c-ink-secondary);
-}
-
-.method-on {
+.method {
+  font-size: var(--fs-small);
   color: var(--c-primary);
-  font-weight: 600;
 }
 
-.btn-main {
+.start-btn {
   width: 100%;
-  height: 120rpx;
-  line-height: 120rpx;
-  margin: 24rpx 0 0;
-  padding: 0 20rpx;
-  font-size: 38rpx;
-  font-weight: 600;
-  color: #fff;
-  background: var(--c-primary);
-  border-radius: var(--radius);
-}
-
-button::after {
-  border: none;
+  margin-top: 28rpx;
 }
 
 /* —— 长期大愿 —— */
-.vow {
-  margin-top: 16rpx;
-  padding: 8rpx 12rpx 12rpx;
-  border-radius: 12rpx;
-}
+.vow { padding-top: 12rpx; }
 
 .vow-head {
   display: flex;
   align-items: center;
 }
-
 .vow-name {
   flex: 1;
   min-width: 0;
-  font-size: var(--fs-body);
-  font-weight: 600;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
 .vow-nums {
-  margin-top: 8rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-ink);
+  margin: 14rpx 0 20rpx;
+  font-size: var(--fs-title);
+  font-weight: 300;
+  letter-spacing: 1rpx;
+  color: var(--c-led);
+  font-variant-numeric: tabular-nums;
+}
+.vow-slash {
+  font-size: var(--fs-small);
+  font-weight: 400;
+  color: var(--c-ink-2);
 }
 
-.vow-meta {
-  margin-top: 8rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
+.vow-meta { margin-top: 16rpx; }
 
 .vow-add {
-  margin-top: 16rpx;
+  margin-top: 8rpx;
   min-height: var(--btn-height);
   line-height: var(--btn-height);
   text-align: center;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-primary);
   border: 2rpx dashed var(--c-border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
+  color: var(--c-primary);
+  font-size: var(--fs-body);
 }
 
 /* —— 近 7 日 —— */
 .recent-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
 }
-
 .recent-legend {
-  font-size: 24rpx;
-  color: var(--c-ink-secondary);
+  font-size: var(--fs-mini);
+  color: var(--c-ink-3);
 }
 
 .days {
   display: flex;
-  margin-top: 16rpx;
+  margin-top: 24rpx;
 }
-
 .day {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
-.day-symbol {
-  font-size: 44rpx;
+.day-dot {
+  font-size: 32rpx;
   line-height: 1.2;
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-3);
 }
+.day-dot--met { color: var(--c-primary); }
+.day-dot--partial { color: var(--c-primary); opacity: 0.5; }
+.day-dot--missed { color: var(--c-ink-3); }
+.day-dot--none { color: var(--c-border); }
 
 .day-label {
-  margin-top: 4rpx;
-  font-size: 24rpx;
-  color: var(--c-ink-secondary);
-}
-
-.day--met .day-symbol {
-  color: var(--c-success);
-}
-
-.day--partial .day-symbol {
-  color: var(--c-primary);
-}
-
-.day--missed .day-symbol {
-  color: var(--c-ink-secondary);
-}
-
-.day--none .day-symbol {
-  color: var(--c-border);
+  margin-top: 10rpx;
+  font-size: var(--fs-mini);
+  color: var(--c-ink-3);
 }
 
 /* —— 底部入口 —— */
-.footer-links {
-  display: flex;
-  margin-top: var(--space);
-}
+.footer-links { margin-top: 8rpx; }
 
-.footer-link {
-  flex: 1;
-  min-height: var(--btn-height);
-  line-height: var(--btn-height);
-  text-align: center;
-  font-size: var(--fs-body);
-  color: var(--c-primary);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  margin-right: 16rpx;
-}
-
-.footer-link:last-child {
-  margin-right: 0;
-}
-
-/* —— E1 弹层 —— */
-.sheet-mask {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 100;
-  background: rgba(31, 27, 22, 0.45);
-  display: flex;
-  align-items: flex-end;
-}
-
+/* —— E1 提醒目标弹层 —— */
 .sheet {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 32rpx var(--space) 24rpx;
-  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
-  background: var(--c-card);
-  border-radius: 32rpx 32rpx 0 0;
+  max-height: 88vh;
+  overflow-y: auto;
 }
-
-.sheet-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.sheet-title {
-  font-size: var(--fs-title);
-  font-weight: 600;
-}
-
-.sheet-close {
-  font-size: 44rpx;
-  line-height: 1;
-  color: var(--c-ink-secondary);
-  padding: 4rpx 16rpx;
-}
-
-.sheet-sub {
-  margin-top: 8rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
-
-.sheet-divider {
-  height: 2rpx;
-  background: var(--c-border);
-  margin: 20rpx 0;
-}
-
 .sheet-label {
-  margin: 16rpx 0 10rpx;
+  margin: 36rpx 4rpx 16rpx;
   font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  color: var(--c-ink-2);
 }
-
-.chips {
-  display: flex;
-}
-
-.chip {
+.chips-3 .chip {
   flex: 1;
-  height: 88rpx;
-  line-height: 84rpx;
-  box-sizing: border-box;
-  margin-right: 16rpx;
-  text-align: center;
-  font-size: var(--fs-body);
-  color: var(--c-ink);
-  background: var(--c-bg);
-  border: 2rpx solid var(--c-border);
-  border-radius: 16rpx;
+  min-width: 0;
+  padding: 0 8rpx;
 }
-
-.chip:last-child {
-  margin-right: 0;
-}
-
-.chip-active {
-  background: var(--c-primary-weak);
-  border-color: var(--c-primary);
-  color: var(--c-primary);
-  font-weight: 600;
-}
-
 .sheet-btn {
-  margin-top: 36rpx;
+  width: 100%;
+  margin-top: 44rpx;
 }
-
-/* 沉静的留白、细分隔与统一操作尺寸。 */
-.card,.list { border-color:#E2E5DC; box-shadow:none; }
-.btn-main,.btn-primary,.btn-save,.card-btn { border-radius:20rpx; font-weight:500; }
-.sheet { max-height:85vh; overflow-y:auto; padding-bottom:calc(32rpx + env(safe-area-inset-bottom)); }
-.sheet-close { min-width:72rpx; min-height:72rpx; text-align:center; line-height:72rpx; }

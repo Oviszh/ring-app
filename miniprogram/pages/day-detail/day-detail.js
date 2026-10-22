@@ -87,39 +87,25 @@ Page({
 
     let amountText = ''
     let targetText = ''
-    let icon = '·'
-    let statusClass = 'none'
 
     if (t.isDuration) {
       amountText = fmtMinutes(t.durationMin)
       targetText = hasTarget ? `/ ${fmtMinutes(t.target)}` : ''
-      icon = {met:'●',partial:'◐',missed:'○',none:'·'}[t.status]
-      statusClass = t.status
     } else {
       amountText = fmtNum(t.total)
       targetText = hasTarget ? `/ ${fmtNum(t.target)}` : ''
-      if (t.status === 'met') {
-        icon = '●'
-        statusClass = 'met'
-      } else if (t.status === 'partial') {
-        icon = '◐'
-        statusClass = 'partial'
-      } else if (t.status === 'missed') {
-        icon = '○'
-        statusClass = 'missed'
-      }
     }
 
     return {
       id: p.id,
       name: nameOf(p) + (p.deleted ? '（已删除）' : ''),
       unit: p.unit || '声',
-      icon,
-      statusClass,
+      isDuration: !!t.isDuration,
+      statusClass: t.status || 'none',
       amountText,
       targetText,
       sourceText: t.isDuration
-        ? `${fmtMinutes(t.durationMin)} · ${t.times}座`
+        ? `仅计时 · ${t.times}座`
         : `戒指 ${fmtNum(t.ring)} · 手机 ${fmtNum(t.phone)} · 手动 ${fmtNum(t.manual)}`,
       entries,
       hasEntries: entries.length > 0,

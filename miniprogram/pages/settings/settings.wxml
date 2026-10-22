@@ -1,4 +1,68 @@
-<view class="page"><view class="eyebrow">适合自己的节奏</view><view class="page-heading">使用设置</view>
- <view class="card"><view class="row"><view class="row-main"><view class="row-label">手机计数入口</view><view class="row-sub">关闭后仍可填报修行记录</view></view><switch checked="{{phoneEnabled}}" color="#304D40" bindchange="onPhoneChange" /></view></view>
- <view class="card"><view class="row row-link" bindtap="onPhoneSettings"><text>计数音效与外观</text><text>›</text></view><view class="row row-link" bindtap="onNotifications"><text>计时与提醒说明</text><text>›</text></view><view class="row row-link" bindtap="onBackup"><text>备份与恢复</text><text>›</text></view><view class="row row-link" bindtap="onAbout"><text>关于</text><text>›</text></view></view>
- <view class="muted">当前为本地使用版本。手机计时与提醒仅在小程序前台有效，切到后台时暂停，返回后继续。</view></view>
+<!-- P16 设置 -->
+<view class="page">
+
+  <view class="section-title">计数入口</view>
+  <view class="card">
+    <view class="row">
+      <view class="row-main">
+        <view class="row-title">手机计数入口</view>
+        <view class="row-sub">关闭后仍可手动填报</view>
+      </view>
+      <switch class="switch" checked="{{phoneEnabled}}" color="#C05B2A" bindchange="onPhoneChange" />
+    </view>
+
+    <view class="row" bindtap="onRingRow">
+      <view class="row-main">
+        <view class="row-title {{hasRing ? '' : 'dim'}}">戒指计数入口</view>
+        <view class="row-sub">{{hasRing ? '关闭后首页不显示戒指计数' : '绑定戒指后可用'}}</view>
+      </view>
+      <switch
+        wx:if="{{hasRing}}"
+        class="switch"
+        checked="{{ringEnabled}}"
+        color="#C05B2A"
+        bindchange="onRingChange"
+      />
+      <view wx:else class="row-right">未绑定戒指 ›</view>
+    </view>
+  </view>
+
+  <view class="section-title">其他</view>
+  <view class="card">
+    <view class="row" bindtap="onPhoneSettings">
+      <view class="row-main">
+        <view class="row-title">计数音效与外观</view>
+        <view class="row-sub">音效 · 震动 · 外观 · 撤销确认</view>
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="row" bindtap="onNotifications">
+      <view class="row-main">
+        <view class="row-title">计时与提醒说明</view>
+        <view class="row-sub">仅在小程序前台生效</view>
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="row" bindtap="onAccount">
+      <view class="row-main">
+        <view class="row-title">账号与云同步</view>
+        <view class="row-sub">登录后可在多台手机间同步</view>
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="row" bindtap="onBackup">
+      <view class="row-main">
+        <view class="row-title">数据备份 / 恢复</view>
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+    <view class="row" bindtap="onAbout">
+      <view class="row-main">
+        <view class="row-title">关于</view>
+      </view>
+      <text class="row-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="note">手机计时与提醒仅在小程序前台有效，切到后台时暂停，返回后继续。</view>
+</view>

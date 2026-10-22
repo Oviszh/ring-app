@@ -4,7 +4,6 @@ const { fmtNum, fmtMinutes } = require('../../utils/format')
 const store = getApp().globalData.store
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
-const DOT_GLYPH = { met: '●', partial: '◐', missed: '○', none: '·' }
 const ALL = 'all'
 
 function nameOf(practice) {
@@ -102,16 +101,12 @@ Page({
         today: date === today,
         warn: false,
         dayText: String(d),
-        numText: String(d),
-        dot: 'none',
-        glyph: DOT_GLYPH.none
+        numText: '',
+        dot: 'none'
       }
 
       if (viewAll) {
-        if (!future) {
-          cell.dot = store.calendarDayStatus(date)
-          cell.glyph = DOT_GLYPH[cell.dot] || DOT_GLYPH.none
-        }
+        if (!future) cell.dot = store.calendarDayStatus(date)
       } else if (!future) {
         const t = store.dayTotals(date, viewPid)
         if (t) {

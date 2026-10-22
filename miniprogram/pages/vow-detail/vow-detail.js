@@ -19,7 +19,7 @@ function vowTitle(practiceName, vowName) {
 }
 
 function etaLabel(eta) {
-  return eta ? `预计 ${eta.slice(0, 7)} 圆满` : '尚无法估算'
+  return eta ? eta.slice(0, 7) : '尚无法估算'
 }
 
 Page({
@@ -32,7 +32,8 @@ Page({
     unit: '声',
     startDate: '',
     deadline: '',
-    dailyText: '',
+    avgText: '',
+    etaText: '',
     days: 0,
     practiceId: '',
     bars: [],
@@ -91,14 +92,17 @@ Page({
       days.push({ date, total })
     }
 
-    const bars = days.map(day => ({
-      date: day.date,
-      empty: day.total <= 0,
-      h: max > 0 && day.total > 0 ? Math.max(10, Math.round(day.total / max * CHART_HEIGHT)) : 0,
-      barStyle: (max > 0 && day.total > 0)
-        ? `height: ${Math.max(10, Math.round((day.total / max) * CHART_HEIGHT))}rpx;`
-        : 'height: 0rpx;'
-    }))
+    // 柱高由 JS 拼好样式串，WXML 不做内联插值；空柱保留 4rpx 底线
+    const bars = days.map(day => {
+      const h = max > 0 && day.total > 0
+        ? Math.max(10, Math.round((day.total / max) * CHART_HEIGHT))
+        : 0
+      return {
+        date: day.date,
+        empty: h === 0,
+        barStyle: `height: ${h > 0 ? h : 4}rpx;`
+      }
+    })
 
     this.setData({
       ready: true,
@@ -110,7 +114,8 @@ Page({
       unit,
       startDate: vow.startDate,
       deadline: vow.deadline || '',
-      dailyText: `日均 ${fmtNum(progress.avgPerDay)} · ${etaLabel(progress.eta)}`,
+      avgText: `${fmtNum(progress.avgPerDay)} ${unit}`,
+      etaText: etaLabel(progress.eta),
       days: progress.days,
       practiceId: vow.practiceId,
       bars,

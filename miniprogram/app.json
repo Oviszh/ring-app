@@ -16,7 +16,10 @@
     "pages/vow-detail/vow-detail",
     "pages/summary/summary",
     "pages/settings/settings",
-    "pages/backup/backup"
+    "pages/backup/backup",
+    "pages/device-list/device-list",
+    "pages/device-detail/device-detail",
+    "pages/device-bind/device-bind"
   ],
   "window": {
     "navigationBarBackgroundColor": "#F6F5F0",

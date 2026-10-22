@@ -1,0 +1,62 @@
+<!-- P12-A 单枚戒指 -->
+<view class="page" wx:if="{{ready}}">
+
+  <view class="card hero">
+    <view class="hero-name">{{name}}</view>
+    <view class="hero-meta">{{meta}}</view>
+    <view class="hero-tags">
+      <text wx:if="{{isCurrent}}" class="badge badge-primary">● 当前戒指</text>
+      <text wx:if="{{ownerMismatch}}" class="badge badge-warn">归属异常</text>
+      <text wx:if="{{batteryText}}" class="badge">🔋 {{batteryText}}</text>
+    </view>
+    <view class="hero-sync">{{syncLine}}</view>
+  </view>
+
+  <button wx:if="{{!isCurrent}}" class="btn btn-ghost btn-block" bindtap="onSetCurrent">设为当前戒指</button>
+
+  <view class="section-title">戒指可切功课</view>
+  <view class="card list-card">
+    <view class="hint">点选功课，在戒指上开启新一轮</view>
+    <view
+      wx:for="{{practices}}"
+      wx:key="id"
+      class="row"
+      hover-class="row-hover"
+      data-id="{{item.id}}"
+      bindtap="onPracticeTap"
+    >
+      <view class="row-main">
+        <view class="row-title">{{item.name}}</view>
+        <view wx:if="{{item.active}}" class="row-sub">戒指正在进行</view>
+      </view>
+      <text class="row-action">开启</text>
+    </view>
+    <view wx:if="{{!practices.length}}" class="hint hint-empty">还没有功课，请先到「功课管理」添加</view>
+  </view>
+
+  <view class="card lock-card">
+    <view class="row lock-row">
+      <view class="row-main">
+        <view class="row-title">触摸锁定</view>
+        <view class="row-sub">锁定后戒指触摸停用，防误触</view>
+      </view>
+      <switch class="lock-switch" checked="{{locked}}" color="#C05B2A" bindchange="onLockChange" />
+    </view>
+  </view>
+
+  <view class="btn-row">
+    <button class="btn btn-primary" bindtap="onSync">立即同步</button>
+    <button class="btn btn-danger" bindtap="onUnbind">解绑设备</button>
+  </view>
+
+  <!-- 演示卡：仅在 mock 适配器下出现 -->
+  <view wx:if="{{isMock}}" class="card debug-card">
+    <view class="debug-title">演示：模拟戒指点按</view>
+    <view class="debug-sub">没有实体戒指时，用这里模拟佩戴者按戒指</view>
+    <view class="btn-row">
+      <button class="btn btn-plain" data-n="1" bindtap="onSimulate">+1</button>
+      <button class="btn btn-plain" data-n="108" bindtap="onSimulate">+108</button>
+    </view>
+  </view>
+
+</view>

@@ -1,7 +1,10 @@
 <!-- P8 大愿详情：进行中 / 已圆满 -->
 <view class="page" wx:if="{{ready}}">
+
+  <!-- 进行中 -->
   <block wx:if="{{!done}}">
-    <view class="hero">
+    <!-- 大字进度 -->
+    <view class="card hero">
       <view class="hero-nums">
         <text class="hero-now">{{totalText}}</text>
         <text class="hero-sep">/</text>
@@ -9,39 +12,42 @@
       </view>
       <view class="hero-unit">{{unit}}</view>
 
-      <view class="bar">
-        <view class="bar-fill" style="width: {{percent + '%'}};"></view>
+      <view class="progress hero-progress">
+        <view class="progress-fill" style="{{barStyle}}"></view>
       </view>
-      <view class="percent">{{percent}}%</view>
+      <view class="hero-pct">{{percent}}%</view>
     </view>
 
-    <view class="meta-card">
-      <view class="meta-row">
-        <text class="meta-label">发愿于</text>
-        <text class="meta-value">{{startDate}}</text>
+    <!-- 发愿信息 -->
+    <view class="card meta-card">
+      <view class="row">
+        <view class="meta-label">发愿于</view>
+        <view class="meta-value">{{startDate}}</view>
       </view>
-      <view class="meta-row" wx:if="{{deadline}}">
-        <text class="meta-label">期限</text>
-        <text class="meta-value">至 {{deadline}}</text>
+      <view class="row" wx:if="{{deadline}}">
+        <view class="meta-label">期限</view>
+        <view class="meta-value">至 {{deadline}}</view>
       </view>
-      <view class="meta-row">
-        <text class="meta-label">进度</text>
-        <text class="meta-value">{{dailyText}}</text>
+      <view class="row">
+        <view class="meta-label">日均</view>
+        <view class="meta-value">{{avgText}}</view>
+      </view>
+      <view class="row">
+        <view class="meta-label">预计圆满</view>
+        <view class="meta-value">{{etaText}}</view>
       </view>
     </view>
 
-    <view class="chart-card">
+    <!-- 近 30 日 -->
+    <view class="card chart-card">
       <view class="chart-head">
-        <text class="section-title">近 30 日</text>
-        <text class="chart-max" wx:if="{{chartMaxText}}">最高 {{chartMaxText}} {{unit}}</text>
+        <view class="section-title">近 30 日</view>
+        <view class="chart-max" wx:if="{{chartMaxText}}">最高 {{chartMaxText}} {{unit}}</view>
       </view>
 
       <view class="chart">
         <view wx:for="{{bars}}" wx:key="date" class="chart-col">
-          <view
-            class="chart-bar {{item.empty ? 'chart-bar--zero' : ''}}"
-            style="height: {{item.h}}rpx;"
-          ></view>
+          <view class="chart-bar {{item.empty ? 'chart-bar--zero' : ''}}" style="{{item.barStyle}}"></view>
         </view>
       </view>
 
@@ -51,15 +57,22 @@
       </view>
     </view>
 
-    <view class="actions">
-      <button class="btn-secondary" bindtap="goEdit">修改大愿</button>
-      <button class="btn-danger" bindtap="onDelete">删除大愿</button>
+    <view class="btn-row actions">
+      <button class="btn btn-plain" bindtap="goEdit">修改大愿</button>
+      <button class="btn btn-danger" bindtap="onDelete">删除大愿</button>
     </view>
   </block>
 
-  <view wx:else class="done-card">
-    <view class="done-title"> 已圆满</view>
-    <view class="done-sub">{{totalText}} {{unit}} · 历时 {{days}} 天</view>
-    <button class="btn-primary" bindtap="goNewVow">再发新愿</button><view class="actions"><button class="btn-secondary" bindtap="goEdit">修改大愿</button><button class="btn-danger" bindtap="onDelete">删除大愿</button></view>
+  <view wx:else class="card done-card">
+    <view class="done-emoji">🎉</view>
+    <view class="done-title">已圆满</view>
+    <view class="done-sub">{{totalText}} {{unit}}</view>
+    <view class="done-meta">历时 {{days}} 天</view>
+
+    <button class="btn btn-primary done-btn" bindtap="goNewVow">再发新愿</button>
+    <view class="btn-row done-actions">
+      <button class="btn btn-plain" bindtap="goEdit">修改大愿</button>
+      <button class="btn btn-danger" bindtap="onDelete">删除大愿</button>
+    </view>
   </view>
 </view>

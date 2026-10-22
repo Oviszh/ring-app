@@ -12,6 +12,7 @@ function genId(prefix, ts) {
 function createInitialState(ts) {
   return {
     schemaVersion: 1,
+    userToken: genId('u', ts || 1), // 本机用户标识：戒指 owner_token 写入值
     currentDay: ts ? dayKey(ts) : '1970-01-01',
     practices: [],
     contexts: { ring: null, phone: null },
@@ -28,7 +29,8 @@ function createInitialState(ts) {
       sound: true,
       vibrate: true,
       theme: 'muyu',
-      undoConfirm: true
+      undoConfirm: true,
+      bleMock: true // 真机协议就绪后置 false 走真实蓝牙
     }
   }
 }

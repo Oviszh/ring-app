@@ -7,7 +7,8 @@ const ABOUT_TEXT = '念佛计数 v0.1 · 永久免费无广告'
 Page({
   data: {
     ringEnabled: true,
-    phoneEnabled: true
+    phoneEnabled: true,
+    hasRing: false
   },
 
   onShow() {
@@ -18,7 +19,8 @@ Page({
     const s = store.state.settings
     this.setData({
       ringEnabled: s.ringEnabled !== false,
-      phoneEnabled: s.phoneEnabled !== false
+      phoneEnabled: s.phoneEnabled !== false,
+      hasRing: !!store.currentDevice()
     })
   },
 
@@ -27,17 +29,34 @@ Page({
     this.refresh()
   },
 
+  onRingChange(e) {
+    if (!this.data.hasRing) return
+    store.setSetting('ringEnabled', e.detail.value)
+    this.refresh()
+  },
+
+  // 未绑定戒指时，整行可点，去绑定
+  onRingRow() {
+    if (this.data.hasRing) return
+    wx.navigateTo({ url: '/pages/device-list/device-list' })
+  },
+
   onNotifications() {
-    wx.showModal({ title:'前台计时与提醒', content:'手机计数仅在小程序前台使用。切到后台时，计时和倒计时暂停；返回后继续。每轮可选择时长或次数提醒，达到目标后提醒一次，计数继续。', showCancel:false })
+    wx.showModal({
+      title: '前台计时与提醒',
+      content: '手机计数仅在小程序前台使用。切到后台时，计时和倒计时暂停；返回后继续。每轮可选择时长或次数提醒，达到目标后提醒一次，计数继续。',
+      showCancel: false
+    })
   },
 
   onAccount() {
     wx.showToast({ title: '下一阶段开放', icon: 'none' })
   },
 
-  onPhoneSettings() { wx.navigateTo({url:'/pages/phone-settings/phone-settings'}) },
+  onPhoneSettings() { wx.navigateTo({ url: '/pages/phone-settings/phone-settings' }) },
+
   onBackup() {
-    wx.navigateTo({url:'/pages/backup/backup'})
+    wx.navigateTo({ url: '/pages/backup/backup' })
   },
 
   onAbout() {

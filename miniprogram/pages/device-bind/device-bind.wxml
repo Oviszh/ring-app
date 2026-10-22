@@ -1,0 +1,39 @@
+<!-- P13 绑定戒指 -->
+<view class="page">
+
+  <!-- 搜索 -->
+  <block wx:if="{{phase === 'scan'}}">
+    <view class="lead">
+      <view class="lead-title">{{scanning ? '正在搜索附近的戒指…' : (devices.length ? '选择要绑定的戒指' : '未发现戒指，请将戒指放在手机旁边')}}</view>
+      <view class="lead-sub">{{scanning ? '请把戒指放在手机旁边，保持屏幕常亮' : '戒指需已开机，并处于可绑定状态'}}</view>
+    </view>
+
+    <view wx:if="{{devices.length}}" class="card list-card">
+      <view wx:for="{{devices}}" wx:key="deviceId" class="row">
+        <view class="row-main">
+          <view class="row-title">{{item.name}}</view>
+          <view class="row-sub">{{item.idText}} · 信号 {{item.rssiText}}</view>
+        </view>
+        <button class="btn btn-ghost btn-connect" data-id="{{item.deviceId}}" bindtap="onConnect">连接</button>
+      </view>
+    </view>
+
+    <button
+      wx:if="{{!scanning}}"
+      class="btn {{devices.length ? 'btn-plain' : 'btn-primary'}} btn-block"
+      bindtap="startScan"
+    >重新扫描</button>
+
+    <view wx:if="{{!devices.length && !scanning}}" class="foot-note">戒指没反应时，可把戒指贴近手机，或给戒指充上电后再试。</view>
+  </block>
+
+  <!-- 绑定中 / 成功 -->
+  <block wx:else>
+    <view class="card bind-card">
+      <view class="bind-glyph {{progressDone ? 'bind-glyph--done' : ''}}">{{progressDone ? '✓' : ''}}</view>
+      <view class="bind-progress {{progressDone ? 'bind-progress--done' : ''}}">{{progressText}}</view>
+      <view class="bind-sub">{{progressDone ? '正在返回…' : '请保持戒指贴近手机，不要走开'}}</view>
+    </view>
+  </block>
+
+</view>

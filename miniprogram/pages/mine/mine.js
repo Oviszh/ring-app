@@ -21,20 +21,19 @@ Page({
   },
 
   refresh() {
-    const devices = store.state.devices || []
-    this.setData({ deviceCount: devices.length })
+    this.setData({ deviceCount: store.devices().length })
   },
 
   // —— P1''-A 游客卡片 ——
 
   onLogin() {
-    wx.showToast({ title: '下一阶段开放', icon: 'none' })
+    wx.showToast({ title: '登录功能即将开放', icon: 'none' })
   },
 
   // —— 我的设备 ——
 
   onDevices() {
-    wx.showToast({ title: '戒指功能下一阶段开放', icon: 'none' })
+    navTo('/pages/device-list/device-list')
   },
 
   // —— 列表入口 ——

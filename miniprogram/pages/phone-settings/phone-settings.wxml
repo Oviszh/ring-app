@@ -1,16 +1,19 @@
 <!-- P6 手机计数设置：音效 / 音效选择 / 震动 / 外观 / 撤销确认 -->
 <view class="page">
+
+  <view class="section-title">计数体验</view>
   <view class="card">
     <view class="row">
       <view class="row-main">
-        <view class="row-label">音效</view>
+        <view class="row-title">音效</view>
+        <view class="row-sub">每计数一次播放提示音</view>
       </view>
-      <switch class="switch" checked="{{sound}}" color="#304D40" bindchange="onSoundChange" />
+      <switch class="switch" checked="{{sound}}" color="#C05B2A" bindchange="onSoundChange" />
     </view>
 
     <view class="row">
       <view class="row-main">
-        <view class="row-label">音效选择</view>
+        <view class="row-title">音效选择</view>
       </view>
       <picker
         class="picker"
@@ -20,20 +23,23 @@
         value="{{soundIndex}}"
         bindchange="onSoundNameChange"
       >
-        <view class="picker-value">{{soundName}} <text class="picker-arrow">▾</text></view>
+        <view class="pick">
+          <text class="pick-value">{{soundName}}</text>
+          <text class="pick-arrow">›</text>
+        </view>
       </picker>
     </view>
 
     <view class="row">
       <view class="row-main">
-        <view class="row-label">震动反馈</view>
+        <view class="row-title">震动反馈</view>
       </view>
-      <switch class="switch" checked="{{vibrate}}" color="#304D40" bindchange="onVibrateChange" />
+      <switch class="switch" checked="{{vibrate}}" color="#C05B2A" bindchange="onVibrateChange" />
     </view>
 
     <view class="row">
       <view class="row-main">
-        <view class="row-label">外观</view>
+        <view class="row-title">外观</view>
       </view>
       <picker
         class="picker"
@@ -43,16 +49,21 @@
         value="{{themeIndex}}"
         bindchange="onThemeChange"
       >
-        <view class="picker-value">{{themeName}} <text class="picker-arrow">›</text></view>
+        <view class="pick">
+          <text class="pick-value">{{themeName}}</text>
+          <text class="pick-arrow">›</text>
+        </view>
       </picker>
     </view>
 
     <view class="row">
       <view class="row-main">
-        <view class="row-label">撤销确认</view>
-        <view class="row-sub">撤销前询问</view>
+        <view class="row-title">撤销确认</view>
+        <view class="row-sub">撤销前先询问</view>
       </view>
-      <switch class="switch" checked="{{undoConfirm}}" color="#304D40" bindchange="onUndoConfirmChange" />
+      <switch class="switch" checked="{{undoConfirm}}" color="#C05B2A" bindchange="onUndoConfirmChange" />
     </view>
   </view>
+
+  <view class="note">音效与震动只影响手机计数，戒指计数由戒指自身提示。</view>
 </view>

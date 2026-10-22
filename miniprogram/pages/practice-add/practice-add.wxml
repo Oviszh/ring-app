@@ -1,62 +1,102 @@
 <!-- P5 添加功课：模糊搜索公共功课，无匹配时自建 -->
 <view class="page">
- <view class="eyebrow">从熟悉的一项开始</view><view class="page-heading">添加功课</view>
-  <view class="search-bar">
+
+  <view class="search">
     <text class="search-icon">⌕</text>
     <input
       class="search-input"
       value="{{keyword}}"
       placeholder="搜索功课，如：阿弥"
-      placeholder-class="search-placeholder"
+      placeholder-class="search-ph"
       confirm-type="search"
       bindinput="onSearch"
     />
-    <view
-      wx:if="{{keyword}}"
-      class="search-clear"
-      hover-class="search-clear-hover"
-      bindtap="onClear"
-    >×</view>
+    <view wx:if="{{keyword}}" class="search-clear" bindtap="onClear">✕</view>
   </view>
 
-  <view class="list" wx:if="{{results.length}}">
+  <!-- 搜索结果 -->
+  <view class="card" wx:if="{{results.length}}">
     <view
       wx:for="{{results}}"
       wx:key="name"
-      class="row {{item.added ? 'row-disabled' : ''}}"
+      class="row {{item.added ? 'row-off' : ''}}"
       data-name="{{item.name}}"
       hover-class="{{item.added ? 'none' : 'row-hover'}}"
       bindtap="onPick"
     >
       <view class="row-main">
-        <view class="row-name">{{item.name}}</view>
-        <view class="row-alias" wx:if="{{item.alias}}">{{item.alias}}</view>
+        <view class="row-title">{{item.name}}</view>
+        <view class="row-sub" wx:if="{{item.alias}}">{{item.alias}}</view>
       </view>
-      <view class="row-tail">
-        <text wx:if="{{item.added}}" class="tag tag-added">已添加</text>
-        <text wx:elif="{{item.type === 'time'}}" class="tag tag-time">计时</text>
-      </view>
+      <text wx:if="{{item.added}}" class="badge">已添加</text>
+      <text wx:elif="{{item.type === 'time'}}" class="badge badge-primary">计时</text>
+      <text wx:else class="row-arrow">›</text>
     </view>
   </view>
 
-  <view class="list" wx:if="{{showCreate}}">
-    <view class="create-row" hover-class="row-hover" bindtap="onCreate">
-      <text class="create-plus">＋</text>
+  <!-- 无匹配：自建 -->
+  <view class="card" wx:if="{{showCreate}}">
+    <view class="row" hover-class="row-hover" bindtap="onCreate">
       <view class="row-main">
-        <view class="create-name">创建自建功课「{{createName}}」</view>
-        <view class="create-sub">选择计数或计时，自定单位与目标</view>
+        <view class="row-title primary">＋ 创建自建功课「{{createName}}」</view>
+        <view class="row-sub">选择计数或计时，自定单位与目标</view>
       </view>
+      <text class="row-arrow">›</text>
     </view>
   </view>
 
-  <view class="empty-hint" wx:if="{{!results.length && !showCreate}}">没有可添加的功课</view>
+  <view wx:if="{{!results.length && !showCreate}}" class="empty">
+    <view class="empty-title">没有可添加的功课</view>
+    <view class="empty-sub">换一个关键词试试</view>
+  </view>
 </view>
 
-<view wx:if="{{creating}}" class="create-mask" bindtap="closeCreate" catchtouchmove="noop"><view class="sheet create-sheet" catchtap="noop">
- <view class="card-title">自建功课 · {{createName}}</view>
- <view class="type-options"><button class="{{customType==='count'?'primary':'secondary'}}" data-type="count" bindtap="onType">计数</button><button class="{{customType==='time'?'primary':'secondary'}}" data-type="time" bindtap="onType">计时</button></view>
- <picker wx:if="{{customType==='count'}}" range="{{units}}" value="{{unitIndex}}" bindchange="onUnit"><view class="custom-field">计数单位　{{units[unitIndex]}}　⌄</view></picker>
- <view wx:else class="muted">计时功课只记录时长，单位为分钟。</view>
- <view class="custom-field"><text>每日目标</text><input type="number" value="{{customTarget}}" placeholder="留空表示不设目标" bindinput="onCustomTarget" /></view>
- <button class="primary" bindtap="saveCustom">添加功课</button><button class="secondary" bindtap="closeCreate">取消</button>
-</view></view>
+<!-- 自建功课弹层 -->
+<block wx:if="{{creating}}">
+  <view class="sheet-mask" catchtouchmove="noop" bindtap="closeCreate"></view>
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-close" bindtap="closeCreate">✕</view>
+    <view class="sheet-title">自建功课</view>
+    <view class="sheet-sub">{{createName}}</view>
+
+    <view class="seg">
+      <view class="seg-item {{customType === 'count' ? 'on' : ''}}" data-type="count" bindtap="onType">计数</view>
+      <view class="seg-item {{customType === 'time' ? 'on' : ''}}" data-type="time" bindtap="onType">计时</view>
+    </view>
+
+    <picker
+      wx:if="{{customType === 'count'}}"
+      mode="selector"
+      range="{{units}}"
+      value="{{unitIndex}}"
+      bindchange="onUnit"
+    >
+      <view class="field">
+        <text class="field-label">计数单位</text>
+        <text class="field-value">{{units[unitIndex]}}</text>
+        <text class="field-arrow">›</text>
+      </view>
+    </picker>
+    <view wx:else class="field">
+      <text class="field-label">计时单位</text>
+      <text class="field-value">分钟</text>
+    </view>
+
+    <view class="field">
+      <text class="field-label">每日目标</text>
+      <input
+        class="field-input"
+        type="number"
+        value="{{customTarget}}"
+        placeholder="留空表示不设目标"
+        placeholder-class="field-ph"
+        bindinput="onCustomTarget"
+      />
+    </view>
+
+    <view class="btn-row sheet-actions">
+      <button class="btn btn-plain" bindtap="closeCreate">取消</button>
+      <button class="btn btn-primary" bindtap="saveCustom">添加功课</button>
+    </view>
+  </view>
+</block>

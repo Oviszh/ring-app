@@ -1,6 +1,40 @@
+<!-- 备份与恢复 -->
 <view class="page">
- <view class="eyebrow">妥善留存 · 随时安心</view><view class="page-heading">备份与恢复</view>
- <view class="card"><view class="card-title">保存一份修行记录</view><view class="muted">当前数据仅保存在本机。清理微信数据或删除小程序可能丢失记录，建议定期导出备份。</view><button class="primary" loading="{{busy}}" bindtap="onExport">导出备份文件</button></view>
- <view class="card"><view class="card-title">从备份恢复</view><view class="muted">从微信会话中选择此前导出的 JSON 文件。校验通过后，可先查看内容概要，再确认恢复。</view><button class="secondary" bindtap="onChoose">选择备份文件</button></view>
- <view wx:if="{{preview}}" class="card"><view class="card-title">备份内容</view><view>{{preview.practices}} 项功课 · {{preview.days}} 个归档日</view><view class="muted">记录日期 {{preview.date}}</view><button class="primary" bindtap="onRestore">确认恢复此备份</button></view>
+
+  <view class="card intro">
+    <view class="intro-title">保存一份修行记录</view>
+    <view class="intro-text">当前数据仅保存在本机。清理微信数据或删除小程序可能丢失记录，建议定期导出备份。</view>
+  </view>
+
+  <button class="btn btn-primary big-btn" loading="{{busy}}" disabled="{{busy}}" bindtap="onExport">导出备份文件</button>
+  <view class="hint">导出后会通过微信发送，可存到「文件传输助手」</view>
+
+  <view class="card import">
+    <view class="row-title">从备份恢复</view>
+    <view class="row-sub">从微信会话中选择此前导出的 JSON 文件，校验通过后可先查看内容，再确认恢复。</view>
+    <button class="btn btn-plain big-btn-in" disabled="{{busy}}" bindtap="onChoose">选择备份文件</button>
+  </view>
+
+  <!-- 结果反馈 -->
+  <view wx:if="{{preview}}" class="card result">
+    <view class="result-title">备份内容</view>
+
+    <view class="result-list">
+      <view class="result-row">
+        <text class="result-label">功课</text>
+        <text class="result-val">{{preview.practices}} 项</text>
+      </view>
+      <view class="result-row">
+        <text class="result-label">归档</text>
+        <text class="result-val">{{preview.days}} 天</text>
+      </view>
+      <view class="result-row">
+        <text class="result-label">记录日期</text>
+        <text class="result-val">{{preview.date}}</text>
+      </view>
+    </view>
+
+    <button class="btn btn-primary big-btn" bindtap="onRestore">确认恢复此备份</button>
+    <button class="btn btn-plain big-btn-in" bindtap="onCancelPreview">暂不恢复</button>
+  </view>
 </view>

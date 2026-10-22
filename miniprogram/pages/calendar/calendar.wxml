@@ -1,34 +1,35 @@
 <!-- P1' 日历（月视图）：全部功课 / 单功课两种口径 + 长期大愿 -->
 <view class="page">
-  <view class="eyebrow">回望来路 · 日日相续</view><view class="page-heading">修行日历</view>
+  <view class="page-cap">回望来路 · 日日相续</view>
+
   <!-- 月份切换 -->
   <view class="month-bar">
-    <view class="month-btn" bindtap="onPrevMonth">‹</view>
+    <view class="month-arrow" bindtap="onPrevMonth">‹</view>
     <view class="month-label">{{monthLabel}}</view>
-    <view class="month-btn {{canNext ? '' : 'month-btn--disabled'}}" bindtap="onNextMonth">›</view>
+    <view class="month-arrow {{canNext ? '' : 'off'}}" bindtap="onNextMonth">›</view>
   </view>
 
-  <!-- 查看选择器 -->
+  <!-- 查看口径：当前选择用 chip 呈现，点开系统选择器 -->
   <view class="view-bar">
-    <picker
-      class="view-picker-wrap"
-      mode="selector"
-      range="{{viewOptions}}"
-      range-key="name"
-      value="{{viewIndex}}"
-      bindchange="onViewChange"
-    >
-      <view class="view-picker">
-        <text class="view-label">查看</text>
-        <text class="view-name">{{viewName}}</text>
-        <text class="view-arrow">▾</text>
-      </view>
-    </picker>
-    <view wx:if="{{targetText}}" class="view-target">{{targetText}}</view>
+    <view class="chips">
+      <picker
+        mode="selector"
+        range="{{viewOptions}}"
+        range-key="name"
+        value="{{viewIndex}}"
+        bindchange="onViewChange"
+      >
+        <view class="chip chip-view {{viewAll ? '' : 'on'}}">
+          <text class="chip-text">{{viewName}}</text>
+          <text class="chip-arrow">▾</text>
+        </view>
+      </picker>
+    </view>
+    <text wx:if="{{targetText}}" class="view-target">{{targetText}}</text>
   </view>
 
   <!-- 月历网格 -->
-  <view class="calendar">
+  <view class="card cal-card">
     <view class="week-row">
       <view wx:for="{{weekdays}}" wx:key="*this" class="week-cell">{{item}}</view>
     </view>
@@ -37,46 +38,67 @@
       <view
         wx:for="{{cells}}"
         wx:key="key"
-        class="cell {{item.blank ? 'cell--blank' : ''}} {{item.future ? 'cell--future' : ''}} {{item.today ? 'cell--today' : ''}} {{!viewAll && !item.blank ? 'cell--total' : ''}}"
+        class="cell"
         data-date="{{item.date}}"
         bindtap="onDayTap"
       >
         <block wx:if="{{!item.blank}}">
-          <text wx:if="{{!viewAll}}" class="cell-date">{{item.dayText}}</text><text class="cell-num {{item.warn ? 'cell-num--warn' : ''}}">{{item.numText}}</text>
-          <view wx:if="{{viewAll && !item.future}}" class="cell-dot cell-dot--{{item.dot}}">{{item.glyph}}</view>
+          <view class="cell-mark {{item.today ? 'on' : ''}}">
+            <block wx:if="{{viewAll}}">
+              <text class="cell-day {{item.future ? 'dim' : ''}}">{{item.dayText}}</text>
+              <view wx:if="{{!item.future}}" class="cell-dot dot-{{item.dot}}"></view>
+            </block>
+            <block wx:else>
+              <text class="cell-day-mini {{item.future ? 'dim' : ''}}">{{item.dayText}}</text>
+              <text class="cell-num {{item.warn ? 'warn' : ''}} {{item.future ? 'dim' : ''}}">{{item.numText}}</text>
+            </block>
+          </view>
         </block>
       </view>
     </view>
   </view>
 
-  <view wx:if="{{viewAll}}" class="calendar-legend">● 全部达标　◐ 部分完成　○ 尚未完成</view>
-  <!-- 单功课口径统计行 -->
-  <view wx:if="{{!viewAll}}" class="stats">{{statsText}}</view>
+  <!-- 口径图例 / 单功课月度统计 -->
+  <view wx:if="{{viewAll}}" class="legend">
+    <view class="legend-item">
+      <view class="cell-dot dot-met"></view>
+      <text>达标</text>
+    </view>
+    <view class="legend-item">
+      <view class="cell-dot dot-partial"></view>
+      <text>部分</text>
+    </view>
+    <view class="legend-item">
+      <view class="cell-dot dot-missed"></view>
+      <text>未完成</text>
+    </view>
+  </view>
+  <view wx:else class="stats">{{statsText}}</view>
 
   <!-- 长期大愿 -->
-  <view class="vow-section">
-    <view class="vow-head">长期大愿</view>
+  <view class="section-title">长期大愿</view>
 
-    <block wx:if="{{hasVows}}">
-      <view
-        wx:for="{{vows}}"
-        wx:key="id"
-        class="vow-card"
-        data-id="{{item.id}}"
-        bindtap="onVowTap"
-      >
-        <view class="vow-title">{{item.title}}</view>
-        <view class="vow-line">
-          <text class="vow-count">{{item.totalText}} / {{item.targetText}}</text>
-          <text class="vow-pct">{{item.percent}}%</text>
-        </view>
-        <view class="vow-bar">
-          <view class="vow-bar-fill" style="width: {{item.percent + '%'}}"></view>
-        </view>
-        <view class="vow-sub">{{item.subText}}</view>
+  <block wx:if="{{hasVows}}">
+    <view
+      wx:for="{{vows}}"
+      wx:key="id"
+      class="card vow-card"
+      data-id="{{item.id}}"
+      bindtap="onVowTap"
+    >
+      <view class="vow-head">
+        <text class="vow-title">{{item.title}}</text>
+        <text class="vow-pct">{{item.percent}}%</text>
       </view>
-    </block>
+      <view class="progress vow-track">
+        <view class="progress-fill" style="{{item.barStyle}}"></view>
+      </view>
+      <view class="vow-foot">
+        <text class="vow-count">{{item.totalText}} / {{item.targetText}}</text>
+        <text wx:if="{{item.subText}}" class="vow-sub">{{item.subText}}</text>
+      </view>
+    </view>
+  </block>
 
-    <view wx:else class="vow-empty" bindtap="onVowNew">＋ 发一个大愿</view>
-  </view>
+  <view wx:else class="card vow-empty" bindtap="onVowNew">＋ 发一个大愿</view>
 </view>

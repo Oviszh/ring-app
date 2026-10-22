@@ -1,0 +1,90 @@
+/* P13 绑定戒指 */
+
+.lead {
+  padding: 8rpx 8rpx 32rpx;
+}
+
+.lead-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.lead-sub {
+  margin-top: 10rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+}
+
+.list-card {
+  padding: 4rpx 32rpx;
+}
+
+.btn-connect {
+  flex: none;
+  width: 176rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  padding: 0;
+  margin-left: 20rpx;
+  font-size: var(--fs-small);
+}
+
+.btn-block {
+  width: 100%;
+  margin: 8rpx 0 0;
+}
+
+.foot-note {
+  padding: 32rpx 8rpx 0;
+  font-size: var(--fs-mini);
+  line-height: 1.8;
+  color: var(--c-ink-2);
+}
+
+/* —— 绑定进度 —— */
+.bind-card {
+  margin-top: 80rpx;
+  padding: 88rpx 40rpx 76rpx;
+  text-align: center;
+}
+
+.bind-glyph {
+  width: 104rpx;
+  height: 104rpx;
+  margin: 0 auto 40rpx;
+  border-radius: 50%;
+  border: 6rpx solid var(--c-track);
+  border-top-color: var(--c-primary);
+  box-sizing: border-box;
+  animation: bind-spin 900ms linear infinite;
+}
+
+.bind-glyph--done {
+  border-color: var(--c-primary);
+  background: var(--c-primary);
+  color: #fff;
+  font-size: 56rpx;
+  line-height: 92rpx;
+  animation: none;
+}
+
+.bind-progress {
+  font-size: var(--fs-title);
+  font-weight: 600;
+}
+
+.bind-progress--done {
+  color: var(--c-primary);
+}
+
+.bind-sub {
+  margin-top: 16rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+}
+
+@keyframes bind-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

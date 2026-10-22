@@ -1,1 +1,72 @@
-.page { padding: 32rpx; } .card { margin-top: 28rpx; padding: 32rpx; } button { margin-top: 32rpx; }
+/* 备份与恢复 —— 基于 app.wxss 设计系统 */
+
+.intro { padding: 36rpx 32rpx; }
+
+.intro-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 12rpx;
+}
+
+.intro-text {
+  font-size: var(--fs-small);
+  line-height: 1.75;
+  color: var(--c-ink-2);
+}
+
+/* —— 大按钮 —— */
+.big-btn {
+  width: 100%;
+  margin-top: 8rpx;
+  padding: 0;
+}
+
+.big-btn-in {
+  width: 100%;
+  margin-top: 28rpx;
+  padding: 0;
+}
+
+.hint {
+  padding: 16rpx 8rpx 0;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+  text-align: center;
+}
+
+/* —— 从备份恢复 —— */
+.import { margin-top: 40rpx; }
+
+/* —— 结果反馈 —— */
+.result { margin-top: 40rpx; }
+
+.result-title {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  min-height: 84rpx;
+  border-bottom: 2rpx solid var(--c-border);
+}
+
+.result-list .result-row:last-child { border-bottom: none; }
+
+.result-label {
+  flex: none;
+  width: 180rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+}
+
+.result-val {
+  flex: 1;
+  font-size: var(--fs-body);
+  font-weight: 500;
+  text-align: right;
+  word-break: break-all;
+}

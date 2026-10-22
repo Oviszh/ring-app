@@ -1,62 +1,74 @@
 <!-- P9 当日详情：来源拆分、手动填报展开/撤销，点行进修正 -->
 <view class="page">
-  <view class="day-title">{{dateLabel}}</view>
+  <view class="day-head">
+    <view class="day-head-title">{{dateLabel}}</view>
+    <view class="day-head-sub">点功课行可修正来源数量</view>
+  </view>
 
   <view wx:if="{{empty}}" class="empty">
     <view class="empty-title">当日无记录</view>
     <view class="empty-sub">这一天还没有任何功课数据</view>
   </view>
 
-  <view
-    wx:for="{{rows}}"
-    wx:key="id"
-    class="row {{item.highlight ? 'row--highlight' : ''}}"
-    data-id="{{item.id}}"
-    bindtap="onRowTap"
-  >
-    <view class="row-main">
-      <text class="row-name">{{item.name}}</text>
-      <text class="row-icon row-icon--{{item.statusClass}}">{{item.icon}}</text>
-      <view class="row-nums">
-        <text class="row-amount">{{item.amountText}}</text>
-        <text class="row-target">{{item.targetText}}</text>
-      </view>
-    </view>
-
-    <view class="row-source">{{item.sourceText}}</view>
-
+  <view wx:else class="card list-card">
     <view
-      wx:if="{{item.hasEntries}}"
-      class="entries-toggle"
-      data-index="{{index}}"
-      catchtap="onToggleEntries"
+      wx:for="{{rows}}"
+      wx:key="id"
+      class="item {{item.highlight ? 'on' : ''}}"
     >
-      手动填报 {{item.entries.length}} 笔
-      <text class="entries-arrow">{{item.expanded ? '▴ 收起' : '▾ 展开'}}</text>
-    </view>
-
-    <view wx:if="{{item.expanded}}" class="entries">
-      <view
-        wx:for="{{item.entries}}"
-        wx:for-item="entry"
-        wx:for-index="entryIndex"
-        wx:key="id"
-        class="entry"
-      >
-        <text class="entry-amount">＋{{entry.amountText}} {{item.unit}}</text>
-        <text class="entry-time">{{entry.timeText}}</text>
-        <view
-          class="entry-undo"
-          data-entry-id="{{entry.id}}"
-          data-amount="{{entry.amount}}"
-          data-time="{{entry.timeText}}"
-          data-unit="{{item.unit}}"
-          catchtap="onUndoEntry"
-        >撤销</view>
+      <view class="row" data-id="{{item.id}}" bindtap="onRowTap">
+        <view class="row-main">
+          <view class="row-title">
+            <view class="st st-{{item.statusClass}}"></view>
+            <text class="name">{{item.name}}</text>
+            <text wx:if="{{item.isDuration}}" class="tag">计时</text>
+          </view>
+          <view class="row-sub">{{item.sourceText}}</view>
+          <view
+            wx:if="{{item.hasEntries}}"
+            class="entry-toggle"
+            data-index="{{index}}"
+            catchtap="onToggleEntries"
+          >
+            手动填报 {{item.entries.length}} 笔
+            <text class="toggle-arrow">{{item.expanded ? '收起 ▴' : '展开 ▾'}}</text>
+          </view>
+        </view>
+        <view class="nums">
+          <view class="amount">
+            <text wx:if="{{item.isDuration}}" class="check">✓</text>
+            <text>{{item.amountText}}</text>
+          </view>
+          <view wx:if="{{item.targetText}}" class="target">{{item.targetText}}</view>
+        </view>
+        <text class="row-arrow">›</text>
       </view>
-      <view class="entries-note">撤销 = 移除该笔填报，不产生反向账目</view>
-    </view>
 
-    <view class="row-hint">点行进入修正 ›</view>
+      <view wx:if="{{item.expanded}}" class="entries">
+        <view class="entry-list">
+          <view
+            wx:for="{{item.entries}}"
+            wx:for-item="entry"
+            wx:for-index="entryIndex"
+            wx:key="id"
+            class="entry"
+          >
+            <view class="entry-main">
+              <text class="entry-amount">＋{{entry.amountText}} {{item.unit}}</text>
+              <text class="entry-time">{{entry.timeText}}</text>
+            </view>
+            <view
+              class="btn btn-ghost btn-sm"
+              data-entry-id="{{entry.id}}"
+              data-amount="{{entry.amount}}"
+              data-time="{{entry.timeText}}"
+              data-unit="{{item.unit}}"
+              catchtap="onUndoEntry"
+            >撤销</view>
+          </view>
+        </view>
+        <view class="entries-note">撤销 = 移除该笔填报，不产生反向账目</view>
+      </view>
+    </view>
   </view>
 </view>

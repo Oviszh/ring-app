@@ -1,86 +1,50 @@
-.page {
-  padding: var(--space);
-  padding-bottom: 48rpx;
-  box-sizing: border-box;
-}
+/* 我的 Tab —— 基于 app.wxss 设计系统 */
 
 /* —— 游客卡片 P1''-A —— */
-
-.card {
-  padding: var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
+.guest-head {
+  display: flex;
+  align-items: flex-start;
 }
 
-.card-title {
-  font-size: var(--fs-title);
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--c-ink);
-}
-
-.card-desc {
-  margin-top: 12rpx;
-  font-size: var(--fs-small);
-  line-height: 1.7;
-  color: var(--c-ink-secondary);
-}
-
-.card-btn {
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  margin: var(--space) 0 0;
-  padding: 0 20rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: #fff;
-  background: var(--c-primary);
-  border-radius: var(--radius);
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.card-btn::after {
-  border: none;
-}
-
-/* —— 入口列表 —— */
-
-.list {
-  margin-top: 32rpx;
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.row {
+.guest-mark {
+  flex: none;
+  width: 96rpx;
+  height: 96rpx;
+  margin-right: 24rpx;
+  border-radius: 50%;
+  background: var(--c-primary-weak);
+  color: var(--c-primary);
+  font-size: 44rpx;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-height: var(--btn-height);
-  padding: 0 var(--space);
-  border-bottom: 1rpx solid var(--c-border);
-  box-sizing: border-box;
+  justify-content: center;
 }
 
-.row:last-child {
-  border-bottom: none;
-}
+.guest-body { flex: 1; min-width: 0; }
 
-.row-label {
-  font-size: var(--fs-body);
-  line-height: 1.6;
-  color: var(--c-ink);
-}
-
-.row-arrow {
-  flex-shrink: 0;
-  margin-left: 16rpx;
+.guest-title {
   font-size: var(--fs-title);
-  line-height: 1;
-  color: var(--c-ink-secondary);
+  font-weight: 600;
+  line-height: 1.4;
 }
 
-.profile-card { display:flex; align-items:center; padding:36rpx; border-radius:28rpx; background:#E8EDE5; } .profile-mark { width:100rpx; height:100rpx; line-height:100rpx; border:1rpx solid #97A791; border-radius:50%; text-align:center; font-family:serif; font-size:42rpx; margin-right:28rpx; } .profile-title { font-size:40rpx; font-family:'Songti SC',serif; } .local-note { font-size:26rpx; color:#687267; padding:24rpx 4rpx 8rpx; line-height:1.8; } .list { border:none; margin-top:28rpx; } .row { min-height:112rpx; padding:26rpx 28rpx; } .row-sub { font-size:26rpx; color:#687267; margin-top:4rpx; }
+.guest-desc {
+  margin-top: 8rpx;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--c-ink-2);
+}
+
+.guest-btn {
+  margin-top: 28rpx;
+  width: 100%;
+  padding: 0;
+}
+
+/* —— 页脚 —— */
+.foot {
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--c-ink-3);
+  padding: 24rpx 0 8rpx;
+}

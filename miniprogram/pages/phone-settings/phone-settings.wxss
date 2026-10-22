@@ -1,82 +1,42 @@
-/* P6 手机计数设置：大字号、大点击区（老年用户） */
-.page {
-  padding: var(--space);
-  padding-bottom: 48rpx;
-  box-sizing: border-box;
-}
-
-.card {
-  padding: 8rpx var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  min-height: 128rpx;
-  padding: 16rpx 0;
-  border-bottom: 1rpx solid var(--c-border);
-  box-sizing: border-box;
-}
-
-.row:last-child {
-  border-bottom: none;
-}
-
-.row-main {
-  flex: 1;
-  min-width: 0;
-}
-
-.row-label {
-  font-size: var(--fs-body);
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.row-sub {
-  margin-top: 4rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
+/* P6 手机计数设置 —— 基于 app.wxss 设计系统 */
 
 .switch {
   flex: none;
   margin-left: 16rpx;
-  transform: scale(1.15);
+  transform: scale(1.1);
   transform-origin: right center;
 }
 
-/* —— 下拉选择 —— */
-
+/* —— 右侧选择 —— */
 .picker {
   flex: none;
-  max-width: 60%;
+  max-width: 55%;
 }
 
-.picker-value {
+.pick {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  min-height: 96rpx;
-  padding: 0 8rpx 0 20rpx;
+  min-height: 88rpx;
+  padding-left: 16rpx;
+}
+
+.pick-value {
   font-size: var(--fs-body);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--c-primary);
   white-space: nowrap;
 }
 
-.picker-arrow {
+.pick-arrow {
   margin-left: 12rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  font-size: var(--fs-body);
+  color: var(--c-ink-3);
 }
 
-/* 沉静的留白、细分隔与统一操作尺寸。 */
-.card,.list { border-color:#E2E5DC; box-shadow:none; }
-.btn-main,.btn-primary,.btn-save,.card-btn { border-radius:20rpx; font-weight:500; }
-.sheet { max-height:85vh; overflow-y:auto; padding-bottom:calc(32rpx + env(safe-area-inset-bottom)); }
-.sheet-close { min-width:72rpx; min-height:72rpx; text-align:center; line-height:72rpx; }
+.note {
+  padding: 8rpx 8rpx 0;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--c-ink-2);
+}

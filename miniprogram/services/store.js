@@ -10,6 +10,10 @@ function createStore(now) {
   now = now || Date.now()
   let state = loadState()
   if (!state || state.schemaVersion !== 1) state = domain.createInitialState(now)
+  // 旧数据迁移：补齐后加字段
+  if (!state.userToken) state.userToken = domain.genId('u', now)
+  if (!state.settings) state.settings = {}
+  if (state.settings.bleMock === undefined) state.settings.bleMock = true
   // 恢复上次前台心跳；意外退出期间不虚计禅坐时间。
   if (state.contexts.phone && state.foregroundTs) domain.pausePhone(state, state.foregroundTs)
   domain.settleUpTo(state, now) // 启动补归档
@@ -255,6 +259,148 @@ function createStore(now) {
         out.push({ date, status: t ? t.status : 'none' })
       }
       return out
+    },
+
+    // —— 戒指（BLE；默认 mock 适配器） ——
+    ringAdapter() { return require('./ble').getAdapter(state) },
+    devices() { return state.devices.slice() },
+    currentDevice() { return domain.currentDevice(state) },
+    ringSetCurrent(deviceId) {
+      domain.setCurrentDevice(state, deviceId)
+      commit()
+    },
+
+    async ringScan() {
+      return this.ringAdapter().scan()
+    },
+
+    // 绑定流程：连接 → 校验归属 → （可选清空）→ 写入归属 → 对时 → 拉快照 → 建档
+    // forceClear=false 且戒指已绑他人时抛 BOUND_BY_OTHER（由页面弹确认后重试 forceClear=true）
+    async ringBind(deviceId, forceClear) {
+      const ble = this.ringAdapter()
+      const ts = Date.now()
+      await ble.connect(deviceId)
+      const dev = await ble.readDeviceState()
+      if (dev.ownerToken && dev.ownerToken !== state.userToken) {
+        if (!forceClear) {
+          await ble.disconnect()
+          const err = new Error('BOUND_BY_OTHER')
+          err.boundByOther = true
+          throw err
+        }
+        await ble.clearAllAndCreateEpoch(domain.genId('op', ts))
+      }
+      await ble.writeOwnerToken(state.userToken)
+      await ble.syncTime()
+      const { epoch, snapshots } = await ble.pullSnapshots()
+
+      let device = state.devices.find(d => d.id === deviceId)
+      if (!device) {
+        device = domain.addDevice(state, {
+          id: deviceId, name: dev.name, model: dev.model, firmware: dev.firmware,
+          ownerToken: state.userToken, epoch, ts
+        })
+      }
+      domain.updateDevice(state, deviceId, {
+        name: dev.name, model: dev.model, firmware: dev.firmware,
+        battery: dev.battery, locked: dev.locked, epoch, ownerToken: state.userToken, lastSyncAt: ts
+      })
+      domain.setCurrentDevice(state, deviceId)
+      for (const s of snapshots) {
+        domain.applyDeviceSnapshot(state, { deviceId, epoch, date: s.date, practiceId: s.practiceId, total: s.total, version: s.version })
+      }
+      if (dev.currentPracticeId) {
+        state.contexts.ring = {
+          side: 'ring', practiceId: dev.currentPracticeId,
+          startTs: dev.roundStartTs || ts, lastTs: ts,
+          roundCount: dev.roundCount || 0, reminder: dev.reminder || null
+        }
+      }
+      commit()
+      return device
+    },
+
+    // 同步：连接 → 对时 → 读状态 → 拉快照覆盖保存 → 更新设备信息
+    async ringSync() {
+      const device = domain.currentDevice(state)
+      if (!device) return { ok: false, reason: 'NO_DEVICE' }
+      const ble = this.ringAdapter()
+      try {
+        if (!ble.isConnected()) await ble.connect(device.id)
+      } catch (e) {
+        return { ok: false, reason: 'OFFLINE' }
+      }
+      const ts = Date.now()
+      await ble.syncTime()
+      const dev = await ble.readDeviceState()
+      if (dev.ownerToken && dev.ownerToken !== state.userToken) {
+        domain.updateDevice(state, device.id, { ownerMismatch: true })
+        commit()
+        return { ok: false, reason: 'OWNER_MISMATCH' }
+      }
+      domain.updateDevice(state, device.id, { ownerMismatch: false, battery: dev.battery, locked: dev.locked, epoch: dev.epoch, lastSyncAt: ts })
+      const { epoch, snapshots } = await ble.pullSnapshots()
+      for (const s of snapshots) {
+        domain.applyDeviceSnapshot(state, { deviceId: device.id, epoch, date: s.date, practiceId: s.practiceId, total: s.total, version: s.version })
+      }
+      if (dev.currentPracticeId) {
+        state.contexts.ring = {
+          side: 'ring', practiceId: dev.currentPracticeId,
+          startTs: dev.roundStartTs || ts, lastTs: ts,
+          roundCount: dev.roundCount || 0, reminder: dev.reminder || null
+        }
+      }
+      commit()
+      return { ok: true }
+    },
+
+    // 戒指侧实时操作：戒指确认（ACK）后才落 domain——失败不改本地状态
+    async ringStartRound(practiceId, reminder) {
+      const device = domain.currentDevice(state)
+      if (!device) throw new Error('NO_DEVICE')
+      const ble = this.ringAdapter()
+      if (!ble.isConnected()) await ble.connect(device.id)
+      await ble.startNewRound({ practiceId, reminder: reminder || null, opId: domain.genId('op', Date.now()) })
+      domain.startNewRound(state, 'ring', practiceId, { ts: Date.now(), reminder: reminder || null })
+      commit()
+    },
+
+    async ringCancelReminder() {
+      const device = domain.currentDevice(state)
+      if (!device) throw new Error('NO_DEVICE')
+      const ble = this.ringAdapter()
+      if (!ble.isConnected()) await ble.connect(device.id)
+      await ble.cancelReminder({ opId: domain.genId('op', Date.now()) })
+      domain.cancelReminder(state, 'ring')
+      commit()
+    },
+
+    async ringSetLocked(locked) {
+      const device = domain.currentDevice(state)
+      if (!device) throw new Error('NO_DEVICE')
+      const ble = this.ringAdapter()
+      if (!ble.isConnected()) await ble.connect(device.id)
+      const r = await ble.setLocked(locked)
+      domain.updateDevice(state, device.id, { locked: r.locked })
+      commit()
+      return r.locked
+    },
+
+    // mock 调试：模拟戒指被点按（真实戒指的触摸计数），随后同步
+    async ringSimulateTap(n) {
+      const ble = this.ringAdapter()
+      if (ble.kind !== 'mock') throw new Error('MOCK_ONLY')
+      const r = ble.simulateTap(n)
+      if (!r.ok) return r
+      await this.ringSync()
+      return r
+    },
+
+    ringUnbind(deviceId) {
+      // 解绑只解除本机绑定；戒指内数据保留
+      domain.removeDevice(state, deviceId)
+      if (state.contexts.ring) state.contexts.ring = null
+      commit()
     }
   }
 }

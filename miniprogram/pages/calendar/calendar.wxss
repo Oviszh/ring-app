@@ -1,29 +1,10 @@
-/* P1' 日历（月视图）——大字号、大点击区 */
+/* P1' 日历（月视图）——基于 app.wxss 设计系统 v2 */
 
-.page {
-  padding: var(--space);
-  padding-bottom: 48rpx;
-  box-sizing: border-box;
-}
-
-/* —— 通用按钮 —— */
-
-.btn-primary {
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  margin: 0;
-  padding: 0 20rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: #fff;
-  background: var(--c-primary);
-  border-radius: var(--radius);
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.btn-primary::after {
-  border: none;
+.page-cap {
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
+  letter-spacing: 2rpx;
+  margin: 4rpx 4rpx 12rpx;
 }
 
 /* —— 月份切换 —— */
@@ -31,21 +12,21 @@
 .month-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  margin-bottom: 12rpx;
 }
 
-.month-btn {
-  width: 104rpx;
-  height: 104rpx;
-  line-height: 104rpx;
+.month-arrow {
+  width: 96rpx;
+  height: 96rpx;
+  line-height: 96rpx;
   text-align: center;
-  font-size: var(--fs-title);
+  font-size: var(--fs-big);
   color: var(--c-primary);
+  border-radius: 50%;
 }
-
-.month-btn--disabled {
-  color: var(--c-border);
-}
+.month-arrow:active { background: var(--c-primary-weak); }
+.month-arrow.off { color: var(--c-ink-3); }
+.month-arrow.off:active { background: transparent; }
 
 .month-label {
   flex: 1;
@@ -55,56 +36,41 @@
   color: var(--c-ink);
 }
 
-/* —— 查看选择器 —— */
+/* —— 查看口径 —— */
 
 .view-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8rpx;
+  margin-bottom: 20rpx;
 }
 
-.view-picker-wrap {
-  flex: 0 1 auto;
-  min-width: 0;
-}
+.chips { flex: 0 1 auto; min-width: 0; }
 
-.view-picker {
+.chip-view {
   display: flex;
   align-items: center;
-  min-height: 88rpx;
-  padding: 0 20rpx;
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
+  justify-content: center;
+  max-width: 460rpx;
+  height: 80rpx;
+  line-height: 80rpx;
 }
 
-.view-label {
-  margin-right: 12rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
-
-.view-name {
-  max-width: 320rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-ink);
+.chip-text {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.view-arrow {
-  margin-left: 10rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+.chip-arrow {
+  margin-left: 12rpx;
+  font-size: var(--fs-mini);
+  opacity: 0.7;
 }
 
 .view-target {
   flex-shrink: 0;
-  margin-left: 16rpx;
+  margin-left: 20rpx;
   font-size: var(--fs-small);
   font-weight: 600;
   color: var(--c-primary);
@@ -112,25 +78,21 @@
 
 /* —— 月历网格 —— */
 
-.calendar {
-  margin-top: 16rpx;
-  padding: 12rpx 8rpx 8rpx;
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
+.cal-card {
+  padding: 16rpx 12rpx;
+  margin-bottom: 16rpx;
 }
 
 .week-row {
   display: flex;
+  padding: 4rpx 0 10rpx;
 }
 
 .week-cell {
   width: 14.2857%;
-  padding: 8rpx 0;
   text-align: center;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
 }
 
 .grid {
@@ -140,97 +102,104 @@
 
 .cell {
   width: 14.2857%;
-  height: 104rpx;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cell-mark {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  border: 3rpx solid transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 3rpx solid transparent;
-  border-radius: 12rpx;
+}
+.cell-mark.on { border-color: var(--c-primary); }
+
+.cell-day {
+  font-size: 32rpx;
+  line-height: 1.1;
+  color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cell-day-mini {
+  font-size: 20rpx;
+  line-height: 1.1;
+  color: var(--c-ink-3);
 }
 
 .cell-num {
-  font-size: var(--fs-body);
-  font-weight: 600;
-  line-height: 1.2;
-  color: var(--c-ink);
-}
-
-.cell-num--warn {
-  color: var(--c-danger);
-}
-
-.cell--total .cell-num {
   font-size: 26rpx;
-  letter-spacing: -0.5rpx;
+  line-height: 1.15;
+  font-weight: 600;
+  color: var(--c-ink);
+  font-variant-numeric: tabular-nums;
 }
+.cell-num.warn { color: var(--c-warn); }
 
-.cell--future .cell-num {
-  color: var(--c-border);
-}
+.dim { color: var(--c-ink-3); }
 
-.cell--today {
-  border-color: var(--c-primary);
-  background: var(--c-primary-weak);
-}
-
+/* 状态点：● 达标 / ◐ 部分 / ○ 未完成 / · 无数据 */
 .cell-dot {
-  margin-top: 2rpx;
-  font-size: 22rpx;
-  line-height: 1;
-  color: var(--c-border);
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  margin-top: 4rpx;
+  box-sizing: border-box;
+}
+.dot-met { background: var(--c-success); }
+.dot-partial {
+  background: linear-gradient(to right, var(--c-warn) 50%, var(--c-track) 50%);
+}
+.dot-missed {
+  background: transparent;
+  border: 3rpx solid var(--c-ink-3);
+}
+.dot-none { background: var(--c-track); }
+
+/* —— 图例 / 统计 —— */
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 40rpx;
+  margin: 4rpx 0 8rpx;
 }
 
-.cell-dot--met {
-  color: var(--c-success);
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
 }
-
-.cell-dot--partial {
-  color: var(--c-led);
-}
-
-.cell-dot--missed {
-  color: var(--c-ink-secondary);
-}
-
-.cell-dot--none {
-  color: var(--c-border);
-}
-
-/* —— 统计行 —— */
+.legend-item .cell-dot { margin: 0 10rpx 0 0; }
 
 .stats {
-  margin-top: 20rpx;
+  margin: 4rpx 0 8rpx;
   text-align: center;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-ink);
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
 }
 
 /* —— 长期大愿 —— */
 
-.vow-section {
-  margin-top: 32rpx;
-}
+.vow-card { padding: 28rpx 32rpx; }
 
 .vow-head {
-  padding: 0 8rpx 12rpx;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-ink);
-}
-
-.vow-card {
-  margin-bottom: 16rpx;
-  padding: var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  box-sizing: border-box;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 .vow-title {
+  flex: 1;
+  min-width: 0;
   font-size: var(--fs-body);
   font-weight: 600;
   color: var(--c-ink);
@@ -239,53 +208,35 @@
   text-overflow: ellipsis;
 }
 
-.vow-line {
+.vow-pct {
+  flex-shrink: 0;
+  margin-left: 20rpx;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--c-primary);
+}
+
+.vow-track { margin-top: 20rpx; }
+
+.vow-foot {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-top: 8rpx;
+  margin-top: 14rpx;
+  font-size: var(--fs-mini);
+  color: var(--c-ink-2);
 }
 
-.vow-count {
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
-
-.vow-pct {
-  font-size: var(--fs-body);
-  font-weight: 700;
-  color: var(--c-primary);
-}
-
-.vow-bar {
-  height: 14rpx;
-  margin-top: 12rpx;
-  background: var(--c-primary-weak);
-  border-radius: 7rpx;
-  overflow: hidden;
-}
-
-.vow-bar-fill {
-  height: 100%;
-  background: var(--c-primary);
-  border-radius: 7rpx;
-}
-
-.vow-sub {
-  margin-top: 10rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
+.vow-count { font-variant-numeric: tabular-nums; }
+.vow-sub { margin-left: 20rpx; }
 
 .vow-empty {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--btn-height);
+  text-align: center;
   font-size: var(--fs-body);
+  font-weight: 500;
   color: var(--c-primary);
   border: 2rpx dashed var(--c-border);
-  border-radius: var(--radius);
+  box-shadow: none;
+  background: transparent;
+  padding: 44rpx 32rpx;
 }
-
-.calendar { padding:20rpx 12rpx; border:none; } .cell { height:110rpx; border-width:1rpx; border-radius:18rpx; } .cell-date { font-size:26rpx; color:#687267; } .cell--total .cell-num { font-size:24rpx; } .cell--today { border-color:#304D40; } .calendar-legend { font-size:24rpx; color:#687267; margin:20rpx 0 40rpx; text-align:center; } .month-bar { background:#FDFCF9; border-radius:24rpx; } .vow-empty { border:1rpx solid #DEE2D8; } .vow-card { border:none; } .cell--future .cell-num { color:#92988D; }

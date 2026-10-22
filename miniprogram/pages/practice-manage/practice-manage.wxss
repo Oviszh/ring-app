@@ -1,143 +1,47 @@
-/* P4 功课管理：大字号、大点击区（老年用户） */
-.page {
-  padding: var(--space);
-  padding-bottom: 48rpx;
-  box-sizing: border-box;
-}
+/* P4 功课管理 —— 基于 app.wxss 设计系统 */
 
-.hint {
-  padding: 0 8rpx 20rpx;
-  font-size: var(--fs-small);
-  line-height: 1.5;
-  color: var(--c-ink-secondary);
-}
-
-.list {
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  min-height: 168rpx;
-  padding: 20rpx var(--space);
-  border-bottom: 1rpx solid var(--c-border);
-  box-sizing: border-box;
-}
-
-.row:last-child {
-  border-bottom: none;
-}
-
-/* —— 排序按钮 —— */
-
+/* —— 排序小圆钮 —— */
 .order {
   flex: none;
   display: flex;
-  flex-direction: column;
-  margin-right: 20rpx;
+  gap: 12rpx;
+  margin-right: 24rpx;
 }
 
 .order-btn {
-  width: 96rpx;
-  height: 72rpx;
-  line-height: 68rpx;
-  margin: 4rpx 0;
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 64rpx;
   text-align: center;
-  font-size: 44rpx;
-  font-weight: 700;
-  color: var(--c-primary);
-  background: var(--c-primary-weak);
-  border-radius: 12rpx;
-  box-sizing: border-box;
+  font-size: 34rpx;
+  color: var(--c-ink);
+  background: var(--c-track);
+  border-radius: 50%;
 }
 
-.order-btn-hover {
-  border: 2rpx solid var(--c-primary);
+.order-btn.off {
+  color: var(--c-ink-3);
+  opacity: 0.5;
 }
 
-.order-btn--disabled {
-  color: var(--c-border);
-  background: var(--c-bg);
-}
+.order-btn-hover { background: var(--c-border); }
 
 /* —— 功课名 —— */
-
-.row-main {
-  flex: 1;
-  min-width: 0;
+.tap {
   padding: 8rpx 0;
   border-radius: 12rpx;
 }
-
-.row-main-hover {
-  background: var(--c-primary-weak);
-}
-
-.row-name {
-  font-size: var(--fs-title);
-  font-weight: 600;
-  line-height: 1.4;
-  word-break: break-all;
-}
-
-.row-sub {
-  margin-top: 6rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
-
-/* —— 首页显示开关 —— */
-
-.row-tail {
-  flex: none;
-  display: flex;
-  align-items: center;
-  margin-left: 16rpx;
-}
-
-.tail-label {
-  margin-right: 12rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
+.tap-hover { background: var(--c-primary-weak); }
 
 .switch {
-  transform: scale(1.15);
+  flex: none;
+  margin-left: 16rpx;
+  transform: scale(1.1);
   transform-origin: right center;
 }
 
-.empty-hint {
-  padding: 140rpx 0;
-  text-align: center;
-  font-size: var(--fs-body);
-  color: var(--c-ink-secondary);
-}
-
-.btn-add {
+.add-btn {
   width: 100%;
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  margin: 40rpx 0 0;
+  margin-top: 8rpx;
   padding: 0;
-  font-size: var(--fs-body);
-  font-weight: 600;
-  color: var(--c-primary);
-  background: var(--c-card);
-  border: 2rpx solid var(--c-primary);
-  border-radius: var(--radius);
-  box-sizing: border-box;
 }
-
-.btn-add::after {
-  border: none;
-}
-
-/* 沉静的留白、细分隔与统一操作尺寸。 */
-.card,.list { border-color:#E2E5DC; box-shadow:none; }
-.btn-main,.btn-primary,.btn-save,.card-btn { border-radius:20rpx; font-weight:500; }
-.sheet { max-height:85vh; overflow-y:auto; padding-bottom:calc(32rpx + env(safe-area-inset-bottom)); }
-.sheet-close { min-width:72rpx; min-height:72rpx; text-align:center; line-height:72rpx; }

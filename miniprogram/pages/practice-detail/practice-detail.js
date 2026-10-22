@@ -51,6 +51,7 @@ Page({
     targetText: '',
     hasTarget: false,
     percent: 0,
+    barStyle: 'width: 0%;',
     breakdownText: '戒指 0 · 手机 0 · 手动 0',
 
     cardTitle: '▶ 开启新一轮计数',
@@ -216,6 +217,7 @@ Page({
       targetText: totalsView.targetText,
       hasTarget: totalsView.hasTarget,
       percent: totalsView.percent,
+      barStyle: totalsView.barStyle,
       breakdownText: totalsView.breakdownText,
       cardTitle,
       mainBtnText,
@@ -237,6 +239,7 @@ Page({
         targetText: '',
         hasTarget: false,
         percent: 0,
+        barStyle: 'width: 0%;',
         breakdownText: isTime ? '今日 0分钟 · 0座' : '戒指 0 · 手机 0 · 手动 0'
       }
     }
@@ -251,6 +254,7 @@ Page({
       targetText: hasTarget ? fmtNum(target) : '',
       hasTarget,
       percent,
+      barStyle: `width: ${percent}%;`,
       breakdownText: isTime
         ? `今日 ${fmtMinutes(totals.durationMin)} · ${fmtNum(totals.times)}座`
         : `戒指 ${fmtNum(totals.ring)} · 手机 ${fmtNum(totals.phone)} · 手动 ${fmtNum(totals.manual)}`
@@ -321,6 +325,7 @@ Page({
       patch.targetText = totalsView.targetText
       patch.hasTarget = totalsView.hasTarget
       patch.percent = totalsView.percent
+      patch.barStyle = totalsView.barStyle
       patch.breakdownText = totalsView.breakdownText
     }
 

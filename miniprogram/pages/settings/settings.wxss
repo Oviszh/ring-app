@@ -1,88 +1,26 @@
-/* P16 设置：大字号、大点击区（老年用户） */
-.page {
-  padding: var(--space);
-  padding-bottom: 48rpx;
-  box-sizing: border-box;
-}
-
-.card {
-  margin-bottom: var(--space);
-  padding: 8rpx var(--space);
-  background: var(--c-card);
-  border: 1rpx solid var(--c-border);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.card-title {
-  padding: 20rpx 0 12rpx;
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--c-ink-secondary);
-}
-
-.card-hint {
-  padding: 8rpx 0 24rpx;
-  font-size: var(--fs-small);
-  line-height: 1.5;
-  color: var(--c-ink-secondary);
-}
-
-.row {
-  display: flex;
-  align-items: center;
-  min-height: 120rpx;
-  padding: 16rpx 0;
-  border-bottom: 1rpx solid var(--c-border);
-  box-sizing: border-box;
-}
-
-.row:last-child {
-  border-bottom: none;
-}
-
-.row-hover {
-  background: var(--c-primary-weak);
-}
-
-.row-main {
-  flex: 1;
-  min-width: 0;
-}
-
-.row-label {
-  font-size: var(--fs-body);
-  font-weight: 600;
-  line-height: 1.5;
-}
-
-.row-sub {
-  margin-top: 4rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-secondary);
-}
-
-.row-arrow {
-  flex: none;
-  margin-left: 16rpx;
-  font-size: 44rpx;
-  line-height: 1;
-  color: var(--c-ink-secondary);
-}
+/* P16 设置 —— 基于 app.wxss 设计系统 */
 
 .switch {
   flex: none;
   margin-left: 16rpx;
-  transform: scale(1.15);
+  transform: scale(1.1);
   transform-origin: right center;
 }
 
-.switch--disabled {
-  opacity: 0.4;
+/* 未绑定戒指时的灰显 */
+.dim { color: var(--c-ink-3); }
+
+.row-right {
+  flex: none;
+  margin-left: 16rpx;
+  font-size: var(--fs-small);
+  color: var(--c-primary);
+  white-space: nowrap;
 }
 
-/* 沉静的留白、细分隔与统一操作尺寸。 */
-.card,.list { border-color:#E2E5DC; box-shadow:none; }
-.btn-main,.btn-primary,.btn-save,.card-btn { border-radius:20rpx; font-weight:500; }
-.sheet { max-height:85vh; overflow-y:auto; padding-bottom:calc(32rpx + env(safe-area-inset-bottom)); }
-.sheet-close { min-width:72rpx; min-height:72rpx; text-align:center; line-height:72rpx; }
+.note {
+  padding: 8rpx 8rpx 0;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--c-ink-2);
+}
