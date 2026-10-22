@@ -1,0 +1,9 @@
+{
+  "name": "nianfo-counter",
+  "version": "0.1.0",
+  "private": true,
+  "description": "念佛计数微信小程序",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}
