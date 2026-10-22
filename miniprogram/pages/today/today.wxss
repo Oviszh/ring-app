@@ -1,4 +1,4 @@
-/* 今日页（样板页）——设计系统 v3 */
+/* 今日页 —— 禅意纸卡风（设计参考：宣纸底 + 回纹角 + 莲花饰 + 墨字大数字） */
 
 /* —— 空状态 —— */
 .empty-mark {
@@ -15,88 +15,156 @@
   box-shadow: 0 12rpx 32rpx rgba(46, 36, 27, 0.25);
 }
 
-/* —— 主视觉计数卡（深咖烛光） —— */
-.hero-head {
+/* —— 计数纸卡 —— */
+.count-card {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 48rpx 36rpx 40rpx;
+  box-shadow: 0 8rpx 30rpx rgba(74, 56, 38, 0.10);
+}
+
+/* 回纹角饰 */
+.corner {
+  position: absolute;
+  width: 36rpx;
+  height: 36rpx;
+  border-color: #C9AE7E;
+  border-style: solid;
+  border-width: 0;
+}
+.corner.tl { top: 16rpx; left: 16rpx; border-top-width: 3rpx; border-left-width: 3rpx; border-top-left-radius: 10rpx; }
+.corner.tr { top: 16rpx; right: 16rpx; border-top-width: 3rpx; border-right-width: 3rpx; border-top-right-radius: 10rpx; }
+.corner.bl { bottom: 16rpx; left: 16rpx; border-bottom-width: 3rpx; border-left-width: 3rpx; border-bottom-left-radius: 10rpx; }
+.corner.br { bottom: 16rpx; right: 16rpx; border-bottom-width: 3rpx; border-right-width: 3rpx; border-bottom-right-radius: 10rpx; }
+
+.count-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.hero-arrow {
+.count-arrow {
   width: 88rpx;
   height: 88rpx;
   line-height: 84rpx;
   text-align: center;
   font-size: 52rpx;
-  color: var(--c-hero-num);
+  color: var(--c-primary);
   border-radius: 50%;
 }
-.hero-arrow:active { background: rgba(247, 217, 168, 0.14); }
-.hero-arrow.off { color: rgba(243, 231, 211, 0.25); }
+.count-arrow:active { background: var(--c-primary-weak); }
+.count-arrow.off { color: var(--c-ink-3); }
 
-.hero-name {
-  font-size: var(--fs-title);
-  font-weight: 600;
-  color: var(--c-hero-text);
+.count-name {
   flex: 1;
-  text-align: center;
-  letter-spacing: 2rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
 }
-
-.hero-num {
-  font-size: var(--fs-hero);
-  font-weight: 200;
+.count-name .name-text {
+  font-size: 42rpx;
+  font-weight: 600;
+  font-family: "Songti SC", "STSong", "SimSun", serif;
   letter-spacing: 4rpx;
-  color: var(--c-hero-num);
-  text-align: center;
-  margin: 40rpx 0 4rpx;
-  font-variant-numeric: tabular-nums;
 }
-.hero-num.dim { color: rgba(247, 217, 168, 0.35); }
+.count-name .orn {
+  color: #C9AE7E;
+  font-size: 30rpx;
+}
 
-.hero-caption {
+/* 未绑定戒指 */
+.count-empty {
+  text-align: center;
+  font-size: 44rpx;
+  color: var(--c-ink-2);
+  font-family: "Songti SC", "STSong", serif;
+  margin: 72rpx 0 12rpx;
+}
+.count-empty-sub {
+  text-align: center;
   font-size: var(--fs-small);
-  color: var(--c-hero-sub);
+  color: var(--c-ink-3);
+  margin-bottom: 36rpx;
+}
+.bind-btn { width: 60%; margin: 0 auto; }
+
+/* 大数字 */
+.count-num {
+  font-size: 150rpx;
+  font-weight: 500;
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+  letter-spacing: 2rpx;
+  color: #1B1917;
+  text-align: center;
+  margin: 56rpx 0 8rpx;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.count-num.dim { color: var(--c-ink-3); }
+
+.count-caption {
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
   text-align: center;
   letter-spacing: 2rpx;
 }
 
-.hero-divider {
+.count-divider {
   height: 2rpx;
-  background: rgba(243, 231, 211, 0.16);
-  margin: 28rpx 0 20rpx;
+  background: var(--c-border);
+  margin: 28rpx 8rpx 20rpx;
 }
 
-.hero-today {
+.count-today {
   font-size: var(--fs-small);
-  color: var(--c-hero-sub);
+  color: var(--c-ink-2);
   text-align: center;
 }
 
-.hero-actions { margin-top: 32rpx; }
+.count-actions { margin-top: 32rpx; }
 
-/* 深咖卡上的烛光按钮 */
-.btn-hero {
-  background: linear-gradient(135deg, #F0C68C 0%, #D9A45E 100%);
-  color: #3A2B1A;
-  box-shadow: 0 6rpx 18rpx rgba(0, 0, 0, 0.25);
-}
-.btn-hero:active { opacity: 0.88; }
-
-.hero-ring-bar {
+.count-ringbar {
   display: flex;
   margin-top: 28rpx;
-  border-top: 2rpx solid rgba(243, 231, 211, 0.16);
+  border-top: 2rpx solid var(--c-border);
   padding-top: 24rpx;
 }
-.hero-ring-item {
+.count-ring-item {
   flex: 1;
   text-align: center;
   font-size: var(--fs-small);
-  color: var(--c-hero-sub);
+  color: var(--c-ink-2);
   padding: 8rpx 0;
 }
-.hero-ring-item:first-child { border-right: 2rpx solid rgba(243, 231, 211, 0.16); }
+.count-ring-item:first-child { border-right: 2rpx solid var(--c-border); }
+
+/* —— 设备/手机页签（卡片下方，宣纸托底感） —— */
+.side-tabs {
+  display: flex;
+  background: #E4DCCD;
+  border-radius: 20rpx;
+  padding: 10rpx;
+  margin-top: 20rpx;
+}
+.side-tab {
+  flex: 1;
+  text-align: center;
+  height: 92rpx;
+  line-height: 92rpx;
+  border-radius: 14rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--c-ink-2);
+  letter-spacing: 2rpx;
+}
+.side-tab.on {
+  background: #FFFFFF;
+  color: var(--c-primary);
+  font-weight: 700;
+  box-shadow: 0 4rpx 14rpx rgba(74, 56, 38, 0.16);
+}
 
 /* —— 填报入口 —— */
 .entry-link {
@@ -104,36 +172,83 @@
   color: var(--c-primary);
   font-size: var(--fs-body);
   font-weight: 600;
-  padding: 28rpx 0 12rpx;
+  padding: 32rpx 0 12rpx;
 }
 
-/* —— 功课列表 —— */
-.dot {
-  width: 16rpx;
-  height: 16rpx;
-  border-radius: 50%;
-  background: var(--c-track);
-  margin-right: 22rpx;
-  flex-shrink: 0;
+/* —— 功课区头 —— */
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16rpx 4rpx 20rpx;
 }
-.dot-on { background: var(--c-primary); }
-
-.mini-track {
+.list-head-main { display: flex; flex-direction: column; }
+.list-title {
+  font-size: 42rpx;
+  font-weight: 700;
+  font-family: "Songti SC", "STSong", serif;
+  letter-spacing: 4rpx;
+}
+.list-bar {
+  width: 56rpx;
   height: 8rpx;
   border-radius: 4rpx;
-  background: var(--c-track);
-  margin-top: 12rpx;
-  overflow: hidden;
-}
-.mini-fill {
-  height: 100%;
-  border-radius: 4rpx;
   background: var(--c-primary);
+  margin-top: 10rpx;
 }
+.list-config {
+  font-size: var(--fs-small);
+  color: var(--c-primary);
+  border: 2rpx solid #D8C49A;
+  border-radius: 999rpx;
+  padding: 14rpx 32rpx;
+  font-weight: 600;
+}
+.list-config:active { background: var(--c-primary-weak); }
 
-.add-row { justify-content: center; }
-.add-text {
-  text-align: center;
+/* —— 功课行卡 —— */
+.p-card {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 22rpx;
+  box-shadow: 0 6rpx 24rpx rgba(74, 56, 38, 0.08);
+}
+.p-icon {
+  width: 88rpx;
+  height: 88rpx;
+  margin-right: 26rpx;
+  flex-shrink: 0;
+}
+.p-main { flex: 1; min-width: 0; }
+.p-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  font-family: "Songti SC", "STSong", serif;
+  letter-spacing: 2rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.p-sub {
+  font-size: var(--fs-small);
+  color: var(--c-ink-2);
+  margin-top: 6rpx;
+}
+.p-num {
+  font-size: 52rpx;
+  font-weight: 500;
+  font-family: "Songti SC", "STSong", serif;
+  color: var(--c-primary);
+  font-variant-numeric: tabular-nums;
+  margin-right: 12rpx;
+}
+.p-arrow { color: var(--c-ink-3); font-size: 40rpx; }
+
+.p-add { justify-content: center; padding: 28rpx; }
+.p-add-text {
   color: var(--c-primary);
   font-size: var(--fs-body);
   font-weight: 600;

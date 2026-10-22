@@ -22,28 +22,34 @@
     "pages/device-bind/device-bind"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#F6F5F0",
+    "navigationBarBackgroundColor": "#EFEAE1",
     "navigationBarTitleText": "念佛计数",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#F6F5F0"
+    "backgroundColor": "#EFEAE1"
   },
   "tabBar": {
-    "color": "#737A72",
-    "selectedColor": "#304D40",
-    "backgroundColor": "#FDFCF9",
-    "borderStyle": "black",
+    "color": "#A8A296",
+    "selectedColor": "#A9853C",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/today/today",
-        "text": "今日"
+        "text": "今日",
+        "iconPath": "assets/icons/tab-today.png",
+        "selectedIconPath": "assets/icons/tab-today-active.png"
       },
       {
         "pagePath": "pages/calendar/calendar",
-        "text": "日历"
+        "text": "日历",
+        "iconPath": "assets/icons/tab-calendar.png",
+        "selectedIconPath": "assets/icons/tab-calendar-active.png"
       },
       {
         "pagePath": "pages/mine/mine",
-        "text": "我的"
+        "text": "我的",
+        "iconPath": "assets/icons/tab-mine.png",
+        "selectedIconPath": "assets/icons/tab-mine-active.png"
       }
     ]
   },

@@ -30,14 +30,11 @@ Page({
   },
 
   onRingChange(e) {
-    if (!this.data.hasRing) return
     store.setSetting('ringEnabled', e.detail.value)
     this.refresh()
   },
 
-  // 未绑定戒指时，整行可点，去绑定
-  onRingRow() {
-    if (this.data.hasRing) return
+  onDevices() {
     wx.navigateTo({ url: '/pages/device-list/device-list' })
   },
 

@@ -12,9 +12,9 @@ page {
   --c-ink: #1B1917;
   --c-ink-2: #7C766C;
   --c-ink-3: #AFA89C;
-  --c-primary: #C05B2A;       /* 朱砂赭 */
-  --c-primary-deep: #A34A20;
-  --c-primary-weak: #F5E2D3;
+  --c-primary: #A9853C;       /* 古金 */
+  --c-primary-deep: #8F6E2F;
+  --c-primary-weak: #F3E9D3;
   --c-success: #3E7C4F;
   --c-warn: #D08A2E;
   --c-danger: #C2402F;

@@ -1,4 +1,5 @@
-// 今日 Tab（P1）：空状态 P1-F / 计数态（含戒指页签 P1-A）/ 纯填报 P1-G / 填报弹层 E3
+// 今日 Tab（P1）：纸卡计数区 + 设备/手机页签（页签常显，未绑定显示"暂无绑定戒指"）
+// 设置里可分别关闭手机/戒指计数入口；全部关闭 = 纯填报模式
 const { fmtNum, fmtDayCN, fmtMinutes } = require('../../utils/format')
 
 const store = getApp().globalData.store
@@ -7,10 +8,10 @@ function nameOf(practice) {
   return practice.displayName || practice.name
 }
 
-// 首页只显示 showOnHome 的功课；正在计数的功课即使被隐藏也保留在列表里
-function visiblePractices() {
+// 首页只显示 showOnHome 的功课；可见侧正在计数的功课即使被隐藏也保留在列表里
+function visiblePractices(enabledSides) {
   const list = store.homePractices()
-  for (const side of ['ring', 'phone']) {
+  for (const side of enabledSides) {
     const ctx = store.context(side)
     const current = ctx ? store.getPractice(ctx.practiceId) : null
     if (current && !list.some(p => p.id === current.id)) {
@@ -41,10 +42,11 @@ Page({
     phoneEnabled: true,
     fillOnly: false,
 
-    // 戒指页签
-    hasRing: false,
+    // 页签与戒指
+    tabsVisible: false,
     side: 'phone',
-    deviceName: '',
+    ringBound: false,
+    ringEmpty: false,
     ringLocked: false,
     syncText: '',
 
@@ -93,17 +95,26 @@ Page({
 
   refresh() {
     const all = store.practices()
-    const list = visiblePractices()
     const today = store.todayKey()
     const device = store.currentDevice()
-    const hasRing = !!device && store.state.settings.ringEnabled !== false
-    const phoneEnabled = store.state.settings.phoneEnabled !== false
-    // P1-G：戒指与手机计数入口都不可用 → 只留手动填报
-    const fillOnly = !hasRing && !phoneEnabled
-    // 当前查看侧：无戒指时固定手机；有戒指时记住用户选择
+    const settings = store.state.settings || {}
+    const ringEnabled = settings.ringEnabled !== false
+    const phoneEnabled = settings.phoneEnabled !== false
+    const ringBound = !!device
+    // 全部关闭 = 纯填报模式；只关一个 = 页签只剩另一侧
+    const fillOnly = !ringEnabled && !phoneEnabled
+    const tabsVisible = ringEnabled && phoneEnabled
+
     let side = this.data.side
-    if (!hasRing && side !== 'phone') side = 'phone'
-    if (hasRing && !side) side = 'ring'
+    if (!ringEnabled && side === 'ring') side = 'phone'
+    if (!phoneEnabled && side === 'phone') side = ringEnabled ? 'ring' : 'phone'
+    if (!tabsVisible) side = ringEnabled ? 'ring' : 'phone'
+    const ringEmpty = side === 'ring' && !ringBound
+
+    const enabledSides = []
+    if (ringEnabled) enabledSides.push('ring')
+    if (phoneEnabled) enabledSides.push('phone')
+    const list = visiblePractices(enabledSides)
 
     if (!list.length) {
       this.setData({
@@ -113,8 +124,12 @@ Page({
         todayKey: today,
         practices: [],
         entryVisible: false,
-        hasRing, side, phoneEnabled, fillOnly,
-        deviceName: device ? device.name : '',
+        phoneEnabled,
+        fillOnly,
+        tabsVisible,
+        side,
+        ringBound,
+        ringEmpty,
         ringLocked: device ? !!device.locked : false,
         syncText: syncTextOf(device)
       })
@@ -131,15 +146,15 @@ Page({
         id: p.id,
         name: nameOf(p),
         current: p.id === current.id,
-        progressText: this.progressText(t),
-        barStyle: `width: ${t && t.target ? Math.min(100, Math.round(t.total / t.target * 100)) : 0}%;`
+        totalText: t ? (t.isDuration ? fmtMinutes(t.durationMin) : fmtNum(t.total)) : '0',
+        progressText: this.progressText(t)
       }
     })
 
     const totals = store.dayTotals(today, current.id)
     const isCurrentCtx = ctx && ctx.practiceId === current.id
     const roundCount = isCurrentCtx ? ctx.roundCount : 0
-    const sideLabel = side === 'ring' ? '戒指' : '手机'
+    const sideLabel = side === 'ring' ? '设备' : '手机'
     const isTime = current.type === 'time'
 
     this.setData({
@@ -147,8 +162,12 @@ Page({
       empty: false,
       emptyHidden: false,
       todayKey: today,
-      hasRing, side, phoneEnabled, fillOnly,
-      deviceName: device ? device.name : '',
+      phoneEnabled,
+      fillOnly,
+      tabsVisible,
+      side,
+      ringBound,
+      ringEmpty,
       ringLocked: device ? !!device.locked : false,
       syncText: syncTextOf(device),
       currentName: nameOf(current),
@@ -174,12 +193,16 @@ Page({
     return `今日 ${fmtNum(totals.total)}/${fmtNum(totals.target)}`
   },
 
-  // —— 戒指/手机页签 ——
+  // —— 设备/手机页签 ——
 
   onSideTab(e) {
     const side = e.currentTarget.dataset.side
     if (!side || side === this.data.side) return
     this.setData({ side }, () => this.refresh())
+  },
+
+  goBind() {
+    wx.navigateTo({ url: '/pages/device-bind/device-bind' })
   },
 
   onRingLock() {
@@ -218,7 +241,7 @@ Page({
   onNextPractice() { this.switchBy(1) },
 
   switchBy(delta) {
-    const list = visiblePractices()
+    const list = this.data.practices.length ? this.data.practices.map(r => store.getPractice(r.id)).filter(Boolean) : []
     if (list.length < 2) return
 
     const side = this.data.side
@@ -228,6 +251,7 @@ Page({
 
     const start = () => {
       if (side === 'ring') {
+        if (!this.data.ringBound) { this.goBind(); return }
         store.ringStartRound(target.id).catch(() => {
           wx.showToast({ title: '戒指未连接', icon: 'none' })
         })

@@ -8,22 +8,28 @@
         <view class="row-title">手机计数入口</view>
         <view class="row-sub">关闭后仍可手动填报</view>
       </view>
-      <switch class="switch" checked="{{phoneEnabled}}" color="#C05B2A" bindchange="onPhoneChange" />
+      <switch class="switch" checked="{{phoneEnabled}}" color="#A9853C" bindchange="onPhoneChange" />
     </view>
 
-    <view class="row" bindtap="onRingRow">
+    <view class="row">
       <view class="row-main">
-        <view class="row-title {{hasRing ? '' : 'dim'}}">戒指计数入口</view>
-        <view class="row-sub">{{hasRing ? '关闭后首页不显示戒指计数' : '绑定戒指后可用'}}</view>
+        <view class="row-title">戒指计数入口</view>
+        <view class="row-sub">关闭后首页不显示戒指计数；未绑定时计数区显示绑定引导</view>
       </view>
       <switch
-        wx:if="{{hasRing}}"
         class="switch"
         checked="{{ringEnabled}}"
-        color="#C05B2A"
+        color="#A9853C"
         bindchange="onRingChange"
       />
-      <view wx:else class="row-right">未绑定戒指 ›</view>
+    </view>
+
+    <view class="row" bindtap="onDevices">
+      <view class="row-main">
+        <view class="row-title">我的设备</view>
+        <view class="row-sub">{{hasRing ? '管理已绑定的戒指' : '还没有绑定戒指'}}</view>
+      </view>
+      <text class="row-arrow">›</text>
     </view>
   </view>
 
