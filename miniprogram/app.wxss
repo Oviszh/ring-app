@@ -1,0 +1,32 @@
+/* 设计变量：老年用户可读性优先 —— 大字号、大按钮、高对比 */
+:root {
+  /* 颜色 */
+  --c-bg: #F7F3EC;          /* 米白底 */
+  --c-card: #FFFDF9;        /* 卡片底 */
+  --c-ink: #2B2620;         /* 主文字 */
+  --c-ink-secondary: #6E655B; /* 次要文字 */
+  --c-primary: #B4552D;     /* 主色（赭红） */
+  --c-primary-weak: #F0E2D8;
+  --c-led: #E8743B;         /* LED 数码管数字 */
+  --c-success: #3E7C4F;
+  --c-danger: #B3372D;
+  --c-border: #E5DCD0;
+
+  /* 字号（大） */
+  --fs-hero: 96rpx;    /* LED 大数字 */
+  --fs-title: 40rpx;
+  --fs-body: 34rpx;
+  --fs-small: 28rpx;
+
+  /* 尺寸 */
+  --btn-height: 104rpx;
+  --radius: 20rpx;
+  --space: 24rpx;
+}
+
+page {
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-size: var(--fs-body);
+  line-height: 1.5;
+}

@@ -1,0 +1,28 @@
+.empty-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 160rpx var(--space);
+}
+
+.empty-text {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.empty-sub {
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+  margin-bottom: 64rpx;
+}
+
+.btn-primary {
+  width: 60%;
+  height: var(--btn-height);
+  line-height: var(--btn-height);
+  font-size: var(--fs-body);
+  color: #fff;
+  background: var(--c-primary);
+  border-radius: var(--radius);
+}

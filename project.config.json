@@ -1,0 +1,17 @@
+{
+  "description": "念佛计数微信小程序",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "appid": "touristappid",
+  "compileType": "miniprogram",
+  "libVersion": "3.4.0",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": false,
+    "lazyCodeLoading": "requiredComponents"
+  },
+  "condition": {}
+}

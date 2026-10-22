@@ -4,6 +4,6 @@
   "private": true,
   "description": "念佛计数微信小程序",
   "scripts": {
-    "test": "node --test test/"
+    "test": "node --test test/*.test.js"
   }
 }

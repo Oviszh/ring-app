@@ -1,0 +1,6 @@
+<!-- P1-F 空状态：阶段2接入数据后补充 P1-A~P1-G -->
+<view class="empty-wrap">
+  <view class="empty-text">还没有功课</view>
+  <view class="empty-sub">添加一个常修的功课，开始今天的修行吧</view>
+  <button class="btn-primary">＋ 添加功课</button>
+</view>

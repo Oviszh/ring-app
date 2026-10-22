@@ -1,0 +1,7 @@
+.placeholder {
+  display: flex;
+  justify-content: center;
+  padding: 160rpx 0;
+  color: var(--c-ink-secondary);
+  font-size: var(--fs-title);
+}
