@@ -2,7 +2,9 @@
   "pages": [
     "pages/today/today",
     "pages/calendar/calendar",
-    "pages/mine/mine"
+    "pages/mine/mine",
+    "pages/woodfish/woodfish",
+    "pages/practice-add/practice-add"
   ],
   "window": {
     "navigationBarBackgroundColor": "#1F1B16",

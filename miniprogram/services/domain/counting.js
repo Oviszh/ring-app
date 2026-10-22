@@ -78,6 +78,21 @@ function reminderRemaining(state, side, ts) {
   return { type: 'time', remainingMs: Math.max(0, remainMs), done: remainMs <= 0 }
 }
 
+// 撤销一次点按：本轮与该侧今日累积各 -1（P2「撤销一次」用；减到 0 为止）
+function undoTap(state, side, ts) {
+  settleUpTo(state, ts)
+  const ctx = state.contexts[side]
+  if (!ctx) throw new Error('NO_CONTEXT')
+  const practice = findPractice(state, ctx.practiceId)
+  if (!practice) throw new Error('NO_PRACTICE')
+  if (practice.type === PRACTICE_TYPES.TIME) throw new Error('TIME_PRACTICE_LOCKED')
+  if (ctx.roundCount <= 0) return { undone: false }
+  const live = liveCounts(state, practice.id)
+  live[side] = Math.max(0, (live[side] || 0) - 1)
+  ctx.roundCount -= 1
+  return { undone: true }
+}
+
 function validateReminder(reminder) {
   if (reminder === null) return
   if (!reminder || (reminder.type !== 'count' && reminder.type !== 'time') || !(reminder.value > 0)) {
@@ -85,4 +100,4 @@ function validateReminder(reminder) {
   }
 }
 
-module.exports = { tap, startNewRound, endRound, cancelReminder, reminderRemaining }
+module.exports = { tap, undoTap, startNewRound, endRound, cancelReminder, reminderRemaining }

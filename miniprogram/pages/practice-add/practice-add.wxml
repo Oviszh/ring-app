@@ -1,0 +1,52 @@
+<!-- P5 添加功课：模糊搜索公共功课，无匹配时自建 -->
+<view class="page">
+  <view class="search-bar">
+    <text class="search-icon">🔍</text>
+    <input
+      class="search-input"
+      value="{{keyword}}"
+      placeholder="搜索功课，如：阿弥"
+      placeholder-class="search-placeholder"
+      confirm-type="search"
+      bindinput="onSearch"
+    />
+    <view
+      wx:if="{{keyword}}"
+      class="search-clear"
+      hover-class="search-clear-hover"
+      bindtap="onClear"
+    >×</view>
+  </view>
+
+  <view class="list" wx:if="{{results.length}}">
+    <view
+      wx:for="{{results}}"
+      wx:key="name"
+      class="row {{item.added ? 'row-disabled' : ''}}"
+      data-name="{{item.name}}"
+      hover-class="{{item.added ? 'none' : 'row-hover'}}"
+      bindtap="onPick"
+    >
+      <view class="row-main">
+        <view class="row-name">{{item.name}}</view>
+        <view class="row-alias" wx:if="{{item.alias}}">{{item.alias}}</view>
+      </view>
+      <view class="row-tail">
+        <text wx:if="{{item.added}}" class="tag tag-added">已添加</text>
+        <text wx:elif="{{item.type === 'time'}}" class="tag tag-time">计时</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="list" wx:if="{{showCreate}}">
+    <view class="create-row" hover-class="row-hover" bindtap="onCreate">
+      <text class="create-plus">＋</text>
+      <view class="row-main">
+        <view class="create-name">创建自建功课「{{createName}}」</view>
+        <view class="create-sub">计数功课 · 每日 108 声</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-hint" wx:if="{{!results.length && !showCreate}}">没有可添加的功课</view>
+</view>

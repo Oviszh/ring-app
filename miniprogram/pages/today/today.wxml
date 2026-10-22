@@ -1,6 +1,107 @@
-<!-- P1-F 空状态：阶段2接入数据后补充 P1-A~P1-G -->
-<view class="empty-wrap">
-  <view class="empty-text">还没有功课</view>
-  <view class="empty-sub">添加一个常修的功课，开始今天的修行吧</view>
-  <button class="btn-primary">＋ 添加功课</button>
+<!-- P1 今日：空状态 P1-F / 仅手机计数 P1-E / 填报弹层 E3 -->
+<view class="page">
+  <!-- 空状态 -->
+  <view wx:if="{{empty}}" class="empty-wrap">
+    <view class="empty-title">还没有功课</view>
+    <view class="empty-sub">添加一个常修的功课，开始今天的修行吧</view>
+    <button class="btn-primary empty-btn" bindtap="goPracticeAdd">＋ 添加功课</button>
+  </view>
+
+  <block wx:else>
+    <!-- LED 卡片 -->
+    <view class="led-card">
+      <view class="switch-row">
+        <view class="switch-btn {{canSwitch ? '' : 'switch-btn--disabled'}}" bindtap="onPrevPractice">◀</view>
+        <view class="practice-name">{{currentName}}</view>
+        <view class="switch-btn {{canSwitch ? '' : 'switch-btn--disabled'}}" bindtap="onNextPractice">▶</view>
+      </view>
+
+      <view class="led-num">{{ledText}}</view>
+      <view class="led-caption">本轮 · 手机</view>
+      <view class="today-line">{{todayText}}</view>
+
+      <button class="btn-primary led-enter" bindtap="goWoodfish">进入手机计数 →</button>
+
+      <view class="entry-link" bindtap="openEntry">✎ 填报今日数据 ›</view>
+    </view>
+
+    <!-- 我的功课 -->
+    <view class="section">
+      <view class="section-head">
+        <text class="section-title">我的功课</text>
+        <view class="section-action" bindtap="onConfig">配置 ›</view>
+      </view>
+
+      <view
+        wx:for="{{practices}}"
+        wx:key="id"
+        class="practice-row"
+        data-id="{{item.id}}"
+        bindtap="onPracticeTap"
+      >
+        <view class="dot {{item.current ? 'dot--on' : ''}}"></view>
+        <text class="row-name">{{item.name}}</text>
+        <text class="row-progress">{{item.progressText}}</text>
+      </view>
+
+      <view class="add-row" bindtap="goPracticeAdd">＋ 添加功课</view>
+    </view>
+  </block>
+
+  <!-- E3 填报弹层 -->
+  <view
+    wx:if="{{entryVisible}}"
+    class="mask"
+    catchtouchmove="noop"
+    bindtap="closeEntry"
+  >
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-head">
+        <text class="sheet-title">填报</text>
+        <view class="sheet-close" bindtap="closeEntry">✕</view>
+      </view>
+
+      <picker mode="date" value="{{entryDate}}" end="{{todayKey}}" bindchange="onEntryDateChange">
+        <view class="field">
+          <text class="field-label">日期</text>
+          <text class="field-value">{{entryDateLabel}}</text>
+          <text class="field-arrow">▾</text>
+        </view>
+      </picker>
+
+      <picker
+        mode="selector"
+        range="{{entryPractices}}"
+        range-key="name"
+        value="{{entryPracticeIndex}}"
+        bindchange="onEntryPracticeChange"
+      >
+        <view class="field">
+          <text class="field-label">功课</text>
+          <text class="field-value">{{entryPracticeName}}</text>
+          <text class="field-arrow">▾</text>
+        </view>
+      </picker>
+
+      <view class="field">
+        <text class="field-label">本次新增</text>
+        <input
+          class="amount-input"
+          type="number"
+          value="{{entryAmount}}"
+          placeholder="填本次新增数量，不是当天总数"
+          placeholder-class="amount-ph"
+          bindinput="onEntryAmountInput"
+        />
+        <text class="field-unit">{{entryUnit}}</text>
+      </view>
+
+      <view class="sheet-btns">
+        <button class="btn-primary btn-save" bindtap="saveEntry">保存</button>
+        <button class="btn-secondary btn-continue" bindtap="saveEntryAndContinue">保存并继续填报</button>
+      </view>
+
+      <view class="sheet-note">说明：填报记为“手动”来源，计入今日累积与个人大愿；填错了可在当日详情中撤销；纠正误触请用“修正”。</view>
+    </view>
+  </view>
 </view>

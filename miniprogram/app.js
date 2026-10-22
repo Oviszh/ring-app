@@ -1,6 +1,11 @@
-// 阶段2将在此挂载 domain store 的加载/持久化；当前为骨架。
-App({
-  onLaunch() {},
+const { createStore } = require('./services/store')
 
-  globalData: {}
+App({
+  onLaunch() {
+    this.globalData.store = createStore()
+  },
+
+  globalData: {
+    store: null
+  }
 })

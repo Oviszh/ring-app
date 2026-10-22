@@ -1,0 +1,86 @@
+<view class="page" wx:if="{{ready}}">
+  <view class="topbar">
+    <view class="gear" bindtap="onSettings" hover-class="gear-hover">⚙</view>
+  </view>
+
+  <block wx:if="{{!ended}}">
+    <view class="practice-name">{{practiceName}}</view>
+
+    <block wx:if="{{!isTime}}">
+      <view class="round-number">{{roundText}}</view>
+      <view class="round-label">本轮计数</view>
+    </block>
+
+    <view class="today-line">{{todayText}}</view>
+
+    <block wx:if="{{isTime}}">
+      <view class="timer">{{elapsedText}}</view>
+      <view class="round-label">本座计时</view>
+      <button class="btn-main btn-end" bindtap="onEndRound">结束一座</button>
+    </block>
+
+    <block wx:else>
+      <view class="woodfish-wrap">
+        <view class="woodfish {{tapping ? 'tapping' : ''}}" bindtap="onTapWoodfish">
+          <view class="woodfish-inner">
+            <view class="woodfish-text">木鱼</view>
+          </view>
+        </view>
+        <view class="tap-hint">轻触 +1</view>
+      </view>
+    </block>
+
+    <view class="sound-row">
+      <view class="sound-item" bindtap="onSound">🔊 音效 [✓]</view>
+    </view>
+
+    <view wx:if="{{reminderText}}" class="reminder-line">{{reminderText}}</view>
+
+    <view class="actions">
+      <button wx:if="{{!isTime}}" class="btn-ghost" bindtap="onUndo">↩ 撤销一次</button>
+      <button class="btn-ghost" bindtap="onOpenSheet">⟳ 重新一轮</button>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="ended-box">
+      <view class="ended-title">{{practiceName}}</view>
+      <view class="ended-sub">本轮已结束</view>
+      <button class="btn-main btn-ended" bindtap="onStartNewSession">{{isTime ? '开始新一座' : '开始新一轮'}}</button>
+    </view>
+  </block>
+</view>
+
+<view wx:if="{{showSheet}}" class="sheet-mask" bindtap="closeSheet" catchtouchmove="noop">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head">
+      <view class="sheet-title">提醒目标（可选）</view>
+      <view class="sheet-close" bindtap="closeSheet">✕</view>
+    </view>
+    <view class="sheet-sub">到点按所选侧提醒：戒指震动 / App 通知</view>
+    <view class="sheet-divider"></view>
+
+    <view class="sheet-label">目标</view>
+    <view class="chips">
+      <view class="chip {{reminderType === 'none' ? 'active' : ''}}" data-type="none" bindtap="onPickReminderType">不限</view>
+      <view class="chip {{reminderType === 'time' ? 'active' : ''}}" data-type="time" bindtap="onPickReminderType">按时间</view>
+      <view class="chip {{reminderType === 'count' ? 'active' : ''}}" data-type="count" bindtap="onPickReminderType">按次数</view>
+    </view>
+
+    <block wx:if="{{reminderType === 'time'}}">
+      <view class="sheet-label">时长</view>
+      <view class="chips">
+        <view wx:for="{{timeOptions}}" wx:key="*this" class="chip {{reminderTime === item ? 'active' : ''}}" data-value="{{item}}" bindtap="onPickReminderTime">{{item}}分</view>
+      </view>
+    </block>
+
+    <block wx:if="{{reminderType === 'count'}}">
+      <view class="sheet-label">次数</view>
+      <view class="chips">
+        <view wx:for="{{countOptions}}" wx:key="*this" class="chip {{reminderCount === item ? 'active' : ''}}" data-value="{{item}}" bindtap="onPickReminderCount">{{item}}</view>
+      </view>
+    </block>
+
+    <button class="btn-main sheet-btn" bindtap="onConfirmRound">{{sheetBtnText}}</button>
+  </view>
+</view>

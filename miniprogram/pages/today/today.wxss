@@ -1,3 +1,43 @@
+.page {
+  padding: var(--space);
+  padding-bottom: 48rpx;
+  box-sizing: border-box;
+}
+
+/* —— 通用按钮 —— */
+
+.btn-primary,
+.btn-secondary {
+  height: var(--btn-height);
+  line-height: var(--btn-height);
+  margin: 0;
+  padding: 0 20rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  border-radius: var(--radius);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  color: #fff;
+  background: var(--c-primary);
+}
+
+.btn-secondary {
+  color: var(--c-primary);
+  background: var(--c-card);
+  border: 2rpx solid var(--c-primary);
+  box-sizing: border-box;
+}
+
+.btn-primary::after,
+.btn-secondary::after {
+  border: none;
+}
+
+/* —— 空状态 P1-F —— */
+
 .empty-wrap {
   display: flex;
   flex-direction: column;
@@ -5,7 +45,7 @@
   padding: 160rpx var(--space);
 }
 
-.empty-text {
+.empty-title {
   font-size: var(--fs-title);
   font-weight: 600;
   margin-bottom: 16rpx;
@@ -15,14 +55,282 @@
   font-size: var(--fs-body);
   color: var(--c-ink-secondary);
   margin-bottom: 64rpx;
+  text-align: center;
 }
 
-.btn-primary {
+.empty-btn {
   width: 60%;
-  height: var(--btn-height);
-  line-height: var(--btn-height);
-  font-size: var(--fs-body);
-  color: #fff;
-  background: var(--c-primary);
+}
+
+/* —— LED 卡片 P1-E —— */
+
+.led-card {
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
   border-radius: var(--radius);
+  padding: var(--space);
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.switch-btn {
+  width: 88rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: var(--fs-title);
+  color: var(--c-primary);
+  border-radius: 50%;
+}
+
+.switch-btn--disabled {
+  color: var(--c-border);
+}
+
+.practice-name {
+  flex: 1;
+  text-align: center;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--c-ink);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.led-num {
+  margin-top: 16rpx;
+  text-align: center;
+  font-size: var(--fs-hero);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: 4rpx;
+  color: var(--c-led);
+  font-family: "DIN Alternate", "Courier New", monospace;
+  text-shadow: 0 0 24rpx rgba(232, 116, 59, 0.35);
+}
+
+.led-caption {
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.today-line {
+  margin-top: 20rpx;
+  text-align: center;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.led-enter {
+  width: 100%;
+  margin-top: var(--space);
+}
+
+.entry-link {
+  margin-top: 12rpx;
+  min-height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: var(--fs-body);
+  color: var(--c-primary);
+}
+
+/* —— 我的功课 —— */
+
+.section {
+  margin-top: 32rpx;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8rpx 12rpx;
+}
+
+.section-title {
+  font-size: var(--fs-body);
+  font-weight: 600;
+}
+
+.section-action {
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+  padding: 12rpx;
+}
+
+.practice-row {
+  display: flex;
+  align-items: center;
+  min-height: var(--btn-height);
+  padding: 0 24rpx;
+  margin-bottom: 12rpx;
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.dot {
+  width: 20rpx;
+  height: 20rpx;
+  margin-right: 16rpx;
+  border: 2rpx solid var(--c-border);
+  border-radius: 50%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.dot--on {
+  border-color: var(--c-primary);
+  background: var(--c-primary);
+}
+
+.row-name {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-body);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.row-progress {
+  flex-shrink: 0;
+  margin-left: 16rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.add-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--btn-height);
+  font-size: var(--fs-body);
+  color: var(--c-primary);
+  border: 2rpx dashed var(--c-border);
+  border-radius: var(--radius);
+}
+
+/* —— E3 填报弹层 —— */
+
+.mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  background: rgba(43, 38, 32, 0.5);
+}
+
+.sheet {
+  width: 100%;
+  max-height: 90vh;
+  padding: var(--space) var(--space) 48rpx;
+  background: var(--c-card);
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-sizing: border-box;
+}
+
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+
+.sheet-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+}
+
+.sheet-close {
+  width: 80rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: var(--fs-title);
+  color: var(--c-ink-secondary);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  min-height: var(--btn-height);
+  border-bottom: 1rpx solid var(--c-border);
+  box-sizing: border-box;
+}
+
+.field-label {
+  width: 170rpx;
+  flex-shrink: 0;
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+.field-value {
+  flex: 1;
+  font-size: var(--fs-body);
+  color: var(--c-ink);
+}
+
+.field-arrow {
+  margin-left: 8rpx;
+  color: var(--c-ink-secondary);
+}
+
+.amount-input {
+  flex: 1;
+  min-width: 0;
+  height: 88rpx;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.amount-ph {
+  font-size: var(--fs-small);
+  font-weight: 400;
+  color: var(--c-ink-secondary);
+  opacity: 0.7;
+}
+
+.field-unit {
+  width: 70rpx;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+.sheet-btns {
+  display: flex;
+  margin-top: 40rpx;
+}
+
+.sheet-btns .btn-primary,
+.sheet-btns .btn-secondary {
+  flex: 1;
+}
+
+.sheet-btns .btn-primary {
+  margin-right: 20rpx;
+}
+
+.sheet-note {
+  margin-top: 32rpx;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-ink-secondary);
 }

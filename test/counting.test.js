@@ -114,3 +114,18 @@ test('无上下文点按报错', () => {
   const { state } = setup()
   assert.throws(() => domain.tap(state, 'ring', D1_0800), /NO_CONTEXT/)
 })
+
+
+test('undoTap：撤销一次本轮与该侧今日各 -1，减到 0 为止', () => {
+  const { state, practice } = setup()
+  domain.startNewRound(state, 'phone', practice.id, { ts: D1_0800 })
+  domain.tap(state, 'phone', D1_0800, 3)
+  assert.strictEqual(domain.undoTap(state, 'phone', D1_0800).undone, true)
+  const t = domain.dayTotals(state, '2026-10-21', practice.id)
+  assert.strictEqual(state.contexts.phone.roundCount, 2)
+  assert.strictEqual(t.phone, 2)
+  domain.undoTap(state, 'phone', D1_0800)
+  domain.undoTap(state, 'phone', D1_0800)
+  assert.strictEqual(domain.undoTap(state, 'phone', D1_0800).undone, false)
+  assert.strictEqual(domain.dayTotals(state, '2026-10-21', practice.id).phone, 0)
+})
