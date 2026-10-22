@@ -1,15 +1,25 @@
 <!-- P1 今日：空状态 P1-F / 仅手机计数 P1-E / 填报弹层 E3 -->
 <view class="page">
-  <!-- 空状态 -->
-  <view wx:if="{{empty}}" class="empty-wrap">
+  <!-- 空状态 P1-F：首次打开 / 功课都关闭了首页显示 -->
+  <view wx:if="{{empty && !emptyHidden}}" class="empty-wrap">
     <view class="empty-title">还没有功课</view>
     <view class="empty-sub">添加一个常修的功课，开始今天的修行吧</view>
     <button class="btn-primary empty-btn" bindtap="goPracticeAdd">＋ 添加功课</button>
   </view>
+  <view wx:elif="{{empty}}" class="empty-wrap">
+    <view class="empty-title">首页还没有要显示的功课</view>
+    <view class="empty-sub">到「配置」里打开功课的首页显示，或添加新功课</view>
+    <button class="btn-secondary empty-btn" bindtap="onConfig">配置 ›</button>
+    <button class="btn-primary empty-btn empty-btn-second" bindtap="goPracticeAdd">＋ 添加功课</button>
+  </view>
 
   <block wx:else>
-    <!-- LED 卡片 -->
-    <view class="led-card">
+    <!-- P1-G 纯填报模式；否则为 P1-E 计数卡片 -->
+    <view wx:if="{{fillOnly}}" class="fill-card">
+      <view class="fill-title">当前以手动填报记录修行</view>
+      <button class="btn-primary fill-btn" bindtap="openEntry">✎ 填报今日数据</button>
+    </view>
+    <view wx:else class="led-card">
       <view class="switch-row">
         <view class="switch-btn {{canSwitch ? '' : 'switch-btn--disabled'}}" bindtap="onPrevPractice">◀</view>
         <view class="practice-name">{{currentName}}</view>
@@ -20,7 +30,7 @@
       <view class="led-caption">本轮 · 手机</view>
       <view class="today-line">{{todayText}}</view>
 
-      <button class="btn-primary led-enter" bindtap="goWoodfish">进入手机计数 →</button>
+      <button wx:if="{{phoneEnabled}}" class="btn-primary led-enter" bindtap="goWoodfish">进入手机计数 →</button>
 
       <view class="entry-link" bindtap="openEntry">✎ 填报今日数据 ›</view>
     </view>
@@ -39,13 +49,17 @@
         data-id="{{item.id}}"
         bindtap="onPracticeTap"
       >
-        <view class="dot {{item.current ? 'dot--on' : ''}}"></view>
+        <view wx:if="{{!fillOnly}}" class="dot {{item.current ? 'dot--on' : ''}}"></view>
         <text class="row-name">{{item.name}}</text>
         <text class="row-progress">{{item.progressText}}</text>
+        <text class="row-arrow">›</text>
       </view>
 
       <view class="add-row" bindtap="goPracticeAdd">＋ 添加功课</view>
     </view>
+
+    <!-- P1-G 底部提示 -->
+    <view wx:if="{{fillOnly}}" class="foot-link" bindtap="goSettings">计数入口已关闭 · 去设置开启 ›</view>
   </block>
 
   <!-- E3 填报弹层 -->

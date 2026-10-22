@@ -1,0 +1,77 @@
+<view class="page" wx:if="{{ready}}">
+  <view class="card">
+    <view class="row row-static">
+      <view class="row-label">名称</view>
+      <view class="row-value">
+        <text>{{name}}</text>
+        <text wx:if="{{isPublic}}" class="tag">（公共）</text>
+      </view>
+    </view>
+
+    <view class="row">
+      <view class="row-label">我的显示名</view>
+      <input
+        class="row-input"
+        value="{{displayName}}"
+        placeholder="{{placeholderName}}"
+        placeholder-class="input-placeholder"
+        maxlength="30"
+        confirm-type="done"
+        bindinput="onDisplayNameInput"
+        bindblur="onDisplayNameBlur"
+        bindconfirm="onDisplayNameConfirm"
+      />
+    </view>
+    <view class="hint">留空则显示实名；首页、计数页与详情页使用此名。</view>
+  </view>
+
+  <view class="card">
+    <view class="row">
+      <view class="row-label">每日目标</view>
+      <input
+        class="row-input row-number"
+        type="number"
+        value="{{dailyTargetInput}}"
+        placeholder="无目标"
+        placeholder-class="input-placeholder"
+        confirm-type="done"
+        bindinput="onTargetInput"
+        bindblur="onTargetBlur"
+        bindconfirm="onTargetConfirm"
+      />
+      <view class="row-unit">{{unit}}</view>
+    </view>
+    <view class="hint">修改次日生效，历史按当时目标算</view>
+  </view>
+
+  <view class="card">
+    <picker
+      wx:if="{{!isTime}}"
+      value="{{vibrateIndex}}"
+      range="{{vibrateOptions}}"
+      bindchange="onVibrateChange"
+    >
+      <view class="row">
+        <view class="row-label">震动提醒</view>
+        <view class="row-value row-value-right">{{vibrateLabel}} <text class="arrow">›</text></view>
+      </view>
+    </picker>
+    <view wx:if="{{!isTime && showCustomHint}}" class="hint">当前：每 {{vibrateEvery}} 次震动提醒</view>
+
+    <view class="row">
+      <view class="row-label">首页显示</view>
+      <switch class="big-switch" checked="{{showOnHome}}" color="#B4552D" bindchange="onShowOnHomeChange" />
+    </view>
+
+    <view wx:if="{{isTime}}" class="row">
+      <view class="row-label">锁计数</view>
+      <view class="lock-box">✓</view>
+      <view class="lock-note">计时型功课只计时，恒为锁定</view>
+    </view>
+  </view>
+
+  <view class="danger-zone">
+    <button class="btn-delete" bindtap="onDelete">删除功课</button>
+    <view class="danger-note">删除不影响历史统计与历史记录</view>
+  </view>
+</view>

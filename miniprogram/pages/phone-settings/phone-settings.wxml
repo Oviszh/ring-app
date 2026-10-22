@@ -1,0 +1,58 @@
+<!-- P6 手机计数设置：音效 / 音效选择 / 震动 / 外观 / 撤销确认 -->
+<view class="page">
+  <view class="card">
+    <view class="row">
+      <view class="row-main">
+        <view class="row-label">音效</view>
+      </view>
+      <switch class="switch" checked="{{sound}}" color="#B4552D" bindchange="onSoundChange" />
+    </view>
+
+    <view class="row">
+      <view class="row-main">
+        <view class="row-label">音效选择</view>
+      </view>
+      <picker
+        class="picker"
+        mode="selector"
+        range="{{soundOptions}}"
+        range-key="name"
+        value="{{soundIndex}}"
+        bindchange="onSoundNameChange"
+      >
+        <view class="picker-value">{{soundName}} <text class="picker-arrow">▾</text></view>
+      </picker>
+    </view>
+
+    <view class="row">
+      <view class="row-main">
+        <view class="row-label">震动反馈</view>
+      </view>
+      <switch class="switch" checked="{{vibrate}}" color="#B4552D" bindchange="onVibrateChange" />
+    </view>
+
+    <view class="row">
+      <view class="row-main">
+        <view class="row-label">外观</view>
+      </view>
+      <picker
+        class="picker"
+        mode="selector"
+        range="{{themeOptions}}"
+        range-key="name"
+        value="{{themeIndex}}"
+        bindchange="onThemeChange"
+      >
+        <view class="picker-value">{{themeName}} <text class="picker-arrow">›</text></view>
+      </picker>
+    </view>
+
+    <view class="row">
+      <view class="row-main">
+        <view class="row-label">撤销确认</view>
+        <view class="row-sub">撤销前询问</view>
+      </view>
+      <switch class="switch" checked="{{undoConfirm}}" color="#B4552D" bindchange="onUndoConfirmChange" />
+    </view>
+  </view>
+</view>

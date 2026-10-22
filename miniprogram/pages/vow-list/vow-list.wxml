@@ -1,0 +1,68 @@
+<!-- P14 大愿列表 -->
+<view class="page">
+  <view class="toolbar">
+    <text class="toolbar-count">{{total ? active.length + ' 个进行中' : ''}}</text>
+    <view class="toolbar-add" hover-class="toolbar-add-hover" bindtap="goNew">
+      <text class="plus">＋</text>
+      <text>新建</text>
+    </view>
+  </view>
+
+  <block wx:if="{{ready}}">
+    <!-- 空态 -->
+    <view wx:if="{{!total}}" class="empty-wrap">
+      <view class="empty-title">还没有大愿</view>
+      <view class="empty-sub">发一个大愿，把长年累月的修行记在一起</view>
+      <button class="btn-primary empty-btn" bindtap="goNew">＋ 发一个大愿</button>
+    </view>
+
+    <block wx:else>
+      <view class="cards" wx:if="{{active.length}}">
+        <view
+          wx:for="{{active}}"
+          wx:key="id"
+          class="card"
+          hover-class="card-hover"
+          data-id="{{item.id}}"
+          bindtap="goDetail"
+        >
+          <view class="card-title">{{item.title}}</view>
+
+          <view class="nums">
+            <text class="num-now">{{item.totalText}}</text>
+            <text class="num-sep">/</text>
+            <text class="num-target">{{item.targetText}}</text>
+            <text class="percent">{{item.percent}}%</text>
+          </view>
+
+          <view class="bar">
+            <view class="bar-fill" style="width: {{item.percent}}%;"></view>
+          </view>
+
+          <view class="meta">日均 {{item.avgText}} · {{item.etaText}}</view>
+        </view>
+      </view>
+
+      <view wx:else class="none-active">所有大愿都已圆满，随喜！</view>
+
+      <!-- 已圆满 -->
+      <view class="done-section" wx:if="{{done.length}}">
+        <view class="done-head">已圆满的大愿 ›</view>
+        <view class="done-list">
+          <view
+            wx:for="{{done}}"
+            wx:key="id"
+            class="done-row"
+            hover-class="done-row-hover"
+            data-id="{{item.id}}"
+            bindtap="goDetail"
+          >
+            <text class="done-emoji">🎉</text>
+            <text class="done-name">{{item.title}}</text>
+            <text class="done-days">历时 {{item.days}} 天</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </block>
+</view>

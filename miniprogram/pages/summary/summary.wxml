@@ -1,0 +1,27 @@
+<!-- P15 计数汇总（历史累计） -->
+<view class="page">
+  <block wx:if="{{ready}}">
+    <view class="list" wx:if="{{practices.length}}">
+      <view wx:for="{{practices}}" wx:key="id" class="row">
+        <view class="row-name">{{item.name}}</view>
+
+        <view class="row-main">
+          <text class="total">累计 {{item.totalText}}</text>
+          <text class="sep">·</text>
+          <text class="sub" wx:if="{{item.isTime}}">{{item.timesText}}</text>
+          <text class="sub" wx:else>{{item.daysText}}</text>
+        </view>
+
+        <view class="row-sources" wx:if="{{!item.isTime}}">
+          戒指 {{item.ringText}} · 手机 {{item.phoneText}} · 手动 {{item.manualText}}
+        </view>
+      </view>
+    </view>
+
+    <view wx:else class="empty-wrap">
+      <view class="empty-title">还没有功课</view>
+      <view class="empty-sub">添加功课并开始计数后，这里会显示历史累计</view>
+      <view class="empty-link" hover-class="empty-link-hover" bindtap="goPracticeAdd">先添加功课 ›</view>
+    </view>
+  </block>
+</view>

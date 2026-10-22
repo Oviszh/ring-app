@@ -1,0 +1,63 @@
+<!-- P10 修正记录：来源选择（戒指/手机）+ 只许减少 + 已有修正可恢复 -->
+<view class="page">
+  <view class="head-title">修正 · {{dateLabel}}<text wx:if="{{practiceName}}"> · {{practiceName}}</text></view>
+
+  <!-- 当前值 -->
+  <view class="card">
+    <view class="current-line">
+      当前：<text class="current-num">{{totalText}}</text>
+    </view>
+    <view class="source-line">戒指 {{ringText}} · 手机 {{phoneText}} · 手动 {{manualText}}</view>
+  </view>
+
+  <!-- 来源选择：AGENTS.md 要求必须有，定稿线框缺 -->
+  <view class="section-label">选择要修正的来源</view>
+  <view class="source-row">
+    <view
+      class="source-btn {{source === 'ring' ? 'source-btn--on' : ''}}"
+      data-source="ring"
+      bindtap="onSourceTap"
+    >戒指</view>
+    <view
+      class="source-btn source-btn--right {{source === 'phone' ? 'source-btn--on' : ''}}"
+      data-source="phone"
+      bindtap="onSourceTap"
+    >手机</view>
+  </view>
+  <view wx:if="{{ringHint}}" class="hint">当前无戒指数据</view>
+  <view wx:if="{{isDuration}}" class="hint">计时型功课只计时：戒指 / 手机计数恒为 0，通常无需修正</view>
+
+  <!-- 修改为 -->
+  <view class="card card--gap">
+    <view class="field">
+      <text class="field-label">修改为</text>
+      <input
+        class="field-input"
+        type="number"
+        value="{{toValue}}"
+        placeholder="输入该来源修正后的净值"
+        placeholder-class="field-ph"
+        bindinput="onInput"
+      />
+      <text class="field-unit">{{unit}}</text>
+    </view>
+    <view class="from-line">{{sourceLabel}}来源当前 {{fromText}} {{unit}}</view>
+
+    <view wx:if="{{deltaText}}" class="delta">{{deltaText}}</view>
+    <view wx:if="{{errorText}}" class="error">{{errorText}}</view>
+  </view>
+
+  <!-- 规则说明（P10 定稿） -->
+  <view class="rules">规则：戒指 / 手机计数只许减少；如需增加，请返回用「填报」。填报记本次新增数量、可整笔撤销；修正只用于纠错、可单独恢复。</view>
+
+  <button class="btn-primary {{canConfirm ? '' : 'btn-primary--off'}}" bindtap="onConfirm">确认修正</button>
+
+  <!-- 已有修正 -->
+  <view wx:if="{{adjustments.length}}" class="adj-section">
+    <view class="adj-head">该日已有修正</view>
+    <view wx:for="{{adjustments}}" wx:key="id" class="adj-row">
+      <text class="adj-text">{{item.text}}</text>
+      <view class="adj-restore" data-id="{{item.id}}" bindtap="onRestore">恢复</view>
+    </view>
+  </view>
+</view>

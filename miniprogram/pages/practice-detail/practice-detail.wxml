@@ -1,0 +1,138 @@
+<view class="page" wx:if="{{ready}}">
+  <view class="topbar">
+    <view class="more" hover-class="more-hover" bindtap="onMore">⋯</view>
+  </view>
+
+  <view class="status {{statusActive ? 'status--active' : 'status--idle'}}">
+    <view class="status-text">{{statusText}}</view>
+
+    <block wx:if="{{reminderText}}">
+      <view class="reminder-text">{{reminderText}}</view>
+      <button class="btn-cancel" bindtap="onCancelReminder">取消提醒（手机）</button>
+    </block>
+  </view>
+
+  <!-- 今日累积 -->
+  <view class="card">
+    <view class="card-label">今日累积</view>
+    <view class="today-main">
+      <text class="today-total">{{totalText}}</text>
+      <text wx:if="{{hasTarget}}" class="today-target"> / {{targetText}}</text>
+      <text class="today-unit">{{unit}}</text>
+    </view>
+
+    <block wx:if="{{hasTarget}}">
+      <view class="progress">
+        <view class="progress-fill" style="width: {{percent}}%"></view>
+      </view>
+      <view class="progress-meta">{{percent}}%</view>
+    </block>
+
+    <view class="breakdown">{{breakdownText}}</view>
+  </view>
+
+  <!-- P3-A/D：开启新一轮 -->
+  <view class="card">
+    <view class="card-title">{{cardTitle}}</view>
+
+    <view class="field">
+      <view class="field-label">计数方式</view>
+      <view class="field-value">
+        <text class="method-on">(手机)</text>
+      </view>
+    </view>
+
+    <view class="field field-tap" hover-class="field-hover" bindtap="onOpenSheet">
+      <view class="field-label">提醒目标</view>
+      <view class="field-value">{{reminderRowText}}</view>
+      <view class="field-arrow">›</view>
+    </view>
+
+    <button class="btn-main" bindtap="onStartRound">{{mainBtnText}}</button>
+  </view>
+
+  <!-- 长期大愿 -->
+  <view class="card">
+    <view class="card-label">长期大愿</view>
+
+    <view wx:if="{{vow}}" class="vow" hover-class="field-hover" bindtap="onVowTap">
+      <view class="vow-head">
+        <view class="vow-name">{{vow.name}}</view>
+        <view class="field-arrow">›</view>
+      </view>
+      <view class="vow-nums">{{vow.totalText}} / {{vow.targetText}}</view>
+      <view class="progress">
+        <view class="progress-fill" style="width: {{vow.percent}}%"></view>
+      </view>
+      <view class="vow-meta">{{vow.percent}}% · 日均 {{vow.avgText}}</view>
+    </view>
+
+    <view wx:else class="vow-add" hover-class="field-hover" bindtap="onCreateVow">＋ 发一个大愿</view>
+  </view>
+
+  <!-- 近 7 日 -->
+  <view class="card">
+    <view class="recent-head">
+      <view class="card-label">近 7 日</view>
+      <view class="recent-legend">●达标 ◐部分 ○未达标</view>
+    </view>
+    <view class="days">
+      <view wx:for="{{recentDays}}" wx:key="date" class="day day--{{item.status}}">
+        <view class="day-symbol">{{item.symbol}}</view>
+        <view class="day-label">{{item.label}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-links">
+    <view class="footer-link" hover-class="field-hover" bindtap="onHistory">历史记录 ›</view>
+    <view class="footer-link" hover-class="field-hover" bindtap="onSettings">功课设置 ›</view>
+  </view>
+</view>
+
+<!-- E1 提醒目标 -->
+<view wx:if="{{showSheet}}" class="sheet-mask" bindtap="closeSheet" catchtouchmove="noop">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head">
+      <view class="sheet-title">提醒目标（可选）</view>
+      <view class="sheet-close" bindtap="closeSheet">✕</view>
+    </view>
+    <view class="sheet-sub">到点按所选侧提醒：App 通知</view>
+    <view class="sheet-divider"></view>
+
+    <view class="sheet-label">目标</view>
+    <view class="chips">
+      <view class="chip {{reminderType === 'none' ? 'chip-active' : ''}}" data-type="none" bindtap="onPickReminderType">不限</view>
+      <view class="chip {{reminderType === 'time' ? 'chip-active' : ''}}" data-type="time" bindtap="onPickReminderType">按时间</view>
+      <view class="chip {{reminderType === 'count' ? 'chip-active' : ''}}" data-type="count" bindtap="onPickReminderType">按次数</view>
+    </view>
+
+    <block wx:if="{{reminderType === 'time'}}">
+      <view class="sheet-label">时长</view>
+      <view class="chips">
+        <view
+          wx:for="{{timeOptions}}"
+          wx:key="*this"
+          class="chip {{reminderTime === item ? 'chip-active' : ''}}"
+          data-value="{{item}}"
+          bindtap="onPickReminderTime"
+        >{{item}}分</view>
+      </view>
+    </block>
+
+    <block wx:if="{{reminderType === 'count'}}">
+      <view class="sheet-label">次数</view>
+      <view class="chips">
+        <view
+          wx:for="{{countOptions}}"
+          wx:key="*this"
+          class="chip {{reminderCount === item ? 'chip-active' : ''}}"
+          data-value="{{item}}"
+          bindtap="onPickReminderCount"
+        >{{item}}</view>
+      </view>
+    </block>
+
+    <button class="btn-main sheet-btn" bindtap="onStartRound">{{sheetBtnText}}</button>
+  </view>
+</view>

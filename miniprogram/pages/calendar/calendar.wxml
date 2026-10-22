@@ -1,2 +1,80 @@
-<!-- P1' 月视图骨架：阶段2实现 -->
-<view class="placeholder">日历</view>
+<!-- P1' 日历（月视图）：全部功课 / 单功课两种口径 + 长期大愿 -->
+<view class="page">
+  <!-- 月份切换 -->
+  <view class="month-bar">
+    <view class="month-btn" bindtap="onPrevMonth">‹</view>
+    <view class="month-label">{{monthLabel}}</view>
+    <view class="month-btn {{canNext ? '' : 'month-btn--disabled'}}" bindtap="onNextMonth">›</view>
+  </view>
+
+  <!-- 查看选择器 -->
+  <view class="view-bar">
+    <picker
+      class="view-picker-wrap"
+      mode="selector"
+      range="{{viewOptions}}"
+      range-key="name"
+      value="{{viewIndex}}"
+      bindchange="onViewChange"
+    >
+      <view class="view-picker">
+        <text class="view-label">查看</text>
+        <text class="view-name">{{viewName}}</text>
+        <text class="view-arrow">▾</text>
+      </view>
+    </picker>
+    <view wx:if="{{targetText}}" class="view-target">{{targetText}}</view>
+  </view>
+
+  <!-- 月历网格 -->
+  <view class="calendar">
+    <view class="week-row">
+      <view wx:for="{{weekdays}}" wx:key="*this" class="week-cell">{{item}}</view>
+    </view>
+
+    <view class="grid">
+      <view
+        wx:for="{{cells}}"
+        wx:key="key"
+        class="cell {{item.blank ? 'cell--blank' : ''}} {{item.future ? 'cell--future' : ''}} {{item.today ? 'cell--today' : ''}} {{!viewAll && !item.blank ? 'cell--total' : ''}}"
+        data-date="{{item.date}}"
+        bindtap="onDayTap"
+      >
+        <block wx:if="{{!item.blank}}">
+          <text class="cell-num {{item.warn ? 'cell-num--warn' : ''}}">{{item.numText}}</text>
+          <view wx:if="{{viewAll && !item.future}}" class="cell-dot cell-dot--{{item.dot}}">{{item.glyph}}</view>
+        </block>
+      </view>
+    </view>
+  </view>
+
+  <!-- 单功课口径统计行 -->
+  <view wx:if="{{!viewAll}}" class="stats">{{statsText}}</view>
+
+  <!-- 长期大愿 -->
+  <view class="vow-section">
+    <view class="vow-head">长期大愿</view>
+
+    <block wx:if="{{hasVows}}">
+      <view
+        wx:for="{{vows}}"
+        wx:key="id"
+        class="vow-card"
+        data-id="{{item.id}}"
+        bindtap="onVowTap"
+      >
+        <view class="vow-title">{{item.title}}</view>
+        <view class="vow-line">
+          <text class="vow-count">{{item.totalText}} / {{item.targetText}}</text>
+          <text class="vow-pct">{{item.percent}}%</text>
+        </view>
+        <view class="vow-bar">
+          <view class="vow-bar-fill" style="width: {{item.percent}}%"></view>
+        </view>
+        <view class="vow-sub">{{item.subText}}</view>
+      </view>
+    </block>
+
+    <view wx:else class="vow-empty" bindtap="onVowNew">＋ 发一个大愿</view>
+  </view>
+</view>

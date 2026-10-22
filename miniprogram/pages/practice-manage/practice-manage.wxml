@@ -1,0 +1,43 @@
+<!-- P4 功课管理：用 ↑ ↓ 调整顺序（定稿拖动的刻意偏差），开关控制首页显示 -->
+<view class="page">
+  <view class="hint">用 ↑ ↓ 调整顺序 · 开关控制首页是否显示</view>
+
+  <view class="list" wx:if="{{rows.length}}">
+    <view class="row" wx:for="{{rows}}" wx:key="id">
+      <view class="order">
+        <view
+          class="order-btn {{item.isFirst ? 'order-btn--disabled' : ''}}"
+          data-index="{{index}}"
+          bindtap="onMoveUp"
+          hover-class="{{item.isFirst ? 'none' : 'order-btn-hover'}}"
+        >↑</view>
+        <view
+          class="order-btn {{item.isLast ? 'order-btn--disabled' : ''}}"
+          data-index="{{index}}"
+          bindtap="onMoveDown"
+          hover-class="{{item.isLast ? 'none' : 'order-btn-hover'}}"
+        >↓</view>
+      </view>
+
+      <view class="row-main" data-id="{{item.id}}" bindtap="onOpenSettings" hover-class="row-main-hover">
+        <view class="row-name">{{item.name}}</view>
+        <view class="row-sub">点此修改功课设置</view>
+      </view>
+
+      <view class="row-tail">
+        <text class="tail-label">显示</text>
+        <switch
+          class="switch"
+          checked="{{item.showOnHome}}"
+          color="#B4552D"
+          data-id="{{item.id}}"
+          bindchange="onToggleShow"
+        />
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-hint" wx:else>还没有功课，点下方按钮添加</view>
+
+  <button class="btn-add" bindtap="onAdd">＋ 添加功课</button>
+</view>

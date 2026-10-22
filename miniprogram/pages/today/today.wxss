@@ -62,6 +62,10 @@
   width: 60%;
 }
 
+.empty-btn-second {
+  margin-top: 20rpx;
+}
+
 /* —— LED 卡片 P1-E —— */
 
 .led-card {
@@ -142,6 +146,28 @@
   color: var(--c-primary);
 }
 
+/* —— P1-G 纯填报模式 —— */
+
+.fill-card {
+  padding: var(--space);
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.fill-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--c-ink);
+}
+
+.fill-btn {
+  width: 100%;
+  margin-top: var(--space);
+}
+
 /* —— 我的功课 —— */
 
 .section {
@@ -209,6 +235,13 @@
   color: var(--c-ink-secondary);
 }
 
+.row-arrow {
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
 .add-row {
   display: flex;
   align-items: center;
@@ -218,6 +251,15 @@
   color: var(--c-primary);
   border: 2rpx dashed var(--c-border);
   border-radius: var(--radius);
+}
+
+.foot-link {
+  margin-top: 32rpx;
+  min-height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
 }
 
 /* —— E3 填报弹层 —— */

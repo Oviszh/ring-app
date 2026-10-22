@@ -1,7 +1,84 @@
-.placeholder {
-  display: flex;
-  justify-content: center;
-  padding: 160rpx 0;
-  color: var(--c-ink-secondary);
+.page {
+  padding: var(--space);
+  padding-bottom: 48rpx;
+  box-sizing: border-box;
+}
+
+/* —— 游客卡片 P1''-A —— */
+
+.card {
+  padding: var(--space);
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+}
+
+.card-title {
   font-size: var(--fs-title);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--c-ink);
+}
+
+.card-desc {
+  margin-top: 12rpx;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--c-ink-secondary);
+}
+
+.card-btn {
+  height: var(--btn-height);
+  line-height: var(--btn-height);
+  margin: var(--space) 0 0;
+  padding: 0 20rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: #fff;
+  background: var(--c-primary);
+  border-radius: var(--radius);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.card-btn::after {
+  border: none;
+}
+
+/* —— 入口列表 —— */
+
+.list {
+  margin-top: 32rpx;
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--btn-height);
+  padding: 0 var(--space);
+  border-bottom: 1rpx solid var(--c-border);
+  box-sizing: border-box;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row-label {
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--c-ink);
+}
+
+.row-arrow {
+  flex-shrink: 0;
+  margin-left: 16rpx;
+  font-size: var(--fs-title);
+  line-height: 1;
+  color: var(--c-ink-secondary);
 }

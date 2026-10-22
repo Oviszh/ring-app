@@ -1,4 +1,4 @@
-// 今日 Tab（P1）：空状态 P1-F；仅手机计数态 P1-E；填报弹层 E3
+// 今日 Tab（P1）：空状态 P1-F；仅手机计数态 P1-E；纯填报模式 P1-G；填报弹层 E3
 const { fmtNum, fmtDayCN, fmtMinutes } = require('../../utils/format')
 
 const store = getApp().globalData.store
@@ -8,10 +8,36 @@ function nameOf(practice) {
   return practice.displayName || practice.name
 }
 
+// 首页只显示 showOnHome 的功课；当前正在计数的功课即使被隐藏也保留在列表里
+function visiblePractices() {
+  const list = store.homePractices()
+  const ctx = store.context(PHONE)
+  const current = ctx ? store.getPractice(ctx.practiceId) : null
+  if (current && !list.some(p => p.id === current.id)) {
+    list.push(current)
+    list.sort((a, b) => a.sort - b.sort)
+  }
+  return list
+}
+
+// 目标页尚未实现时给个明确提示，避免点了没反应
+function navTo(url) {
+  wx.navigateTo({
+    url,
+    fail() {
+      wx.showToast({ title: '页面开发中', icon: 'none' })
+    }
+  })
+}
+
 Page({
   data: {
     empty: true,
+    emptyHidden: false,
     todayKey: '',
+
+    phoneEnabled: true,
+    fillOnly: false,
 
     currentName: '',
     currentPracticeId: '',
@@ -49,15 +75,22 @@ Page({
   // —— view-model ——
 
   refresh() {
-    const list = store.practices()
+    const all = store.practices()
+    const list = visiblePractices()
     const today = store.todayKey()
+    const phoneEnabled = store.state.settings.phoneEnabled !== false
+    // P1-G：戒指未绑定且手机计数入口关闭 → 只留手动填报
+    const fillOnly = !phoneEnabled && store.state.devices.length === 0
 
     if (!list.length) {
       this.setData({
         empty: true,
+        emptyHidden: all.length > 0,
         todayKey: today,
         practices: [],
-        entryVisible: false
+        entryVisible: false,
+        phoneEnabled,
+        fillOnly
       })
       return
     }
@@ -78,6 +111,7 @@ Page({
 
     this.setData({
       empty: false,
+      emptyHidden: false,
       todayKey: today,
       currentName: nameOf(current),
       currentPracticeId: current.id,
@@ -87,7 +121,9 @@ Page({
       todayText: totals.isDuration
         ? `今日 ${fmtMinutes(totals.durationMin)}`
         : `今日累积 ${fmtNum(totals.total)}`,
-      practices: rows
+      practices: rows,
+      phoneEnabled,
+      fillOnly
     })
   },
 
@@ -109,7 +145,7 @@ Page({
   },
 
   switchBy(delta) {
-    const list = store.practices()
+    const list = visiblePractices()
     if (list.length < 2) return
 
     const target = list[(this.data.currentIndex + delta + list.length) % list.length]
@@ -146,12 +182,18 @@ Page({
     wx.navigateTo({ url: '/pages/practice-add/practice-add' })
   },
 
-  onPracticeTap() {
-    wx.showToast({ title: '功课详情开发中', icon: 'none' })
+  goSettings() {
+    navTo('/pages/settings/settings')
+  },
+
+  onPracticeTap(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    navTo(`/pages/practice-detail/practice-detail?id=${id}`)
   },
 
   onConfig() {
-    wx.showToast({ title: '功课管理开发中', icon: 'none' })
+    navTo('/pages/practice-manage/practice-manage')
   },
 
   // —— E3 填报弹层 ——

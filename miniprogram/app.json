@@ -4,7 +4,18 @@
     "pages/calendar/calendar",
     "pages/mine/mine",
     "pages/woodfish/woodfish",
-    "pages/practice-add/practice-add"
+    "pages/practice-add/practice-add",
+    "pages/practice-detail/practice-detail",
+    "pages/practice-manage/practice-manage",
+    "pages/practice-settings/practice-settings",
+    "pages/phone-settings/phone-settings",
+    "pages/day-detail/day-detail",
+    "pages/correction/correction",
+    "pages/vow-new/vow-new",
+    "pages/vow-list/vow-list",
+    "pages/vow-detail/vow-detail",
+    "pages/summary/summary",
+    "pages/settings/settings"
   ],
   "window": {
     "navigationBarBackgroundColor": "#1F1B16",

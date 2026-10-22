@@ -12,5 +12,6 @@ module.exports = {
   ...require('./manualEntry'),
   ...require('./adjustment'),
   ...require('./vow'),
-  ...require('./deviceSync')
+  ...require('./deviceSync'),
+  ...require('./stats')
 }

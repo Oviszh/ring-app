@@ -1,0 +1,154 @@
+.page {
+  min-height: 100vh;
+  padding: var(--space) var(--space) 48rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  margin-bottom: var(--space);
+  padding: 0 var(--space);
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card picker {
+  display: block;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  min-height: 112rpx;
+  border-bottom: 1rpx solid var(--c-border);
+  box-sizing: border-box;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row-label {
+  width: 200rpx;
+  flex-shrink: 0;
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+.row-value {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-body);
+  color: var(--c-ink);
+  word-break: break-all;
+}
+
+.row-value-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--c-primary);
+  font-weight: 600;
+}
+
+.tag {
+  margin-left: 8rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.row-input {
+  flex: 1;
+  min-width: 0;
+  height: 88rpx;
+  font-size: var(--fs-body);
+  color: var(--c-ink);
+}
+
+.row-number {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.input-placeholder {
+  font-size: var(--fs-small);
+  font-weight: 400;
+  color: var(--c-ink-secondary);
+  opacity: 0.7;
+}
+
+.row-unit {
+  width: 90rpx;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+.arrow {
+  margin-left: 8rpx;
+  font-size: 44rpx;
+  line-height: 1;
+}
+
+.hint {
+  padding: 16rpx 0 24rpx;
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--c-ink-secondary);
+}
+
+.big-switch {
+  margin-left: auto;
+  transform: scale(1.12);
+  transform-origin: right center;
+}
+
+.lock-box {
+  width: 48rpx;
+  height: 48rpx;
+  line-height: 48rpx;
+  text-align: center;
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #fff;
+  background: var(--c-primary);
+  border-radius: 10rpx;
+}
+
+.lock-note {
+  margin-left: 16rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+/* —— 删除 —— */
+.danger-zone {
+  margin-top: 48rpx;
+}
+
+.btn-delete {
+  width: 100%;
+  height: 112rpx;
+  line-height: 112rpx;
+  margin: 0;
+  padding: 0;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: #fff;
+  background: var(--c-danger);
+  border-radius: var(--radius);
+}
+
+button::after {
+  border: none;
+}
+
+.danger-note {
+  margin-top: 16rpx;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}

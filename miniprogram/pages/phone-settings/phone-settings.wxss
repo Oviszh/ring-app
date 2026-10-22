@@ -1,0 +1,76 @@
+/* P6 手机计数设置：大字号、大点击区（老年用户） */
+.page {
+  padding: var(--space);
+  padding-bottom: 48rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  padding: 8rpx var(--space);
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  min-height: 128rpx;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--c-border);
+  box-sizing: border-box;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-label {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.row-sub {
+  margin-top: 4rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.switch {
+  flex: none;
+  margin-left: 16rpx;
+  transform: scale(1.15);
+  transform-origin: right center;
+}
+
+/* —— 下拉选择 —— */
+
+.picker {
+  flex: none;
+  max-width: 60%;
+}
+
+.picker-value {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 96rpx;
+  padding: 0 8rpx 0 20rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--c-primary);
+  white-space: nowrap;
+}
+
+.picker-arrow {
+  margin-left: 12rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}

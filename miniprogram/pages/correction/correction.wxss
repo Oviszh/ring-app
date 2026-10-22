@@ -1,0 +1,229 @@
+/* P10 修正记录 —— 大字号、大点击区 */
+
+.page {
+  padding: var(--space);
+  padding-bottom: 48rpx;
+  box-sizing: border-box;
+}
+
+.head-title {
+  padding: 0 8rpx 20rpx;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.card {
+  padding: var(--space);
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+/* —— 当前值 —— */
+
+.current-line {
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+.current-num {
+  font-size: var(--fs-title);
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+.source-line {
+  margin-top: 8rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+/* —— 来源选择 —— */
+
+.section-label {
+  margin: var(--space) 8rpx 12rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.source-row {
+  display: flex;
+}
+
+.source-btn {
+  flex: 1;
+  height: var(--btn-height);
+  line-height: var(--btn-height);
+  text-align: center;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--c-ink-secondary);
+  background: var(--c-card);
+  border: 2rpx solid var(--c-border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.source-btn--right {
+  margin-left: 20rpx;
+}
+
+.source-btn--on {
+  color: #fff;
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+}
+
+.hint {
+  margin: 12rpx 8rpx 0;
+  font-size: var(--fs-small);
+  color: var(--c-led);
+}
+
+/* —— 修改为 —— */
+
+.card--gap {
+  margin-top: var(--space);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  min-height: var(--btn-height);
+  border-bottom: 1rpx solid var(--c-border);
+  box-sizing: border-box;
+}
+
+.field-label {
+  width: 150rpx;
+  flex-shrink: 0;
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+.field-input {
+  flex: 1;
+  min-width: 0;
+  height: 96rpx;
+  font-size: var(--fs-title);
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+.field-ph {
+  font-size: var(--fs-small);
+  font-weight: 400;
+  color: var(--c-ink-secondary);
+  opacity: 0.7;
+}
+
+.field-unit {
+  width: 80rpx;
+  flex-shrink: 0;
+  text-align: right;
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+.from-line {
+  margin-top: 12rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.delta {
+  margin-top: 12rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--c-primary);
+}
+
+.error {
+  margin-top: 12rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--c-danger);
+}
+
+/* —— 规则 —— */
+
+.rules {
+  margin: var(--space) 8rpx;
+  font-size: var(--fs-small);
+  line-height: 1.7;
+  color: var(--c-ink-secondary);
+}
+
+/* —— 按钮 —— */
+
+.btn-primary {
+  height: var(--btn-height);
+  line-height: var(--btn-height);
+  margin: 0;
+  padding: 0 20rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: #fff;
+  background: var(--c-primary);
+  border-radius: var(--radius);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-primary--off {
+  color: var(--c-ink-secondary);
+  background: var(--c-border);
+}
+
+/* —— 已有修正 —— */
+
+.adj-section {
+  margin-top: 40rpx;
+}
+
+.adj-head {
+  padding: 0 8rpx 12rpx;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+.adj-row {
+  display: flex;
+  align-items: center;
+  min-height: 96rpx;
+  padding: 0 var(--space);
+  margin-bottom: 12rpx;
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.adj-text {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-small);
+  color: var(--c-ink);
+}
+
+.adj-restore {
+  flex-shrink: 0;
+  margin-left: 16rpx;
+  min-width: 128rpx;
+  height: 68rpx;
+  line-height: 68rpx;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--c-primary);
+  border: 2rpx solid var(--c-primary);
+  border-radius: 12rpx;
+  box-sizing: border-box;
+}

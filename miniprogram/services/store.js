@@ -71,6 +71,9 @@ function createStore(now) {
     practices() {
       return state.practices.filter(p => !p.deleted).sort((a, b) => a.sort - b.sort)
     },
+    homePractices() {
+      return this.practices().filter(p => p.showOnHome)
+    },
     getPractice(id) {
       return state.practices.find(p => p.id === id && !p.deleted) || null
     },
@@ -81,6 +84,31 @@ function createStore(now) {
     },
     setDailyTarget(practiceId, target) {
       domain.setDailyTarget(state, practiceId, target)
+      commit()
+    },
+    setDisplayName(practiceId, name) {
+      const p = domain.findPractice(state, practiceId)
+      if (!p) throw new Error('NO_PRACTICE')
+      p.displayName = name || ''
+      commit()
+    },
+    setVibrateEvery(practiceId, n) {
+      const p = domain.findPractice(state, practiceId)
+      if (!p) throw new Error('NO_PRACTICE')
+      p.vibrateEvery = n > 0 ? Math.floor(n) : 0
+      commit()
+    },
+    setShowOnHome(practiceId, show) {
+      const p = domain.findPractice(state, practiceId)
+      if (!p) throw new Error('NO_PRACTICE')
+      p.showOnHome = !!show
+      commit()
+    },
+    reorderPractices(orderedIds) {
+      orderedIds.forEach((id, i) => {
+        const p = state.practices.find(x => x.id === id)
+        if (p) p.sort = i
+      })
       commit()
     },
     removePractice(practiceId) {
@@ -98,10 +126,87 @@ function createStore(now) {
       domain.undoEntry(state, entryId)
       commit()
     },
+    entriesFor(date, practiceId) {
+      return state.entries
+        .filter(e => e.date === date && e.practiceId === practiceId && !e.tombstone)
+        .sort((a, b) => a.createdAt - b.createdAt)
+    },
+
+    // —— 修正 ——
+    sourceTotal(date, practiceId, source) {
+      return domain.sourceTotal(state, date, practiceId, source)
+    },
+    addAdjustment(input) {
+      const a = domain.addAdjustment(state, Object.assign({}, input, { ts: Date.now() }))
+      commit()
+      return a
+    },
+    undoAdjustment(adjustmentId) {
+      domain.undoAdjustment(state, adjustmentId)
+      commit()
+    },
+    adjustmentsFor(date, practiceId) {
+      return state.adjustments
+        .filter(a => a.date === date && a.practiceId === practiceId && !a.restored)
+        .sort((a, b) => a.createdAt - b.createdAt)
+    },
+
+    // —— 大愿 ——
+    vows() {
+      return state.vows.slice()
+    },
+    createVow(input) {
+      const v = domain.createVow(state, input, Date.now())
+      commit()
+      return v
+    },
+    updateVow(vowId, patch) {
+      const v = state.vows.find(x => x.id === vowId)
+      if (!v) throw new Error('NO_VOW')
+      if (patch.name !== undefined) v.name = patch.name
+      if (patch.targetTotal !== undefined) {
+        if (!(patch.targetTotal > 0)) throw new Error('TARGET_POSITIVE')
+        v.targetTotal = patch.targetTotal
+      }
+      if (patch.deadline !== undefined) v.deadline = patch.deadline
+      if (patch.existingTotal !== undefined) v.existingTotal = patch.existingTotal
+      commit()
+    },
+    removeVow(vowId) {
+      domain.removeVow(state, vowId)
+      commit()
+    },
+    vowProgress(vowId) {
+      const v = state.vows.find(x => x.id === vowId)
+      if (!v) return null
+      return domain.vowProgress(state, v, Date.now())
+    },
+
+    // —— 设置 ——
+    setSetting(key, value) {
+      state.settings[key] = value
+      commit()
+    },
 
     // —— 查询 ——
     dayTotals(date, practiceId) {
       return domain.dayTotals(state, date, practiceId, Date.now())
+    },
+    calendarDayStatus(date) {
+      return domain.calendarDayStatus(state, date)
+    },
+    practiceTotalsAll(practiceId) {
+      return domain.practiceTotalsAll(state, practiceId, Date.now())
+    },
+    recentDayStatuses(practiceId, n) {
+      // 最近 n 天（含今天，倒序）的日状态列表 [{date, status}]
+      const out = []
+      for (let i = n - 1; i >= 0; i--) {
+        const date = domain.addDays(state.currentDay, -i)
+        const t = domain.dayTotals(state, date, practiceId)
+        out.push({ date, status: t ? t.status : 'none' })
+      }
+      return out
     }
   }
 }

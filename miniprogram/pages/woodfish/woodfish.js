@@ -401,10 +401,12 @@ Page({
   },
 
   onSound() {
-    wx.showToast({ title: '音效开发中', icon: 'none' })
+    const names = { muyu: '木鱼', qing: '引磬', silent: '静音震动' }
+    const key = store.state.settings.soundName || 'muyu'
+    wx.showToast({ title: '音效：' + (names[key] || '木鱼'), icon: 'none' })
   },
 
   onSettings() {
-    wx.showToast({ title: '设置开发中', icon: 'none' })
+    wx.navigateTo({ url: '/pages/phone-settings/phone-settings' })
   }
 })

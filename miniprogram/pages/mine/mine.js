@@ -1,2 +1,53 @@
-// 我的 Tab（P1''）：阶段3接入登录状态
-Page({ data: {} })
+// 我的 Tab（P1''）：本阶段仅游客模式 P1''-A，登录留到阶段3
+const store = getApp().globalData.store
+
+// 目标页尚未实现时给个明确提示，避免点了没反应
+function navTo(url) {
+  wx.navigateTo({
+    url,
+    fail() {
+      wx.showToast({ title: '页面开发中', icon: 'none' })
+    }
+  })
+}
+
+Page({
+  data: {
+    deviceCount: 0
+  },
+
+  onShow() {
+    this.refresh()
+  },
+
+  refresh() {
+    const devices = store.state.devices || []
+    this.setData({ deviceCount: devices.length })
+  },
+
+  // —— P1''-A 游客卡片 ——
+
+  onLogin() {
+    wx.showToast({ title: '下一阶段开放', icon: 'none' })
+  },
+
+  // —— 我的设备 ——
+
+  onDevices() {
+    wx.showToast({ title: '戒指功能下一阶段开放', icon: 'none' })
+  },
+
+  // —— 列表入口 ——
+
+  goVows() {
+    navTo('/pages/vow-list/vow-list')
+  },
+
+  goSummary() {
+    navTo('/pages/summary/summary')
+  },
+
+  goSettings() {
+    navTo('/pages/settings/settings')
+  }
+})

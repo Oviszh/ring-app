@@ -1,0 +1,162 @@
+<!-- P11 新建 / 修改大愿 -->
+<view class="page">
+  <view wx:if="{{noPractices}}" class="empty-wrap">
+    <view class="empty-title">还没有功课</view>
+    <view class="empty-sub">大愿要挂在功课下，先添加一个功课</view>
+    <button class="btn-primary empty-btn" bindtap="goPracticeAdd">去添加功课</button>
+  </view>
+
+  <block wx:elif="{{ready}}">
+    <view class="card">
+      <!-- 功课 -->
+      <view class="row">
+        <picker
+          wx:if="{{!isEdit}}"
+          class="picker"
+          mode="selector"
+          range="{{practices}}"
+          range-key="name"
+          value="{{practiceIndex}}"
+          bindchange="onPracticeChange"
+        >
+          <view class="field">
+            <text class="label">功课</text>
+            <text class="value">{{practiceName || '请选择'}}</text>
+            <text class="arrow">▾</text>
+          </view>
+        </picker>
+        <view wx:else class="field field-disabled">
+          <text class="label">功课</text>
+          <text class="value">{{practiceName || '—'}}</text>
+        </view>
+        <view class="note" wx:if="{{isEdit}}">编辑时不可更换功课</view>
+      </view>
+
+      <!-- 目标 -->
+      <view class="row">
+        <view class="field">
+          <text class="label">目标</text>
+          <input
+            class="num-input"
+            type="number"
+            value="{{target}}"
+            placeholder="如 1000000"
+            placeholder-class="ph"
+            bindinput="onTargetInput"
+          />
+          <text class="unit">{{unit}}</text>
+        </view>
+      </view>
+
+      <!-- 名称 -->
+      <view class="row">
+        <view class="field">
+          <text class="label">名称</text>
+          <input
+            class="text-input"
+            maxlength="24"
+            value="{{name}}"
+            placeholder="大愿名称"
+            placeholder-class="ph"
+            bindinput="onNameInput"
+          />
+        </view>
+      </view>
+
+      <!-- 开始 -->
+      <view class="row">
+        <picker
+          wx:if="{{!isEdit}}"
+          class="picker"
+          mode="selector"
+          range="{{startOptions}}"
+          value="{{startIndex}}"
+          bindchange="onStartChange"
+        >
+          <view class="field">
+            <text class="label">开始</text>
+            <text class="value">{{startText}}</text>
+            <text class="arrow">▾</text>
+          </view>
+        </picker>
+        <view wx:else class="field field-disabled">
+          <text class="label">开始</text>
+          <text class="value">{{startDate}}</text>
+        </view>
+
+        <picker
+          wx:if="{{!isEdit && startIndex === 2}}"
+          class="picker"
+          mode="date"
+          value="{{startDate}}"
+          end="{{today}}"
+          bindchange="onPastDateChange"
+        >
+          <view class="field sub-field">
+            <text class="label">选择日期</text>
+            <text class="value">{{startDate}}</text>
+            <text class="arrow">▾</text>
+          </view>
+        </picker>
+
+        <view class="note">{{startDesc}}</view>
+        <view class="note" wx:if="{{!isEdit}}">选过去则汇总已有归档</view>
+      </view>
+
+      <!-- 已有累计 -->
+      <view class="row">
+        <view class="field">
+          <text class="label">已有累计</text>
+          <input
+            class="num-input"
+            type="number"
+            value="{{existingTotal}}"
+            placeholder="0"
+            placeholder-class="ph"
+            bindinput="onExistingInput"
+          />
+          <text class="unit">{{unit}}</text>
+        </view>
+        <view class="note">承接他处进度，记为手动来源</view>
+      </view>
+
+      <!-- 期限 -->
+      <view class="row">
+        <picker
+          class="picker"
+          mode="selector"
+          range="{{deadlineOptions}}"
+          value="{{deadlineIndex}}"
+          bindchange="onDeadlineChange"
+        >
+          <view class="field">
+            <text class="label">期限</text>
+            <text class="value">{{deadlineText}}</text>
+            <text class="arrow">▾</text>
+          </view>
+        </picker>
+
+        <picker
+          wx:if="{{showDeadlinePicker}}"
+          class="picker"
+          mode="date"
+          value="{{deadline}}"
+          start="{{today}}"
+          bindchange="onDeadlineDateChange"
+        >
+          <view class="field sub-field">
+            <text class="label">截止日期</text>
+            <text class="value">{{deadline || '请选择'}}</text>
+            <text class="arrow">▾</text>
+          </view>
+        </picker>
+
+        <view class="note" wx:if="{{!deadline}}">设期限则推算日均</view>
+        <view class="note note-strong" wx:if="{{dailyHint}}">{{dailyHint}}</view>
+      </view>
+    </view>
+
+    <button class="btn-primary submit" bindtap="onSubmit">{{submitText}}</button>
+    <view class="foot-note">大愿只统计该功课的计数，不影响每日目标与达标判断</view>
+  </block>
+</view>

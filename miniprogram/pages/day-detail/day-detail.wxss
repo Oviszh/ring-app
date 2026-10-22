@@ -1,0 +1,182 @@
+/* P9 当日详情 —— 大字号、大点击区 */
+
+.page {
+  padding: var(--space);
+  padding-bottom: 48rpx;
+  box-sizing: border-box;
+}
+
+.day-title {
+  padding: 0 8rpx 20rpx;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--c-ink);
+}
+
+/* —— 空状态 —— */
+
+.empty {
+  padding: 120rpx var(--space);
+  text-align: center;
+}
+
+.empty-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.empty-sub {
+  font-size: var(--fs-body);
+  color: var(--c-ink-secondary);
+}
+
+/* —— 功课行 —— */
+
+.row {
+  margin-bottom: 16rpx;
+  padding: 20rpx var(--space);
+  background: var(--c-card);
+  border: 1rpx solid var(--c-border);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+}
+
+.row--highlight {
+  border-color: var(--c-primary);
+  background: var(--c-primary-weak);
+}
+
+.row-main {
+  display: flex;
+  align-items: baseline;
+  min-height: 56rpx;
+}
+
+.row-name {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-body);
+  font-weight: 600;
+  color: var(--c-ink);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.row-icon {
+  flex-shrink: 0;
+  margin: 0 12rpx;
+  font-size: var(--fs-body);
+  line-height: 1;
+}
+
+.row-icon--met {
+  color: var(--c-success);
+}
+
+.row-icon--partial {
+  color: var(--c-led);
+}
+
+.row-icon--missed {
+  color: var(--c-ink-secondary);
+}
+
+.row-icon--none {
+  color: var(--c-border);
+}
+
+.row-icon--time {
+  color: var(--c-primary);
+}
+
+.row-nums {
+  flex-shrink: 0;
+  display: flex;
+  align-items: baseline;
+}
+
+.row-amount {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--c-ink);
+}
+
+.row-target {
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.row-source {
+  margin-top: 6rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.row-hint {
+  margin-top: 10rpx;
+  text-align: right;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+/* —— 手动填报展开 —— */
+
+.entries-toggle {
+  margin-top: 12rpx;
+  min-height: 76rpx;
+  line-height: 76rpx;
+  font-size: var(--fs-small);
+  color: var(--c-primary);
+  border-top: 1rpx solid var(--c-border);
+}
+
+.entries-arrow {
+  margin-left: 12rpx;
+  color: var(--c-primary);
+}
+
+.entries {
+  padding: 4rpx 0 8rpx;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+  border-bottom: 1rpx solid var(--c-border);
+  box-sizing: border-box;
+}
+
+.entry-amount {
+  flex: 1;
+  font-size: var(--fs-body);
+  color: var(--c-ink);
+}
+
+.entry-time {
+  flex-shrink: 0;
+  margin-right: 16rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
+
+.entry-undo {
+  flex-shrink: 0;
+  min-width: 128rpx;
+  height: 68rpx;
+  line-height: 68rpx;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--c-danger);
+  border: 2rpx solid var(--c-danger);
+  border-radius: 12rpx;
+  box-sizing: border-box;
+}
+
+.entries-note {
+  padding-top: 12rpx;
+  font-size: var(--fs-small);
+  color: var(--c-ink-secondary);
+}
