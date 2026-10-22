@@ -1,30 +1,36 @@
 /* ============================================================
-   设计系统 v2 —— 现代 · 简洁 · 大方 · 老年可读
-   用法：页面用 .page 包裹，卡片 .card，按钮 .btn-*，列表行 .row，
-   弹层 .sheet-mask + .sheet，进度条 .progress + .progress-fill，
-   分段选择 .seg + .seg-item，空状态 .empty。
+   设计系统 v3 —— 暖纸 · 墨字 · 烛光大数字
+   页面用 .page 包裹；卡片 .card；主视觉卡 .card-hero（深咖渐变）；
+   按钮 .btn-*；列表行 .row；弹层 .sheet；进度条 .progress；
+   分段选择 .seg；选项 .chips/.chip；空状态 .empty；徽标 .badge。
    ============================================================ */
 
-:root {
-  /* 色板 */
-  --c-bg: #F6F5F2;            /* 暖纸底 */
+page {
+  /* 色板：暖纸底与纯白卡片拉开明显层次 */
+  --c-bg: #EFEAE1;            /* 暖纸底（明显的暖灰米色） */
   --c-card: #FFFFFF;
-  --c-ink: #1B1917;           /* 主文字 */
-  --c-ink-2: #8B857C;         /* 次要文字 */
-  --c-ink-3: #B8B2A8;         /* 弱化/占位 */
+  --c-ink: #1B1917;
+  --c-ink-2: #7C766C;
+  --c-ink-3: #AFA89C;
   --c-primary: #C05B2A;       /* 朱砂赭 */
   --c-primary-deep: #A34A20;
-  --c-primary-weak: #F8ECE3;
-  --c-led: #1B1917;           /* 大数字用墨色（现代感） */
+  --c-primary-weak: #F5E2D3;
   --c-success: #3E7C4F;
   --c-warn: #D08A2E;
   --c-danger: #C2402F;
-  --c-border: #ECE8E1;
-  --c-track: #EFECE6;         /* 进度条轨道 */
+  --c-border: #E6DFD3;
+  --c-track: #EAE4D8;
+
+  /* 主视觉深咖 */
+  --c-hero-1: #2E241B;
+  --c-hero-2: #4A3826;
+  --c-hero-text: #F3E7D3;     /* 烛光米 */
+  --c-hero-num: #F7D9A8;      /* 烛光数字 */
+  --c-hero-sub: rgba(243, 231, 211, 0.62);
 
   /* 字号 */
-  --fs-hero: 136rpx;          /* 计数大数字 */
-  --fs-big: 56rpx;
+  --fs-hero: 148rpx;
+  --fs-big: 60rpx;
   --fs-title: 40rpx;
   --fs-body: 34rpx;
   --fs-small: 28rpx;
@@ -32,13 +38,11 @@
 
   /* 尺寸 */
   --btn-height: 108rpx;
-  --radius: 28rpx;
-  --radius-sm: 18rpx;
+  --radius: 32rpx;
+  --radius-sm: 20rpx;
   --space: 28rpx;
-  --page-x: 32rpx;
-}
+  --page-x: 36rpx;
 
-page {
   background: var(--c-bg);
   color: var(--c-ink);
   font-size: var(--fs-body);
@@ -47,22 +51,33 @@ page {
 }
 
 /* —— 页面容器 —— */
-.page { padding: var(--space) var(--page-x) 48rpx; }
+.page { padding: var(--space) var(--page-x) 56rpx; }
 
 /* —— 卡片 —— */
 .card {
   background: var(--c-card);
   border-radius: var(--radius);
-  padding: 32rpx;
-  box-shadow: 0 2rpx 16rpx rgba(27, 25, 23, 0.05);
+  padding: 36rpx;
+  box-shadow: 0 6rpx 28rpx rgba(74, 56, 38, 0.10);
+  margin-bottom: var(--space);
+}
+
+/* 主视觉卡：深咖渐变 + 烛光字 */
+.card-hero {
+  background: linear-gradient(150deg, var(--c-hero-1) 0%, var(--c-hero-2) 100%);
+  border-radius: var(--radius);
+  padding: 44rpx 40rpx;
+  color: var(--c-hero-text);
+  box-shadow: 0 12rpx 36rpx rgba(46, 36, 27, 0.28);
   margin-bottom: var(--space);
 }
 
 .section-title {
   font-size: var(--fs-small);
   color: var(--c-ink-2);
-  margin: 8rpx 4rpx 16rpx;
-  font-weight: 500;
+  margin: 12rpx 8rpx 16rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
 }
 
 /* —— 按钮 —— */
@@ -76,8 +91,12 @@ page {
 }
 .btn::after { border: none; }
 
-.btn-primary { background: var(--c-primary); color: #fff; }
-.btn-primary.btn-hover, .btn-primary:active { background: var(--c-primary-deep); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-deep) 100%);
+  color: #fff;
+  box-shadow: 0 6rpx 18rpx rgba(192, 91, 42, 0.32);
+}
+.btn-primary:active { opacity: 0.88; }
 
 .btn-ghost { background: var(--c-primary-weak); color: var(--c-primary); }
 
@@ -87,33 +106,33 @@ page {
   border: 2rpx solid var(--c-border);
 }
 
-.btn-danger { background: #FBEEEC; color: var(--c-danger); }
+.btn-danger { background: #F9E9E6; color: var(--c-danger); }
 
 .btn[disabled] { opacity: 0.45; }
 
 .btn-row { display: flex; gap: 24rpx; }
 .btn-row .btn { flex: 1; }
 
-/* —— 列表行（卡片内） —— */
+/* —— 列表行 —— */
 .row {
   display: flex;
   align-items: center;
-  min-height: 112rpx;
-  padding: 20rpx 4rpx;
+  min-height: 116rpx;
+  padding: 22rpx 4rpx;
   border-bottom: 2rpx solid var(--c-border);
 }
 .row:last-child { border-bottom: none; }
 .row-main { flex: 1; min-width: 0; }
-.row-title { font-size: var(--fs-body); font-weight: 500; }
-.row-sub { font-size: var(--fs-small); color: var(--c-ink-2); margin-top: 2rpx; }
-.row-arrow { color: var(--c-ink-3); font-size: var(--fs-body); margin-left: 16rpx; }
+.row-title { font-size: var(--fs-body); font-weight: 600; }
+.row-sub { font-size: var(--fs-small); color: var(--c-ink-2); margin-top: 4rpx; }
+.row-arrow { color: var(--c-ink-3); font-size: 40rpx; margin-left: 16rpx; }
 .row-right { margin-left: 16rpx; color: var(--c-ink-2); font-size: var(--fs-small); }
 
 /* —— 底部弹层 —— */
 .sheet-mask {
   position: fixed;
   inset: 0;
-  background: rgba(27, 25, 23, 0.45);
+  background: rgba(27, 25, 23, 0.5);
   z-index: 90;
 }
 .sheet {
@@ -121,8 +140,8 @@ page {
   left: 0; right: 0; bottom: 0;
   z-index: 91;
   background: var(--c-card);
-  border-radius: 32rpx 32rpx 0 0;
-  padding: 40rpx 32rpx calc(40rpx + env(safe-area-inset-bottom));
+  border-radius: 36rpx 36rpx 0 0;
+  padding: 44rpx 36rpx calc(44rpx + env(safe-area-inset-bottom));
 }
 .sheet-title {
   font-size: var(--fs-title);
@@ -138,7 +157,7 @@ page {
 }
 .sheet-close {
   position: absolute;
-  right: 28rpx; top: 28rpx;
+  right: 32rpx; top: 32rpx;
   width: 64rpx; height: 64rpx;
   line-height: 64rpx;
   text-align: center;
@@ -148,72 +167,77 @@ page {
 
 /* —— 进度条 —— */
 .progress {
-  height: 16rpx;
-  border-radius: 8rpx;
+  height: 18rpx;
+  border-radius: 9rpx;
   background: var(--c-track);
   overflow: hidden;
 }
 .progress-fill {
   height: 100%;
-  border-radius: 8rpx;
-  background: var(--c-primary);
+  border-radius: 9rpx;
+  background: linear-gradient(90deg, var(--c-primary) 0%, var(--c-primary-deep) 100%);
 }
 
-/* —— 分段选择器（页签/选项） —— */
+/* —— 分段选择器 —— */
 .seg {
   display: flex;
-  background: var(--c-track);
+  background: #E2DACB;
   border-radius: var(--radius-sm);
   padding: 8rpx;
 }
 .seg-item {
   flex: 1;
   text-align: center;
-  height: 76rpx;
-  line-height: 76rpx;
-  border-radius: 12rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 14rpx;
   font-size: var(--fs-small);
+  font-weight: 500;
   color: var(--c-ink-2);
 }
 .seg-item.on {
   background: var(--c-card);
   color: var(--c-ink);
-  font-weight: 600;
-  box-shadow: 0 2rpx 8rpx rgba(27, 25, 23, 0.08);
+  font-weight: 700;
+  box-shadow: 0 2rpx 10rpx rgba(46, 36, 27, 0.14);
 }
 
-/* —— 选项胶囊（弹层里选值） —— */
+/* —— 选项胶囊 —— */
 .chips { display: flex; gap: 20rpx; flex-wrap: wrap; }
 .chip {
-  min-width: 160rpx;
-  height: 84rpx;
-  line-height: 84rpx;
+  min-width: 168rpx;
+  height: 88rpx;
+  line-height: 88rpx;
   text-align: center;
-  border-radius: 16rpx;
+  border-radius: 18rpx;
   background: var(--c-track);
   color: var(--c-ink);
   font-size: var(--fs-body);
   padding: 0 28rpx;
 }
-.chip.on { background: var(--c-primary); color: #fff; font-weight: 600; }
+.chip.on {
+  background: linear-gradient(135deg, var(--c-primary) 0%, var(--c-primary-deep) 100%);
+  color: #fff;
+  font-weight: 600;
+}
 
 /* —— 空状态 —— */
 .empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 120rpx 48rpx;
+  padding: 130rpx 48rpx;
   text-align: center;
 }
-.empty-title { font-size: var(--fs-title); font-weight: 600; margin-bottom: 12rpx; }
-.empty-sub { font-size: var(--fs-body); color: var(--c-ink-2); margin-bottom: 56rpx; line-height: 1.6; }
+.empty-title { font-size: var(--fs-title); font-weight: 600; margin-bottom: 14rpx; }
+.empty-sub { font-size: var(--fs-body); color: var(--c-ink-2); margin-bottom: 60rpx; line-height: 1.7; }
 
-/* —— 徽标/状态点 —— */
+/* —— 徽标 —— */
 .badge {
   font-size: var(--fs-mini);
-  padding: 4rpx 16rpx;
+  padding: 6rpx 18rpx;
   border-radius: 999rpx;
   background: var(--c-track);
   color: var(--c-ink-2);
 }
-.badge-primary { background: var(--c-primary-weak); color: var(--c-primary); }
+.badge-primary { background: var(--c-primary-weak); color: var(--c-primary); font-weight: 600; }

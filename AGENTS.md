@@ -55,7 +55,8 @@ docs/                   设计定稿
 - 阶段 0–2 完成：domain 业务层（45 项单测全绿）、全部无戒指页面、设计系统 v2。
 - 阶段 4 先行完成：BLE 抽象层（`services/ble/`：mock-adapter 全功能模拟戒指 / wechat-adapter 待真机协议）、设备页 P12/P13、store 戒指操作（绑定/同步/锁定/新一轮/模拟点按）。真机协议就绪后只需实现 wechat-adapter 并把 settings.bleMock 置 false。
 - 待做：阶段3 微信登录 + 云同步（云函数在 `cloudfunctions/`）。
-- UI 铁律：禁内联样式插值 `style="...{{x}}..."`（DevTools 编译报错）；动态样式在 JS 拼完整串（barStyle 模式）。通用类与变量统一用 `app.wxss` 设计系统 v2。
+- UI 铁律：禁内联样式插值 `style="...{{x}}..."`（DevTools 编译报错）；动态样式在 JS 拼完整串（barStyle 模式）。通用类与变量统一用 `app.wxss` 设计系统 v3。
+- **CSS 变量必须挂在 `page` 选择器上，`:root` 在 WXSS 里不生效**（血案：全页 var() 失效 = 全白）。
 
 ## 其他
 

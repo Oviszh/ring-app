@@ -167,7 +167,9 @@ Page({
 
     const vows = store.vows().map(v => {
       const prog = store.vowProgress(v.id)
-      const title = (byId[v.practiceId] || '功课') + (v.name ? ` · ${v.name}` : '')
+      const pname = byId[v.practiceId] || '功课'
+      // 愿名已含功课名前缀时直接用愿名，避免「功课 · 功课 · …」重复
+      const title = v.name && v.name.indexOf(pname + ' · ') === 0 ? v.name : pname + (v.name ? ` · ${v.name}` : '')
       if (!prog) {
         return { id: v.id, title, totalText: '0', targetText: fmtNum(v.targetTotal), percent: 0, barStyle: 'width: 0%;', subText: '' }
       }

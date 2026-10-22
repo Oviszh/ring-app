@@ -27,34 +27,32 @@
       </view>
     </block>
 
-    <!-- 计数卡片 -->
+    <!-- 计数主视觉 -->
     <block wx:else>
-      <!-- 戒指/手机页签（有戒指时显示） -->
       <view wx:if="{{hasRing}}" class="seg" style="margin-bottom: 24rpx;">
         <view class="seg-item {{side === 'ring' ? 'on' : ''}}" data-side="ring" bindtap="onSideTab">戒指计数</view>
         <view class="seg-item {{side === 'phone' ? 'on' : ''}}" data-side="phone" bindtap="onSideTab">手机计数</view>
       </view>
 
-      <view class="card counter-card">
-        <view class="counter-head">
-          <view class="counter-arrow {{canSwitch ? '' : 'off'}}" bindtap="onPrevPractice">‹</view>
-          <view class="counter-name">{{currentName}}</view>
-          <view class="counter-arrow {{canSwitch ? '' : 'off'}}" bindtap="onNextPractice">›</view>
+      <view class="card-hero">
+        <view class="hero-head">
+          <view class="hero-arrow {{canSwitch ? '' : 'off'}}" bindtap="onPrevPractice">‹</view>
+          <view class="hero-name">{{currentName}}</view>
+          <view class="hero-arrow {{canSwitch ? '' : 'off'}}" bindtap="onNextPractice">›</view>
         </view>
 
-        <view class="counter-num {{ringLocked && side === 'ring' ? 'dim' : ''}}">{{ledText}}</view>
-        <view class="counter-caption">{{ledCaption}}{{ringLocked && side === 'ring' ? ' · 已锁定' : ''}}</view>
+        <view class="hero-num {{ringLocked && side === 'ring' ? 'dim' : ''}}">{{ledText}}</view>
+        <view class="hero-caption">{{ledCaption}}{{ringLocked && side === 'ring' ? ' · 已锁定' : ''}}</view>
 
-        <view class="counter-today">{{todayText}}</view>
+        <view class="hero-divider"></view>
+        <view class="hero-today">{{todayText}}</view>
 
-        <view wx:if="{{side === 'phone' && phoneEnabled}}" class="counter-actions">
-          <button class="btn btn-primary" bindtap="goWoodfish">{{isTime ? '进入静坐计时' : '进入手机计数'}}</button>
+        <view wx:if="{{side === 'phone' && phoneEnabled}}" class="hero-actions">
+          <button class="btn btn-hero" bindtap="goWoodfish">{{isTime ? '进入静坐计时' : '进入手机计数'}}</button>
         </view>
-        <view wx:if="{{side === 'ring'}}" class="counter-actions">
-          <view class="ring-bar">
-            <view class="ring-bar-item" bindtap="onRingLock">{{ringLocked ? '🔒 已锁定 · 点按解锁' : '🔓 锁定戒指'}}</view>
-            <view class="ring-bar-item" bindtap="onRingSync">⟳ {{syncText}}</view>
-          </view>
+        <view wx:if="{{side === 'ring'}}" class="hero-ring-bar">
+          <view class="hero-ring-item" bindtap="onRingLock">{{ringLocked ? '🔒 已锁定 · 点按解锁' : '🔓 锁定戒指'}}</view>
+          <view class="hero-ring-item" bindtap="onRingSync">⟳ {{syncText}}</view>
         </view>
       </view>
 
@@ -63,7 +61,7 @@
 
     <!-- 我的功课 -->
     <view class="section-title">我的功课</view>
-    <view class="card" style="padding-top: 8rpx; padding-bottom: 8rpx;">
+    <view class="card" style="padding-top: 10rpx; padding-bottom: 10rpx;">
       <view
         wx:for="{{practices}}"
         wx:key="id"
