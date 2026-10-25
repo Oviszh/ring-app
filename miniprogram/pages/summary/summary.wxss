@@ -73,3 +73,5 @@
 }
 
 .empty-btn { width: 60%; }
+
+.sum-unit { font-size: 26rpx; color: var(--c-ink-2); margin-left: 12rpx; }.sum-name { font-size: 34rpx; font-weight: 500; }.empty-mark { display: none; }

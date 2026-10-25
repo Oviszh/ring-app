@@ -1,150 +1,37 @@
-<!-- P1 今日：纸卡计数区 + 设备/手机页签 -->
-<view class="page">
-
-  <!-- 空状态 -->
-  <block wx:if="{{empty}}">
-    <view wx:if="{{!emptyHidden}}" class="empty">
-      <view class="empty-mark">念</view>
-      <view class="empty-title">还没有功课</view>
-      <view class="empty-sub">添加一个常修的功课，开始今天的修行吧</view>
-      <button class="btn btn-primary" style="width: 70%;" bindtap="goPracticeAdd">＋ 添加功课</button>
+<view class="page today-page">
+  <view class="today-heading"><view><view class="eyebrow">{{dateLabel}}</view><view class="page-title">当前计数</view></view><view class="saved-mark"><view class="saved-dot"></view>本机记录</view></view>
+  <view wx:if="{{!fillOnly}}" class="counter-shell {{tabsVisible ? 'has-tabs' : ''}}">
+    <view class="counter-card">
+      <view class="counter-top"><text class="counter-label">{{counterLabel}}</text><view class="switch-controls"><button class="switch-arrow" disabled="{{!canSwitch}}" bindtap="onPrevPractice" aria-label="上一项功课">‹</button><button class="switch-arrow" disabled="{{!canSwitch}}" bindtap="onNextPractice" aria-label="下一项功课">›</button></view></view>
+      <view class="counter-name">{{currentName}}</view>
+      <view class="counter-screen {{ringEmpty ? 'screen-unbound' : ''}}">
+        <view class="screen-caption"><text>{{isTime ? '本座时长' : '本轮计数'}}</text><text>{{ringEmpty ? '未绑定' : (side === 'ring' && ringLocked ? '已锁定' : unit)}}</text></view>
+        <led-number id="today-led" value="{{roundText}}" dimmed="{{ringEmpty}}" />
+      </view>
+      <view wx:if="{{ringEmpty}}" class="unbound-status"><view class="unbound-title">未绑定设备</view><view class="unbound-description">绑定后，可在这里查看设备计数。</view></view>
+      <view wx:else class="counter-meta"><text>今日 {{todayText}} {{unit}}</text></view>
+      <view wx:if="{{side === 'ring' && ringBound}}" class="device-status">{{deviceStatus}}{{!deviceConnected ? ' · 显示上次同步记录' : ''}}</view>
+      <view wx:if="{{reminderText}}" class="counter-reminder">{{reminderText}}</view>
+      <view wx:if="{{side === 'phone'}}" class="btn-row counter-actions"><button class="btn btn-primary" bindtap="goWoodfish">{{empty ? '添加功课' : (isTime ? (hasContext ? '继续静坐' : '开始静坐') : (hasContext ? '继续计数' : '开始计数'))}}</button></view>
+      <view wx:else class="btn-row counter-actions"><button class="btn btn-primary" disabled="{{busy}}" bindtap="onDevicePrimary">{{!ringBound ? '绑定设备' : (hasContext ? '设备管理' : '开始设备计数')}}</button></view>
+      <view wx:if="{{side === 'ring' && ringBound}}" class="device-tools"><view bindtap="onRingLock">{{ringLocked ? '解锁计数' : '锁定计数'}}</view><view bindtap="onRingSync">{{busy ? '处理中…' : '同步设备'}}</view></view>
     </view>
-    <view wx:else class="empty">
-      <view class="empty-title">首页还没有要显示的功课</view>
-      <view class="empty-sub">到「配置功课」里打开功课的首页显示，或添加新功课</view>
-      <button class="btn btn-ghost" style="width: 70%;" bindtap="onConfig">配置功课</button>
-      <button class="btn btn-primary" style="width: 70%; margin-top: 24rpx;" bindtap="goPracticeAdd">＋ 添加功课</button>
+    <view wx:if="{{tabsVisible}}" class="count-tabs" role="tablist">
+      <view wx:if="{{ringEnabled}}" class="count-tab {{side === 'ring' ? 'on' : ''}}" role="tab" aria-selected="{{side === 'ring'}}" data-side="ring" bindtap="onSideTab">设备计数</view>
+      <view wx:if="{{phoneEnabled}}" class="count-tab {{side === 'phone' ? 'on' : ''}}" role="tab" aria-selected="{{side === 'phone'}}" data-side="phone" bindtap="onSideTab">触屏计数</view>
     </view>
-  </block>
-
-  <block wx:else>
-
-    <!-- 纯填报模式 -->
-    <block wx:if="{{fillOnly}}">
-      <view class="card fill-hero">
-        <view class="fill-title">当前以手动填报记录修行</view>
-        <button class="btn btn-primary" bindtap="openEntry">✎ 填报今日数据</button>
-      </view>
-    </block>
-
-    <block wx:else>
-      <!-- 计数纸卡（回纹角 + 莲花饰 + 墨字大数字） -->
-      <view class="count-card">
-        <view class="corner tl"></view>
-        <view class="corner tr"></view>
-        <view class="corner bl"></view>
-        <view class="corner br"></view>
-
-        <view class="count-head">
-          <view class="count-arrow {{canSwitch ? '' : 'off'}}" bindtap="onPrevPractice">‹</view>
-          <view class="count-name">
-            <text class="orn">❀</text>
-            <text class="name-text">{{currentName}}</text>
-            <text class="orn">❀</text>
-          </view>
-          <view class="count-arrow {{canSwitch ? '' : 'off'}}" bindtap="onNextPractice">›</view>
-        </view>
-
-        <!-- 戒指未绑定：页签可见但计数区显示引导 -->
-        <block wx:if="{{ringEmpty}}">
-          <view class="count-empty">暂无绑定戒指</view>
-          <view class="count-empty-sub">绑定念佛戒指后，这里显示戒指上的实时计数</view>
-          <button class="btn btn-ghost bind-btn" bindtap="goBind">去绑定戒指</button>
-        </block>
-
-        <block wx:else>
-          <view class="count-num {{ringLocked && side === 'ring' ? 'dim' : ''}}">{{ledText}}</view>
-          <view class="count-caption">{{ledCaption}}{{ringLocked && side === 'ring' ? ' · 已锁定' : ''}}</view>
-          <view class="count-divider"></view>
-          <view class="count-today">{{todayText}}</view>
-
-          <view wx:if="{{side === 'phone'}}" class="count-actions">
-            <button class="btn btn-primary" bindtap="goWoodfish">{{isTime ? '进入静坐计时' : '进入手机计数'}}</button>
-          </view>
-          <view wx:elif="{{side === 'ring'}}" class="count-ringbar">
-            <view class="count-ring-item" bindtap="onRingLock">{{ringLocked ? '🔒 已锁定 · 点按解锁' : '🔓 锁定戒指'}}</view>
-            <view class="count-ring-item" bindtap="onRingSync">⟳ {{syncText}}</view>
-          </view>
-        </block>
-      </view>
-
-      <!-- 设备/手机页签（位于卡片下方，如宣纸托底） -->
-      <view wx:if="{{tabsVisible}}" class="side-tabs">
-        <view class="side-tab {{side === 'ring' ? 'on' : ''}}" data-side="ring" bindtap="onSideTab">设备计数</view>
-        <view class="side-tab {{side === 'phone' ? 'on' : ''}}" data-side="phone" bindtap="onSideTab">手机计数</view>
-      </view>
-
-      <view class="entry-link" bindtap="openEntry">✎ 填报今日数据</view>
-    </block>
-
-    <!-- 功课列表 -->
-    <view class="list-head">
-      <view class="list-head-main">
-        <view class="list-title">功课</view>
-        <view class="list-bar"></view>
-      </view>
-      <view class="list-config" bindtap="onConfig">配置功课</view>
+  </view>
+  <view wx:else class="card manual-card"><view class="manual-title">记下今日的用功</view><view class="row-sub">只用填报，也能完整记录日常功课。</view><button class="btn btn-primary" bindtap="openEntry">{{empty ? '添加功课' : '补录功课'}}</button><view class="manual-settings" bindtap="goSettings">计数入口已关闭 · 去设置开启 ›</view></view>
+  <view class="list-heading"><view class="list-heading-title">我的功课</view><button class="text-button" bindtap="onConfig">管理</button></view>
+  <view wx:if="{{practices.length}}" class="practice-groups">
+    <block wx:for="{{practiceGroups}}" wx:for-item="group" wx:key="key"><view wx:if="{{group.rows.length}}" class="practice-group group-{{group.key}}"><view class="group-heading"><text>{{group.name}}</text><text class="group-note">{{group.note}}</text></view><view class="practice-list">
+    <view class="practice-row" wx:for="{{group.rows}}" wx:key="id" data-id="{{item.id}}" bindtap="onPracticeTap" hover-class="practice-hover">
+      <view class="practice-info"><view class="practice-name">{{item.name}}</view><view wx:if="{{item.detail}}" class="row-sub">{{item.detail}}</view><view class="practice-target">{{item.targetText}}<text wx:if="{{item.done}}" class="done-label"> · 已达标</text></view><view wx:if="{{item.hasTarget}}" class="progress practice-progress"><view class="progress-fill" style="{{item.barStyle}}"></view></view></view>
+      <view class="practice-total"><view class="practice-number">{{item.totalText}}</view><view class="practice-unit">{{item.unit}}</view></view><text class="practice-chevron">›</text>
     </view>
-
-    <view
-      wx:for="{{practices}}"
-      wx:key="id"
-      class="p-card"
-      data-id="{{item.id}}"
-      bindtap="onPracticeTap"
-    >
-      <image class="p-icon" src="/assets/icons/lotus-gold.png" mode="aspectFit" />
-      <view class="p-main">
-        <view class="p-name">{{item.name}}</view>
-        <view class="p-sub">{{item.progressText}}</view>
-      </view>
-      <view class="p-num">{{item.totalText}}</view>
-      <text class="p-arrow">›</text>
-    </view>
-
-    <view class="p-card p-add" bindtap="goPracticeAdd">
-      <view class="p-add-text">＋ 添加功课</view>
-    </view>
-
-    <view wx:if="{{fillOnly}}" class="foot-link" bindtap="goSettings">计数入口已关闭 · 去设置开启 ›</view>
-  </block>
-
-  <!-- E3 填报弹层 -->
-  <block wx:if="{{entryVisible}}">
-    <view class="sheet-mask" catchtouchmove="noop" bindtap="closeEntry"></view>
-    <view class="sheet">
-      <view class="sheet-close" bindtap="closeEntry">✕</view>
-      <view class="sheet-title">填报</view>
-      <view class="sheet-sub">记的是「本次新增数量」，不是当天总数</view>
-
-      <picker mode="date" value="{{entryDate}}" end="{{todayKey}}" bindchange="onEntryDateChange">
-        <view class="field">
-          <text class="field-label">日期</text>
-          <text class="field-value">{{entryDateLabel}}</text>
-          <text class="field-arrow">▾</text>
-        </view>
-      </picker>
-
-      <picker mode="selector" range="{{entryPractices}}" range-key="name" value="{{entryPracticeIndex}}" bindchange="onEntryPracticeChange">
-        <view class="field">
-          <text class="field-label">功课</text>
-          <text class="field-value">{{entryPracticeName}}</text>
-          <text class="field-arrow">▾</text>
-        </view>
-      </picker>
-
-      <view class="field">
-        <text class="field-label">本次新增</text>
-        <input class="field-input" type="number" value="{{entryAmount}}" placeholder="如 500" placeholder-class="field-ph" bindinput="onEntryAmountInput" />
-        <text class="field-unit">{{entryUnit}}</text>
-      </view>
-
-      <view class="btn-row" style="margin-top: 32rpx;">
-        <button class="btn btn-plain" bindtap="saveEntryAndContinue">保存并继续填报</button>
-        <button class="btn btn-primary" bindtap="saveEntry">保存</button>
-      </view>
-
-      <view class="sheet-note">填报记为「手动」来源，计入今日累积与个人大愿；填错了可在 日历 → 当日详情 中撤销；纠正误触请用「修正」。</view>
-    </view>
-  </block>
+    </view></view></block>
+  </view>
+  <view wx:else class="list-empty"><text>{{emptyHidden ? '功课已收起，可在管理中重新显示。' : '添加常修的功课，记录每天的用功。'}}</text></view>
+  <button class="add-practice" bindtap="openEntry">补录</button>
 </view>
+<entry-sheet id="entry-sheet" visible="{{entryVisible}}" practice-id="{{currentPracticeId}}" bind:close="closeEntry" bind:saved="onEntrySaved" />

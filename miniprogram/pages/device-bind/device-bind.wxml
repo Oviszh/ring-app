@@ -1,11 +1,11 @@
-<!-- P13 绑定戒指 -->
+<!-- P13 绑定设备 -->
 <view class="page">
 
   <!-- 搜索 -->
   <block wx:if="{{phase === 'scan'}}">
     <view class="lead">
-      <view class="lead-title">{{scanning ? '正在搜索附近的戒指…' : (devices.length ? '选择要绑定的戒指' : '未发现戒指，请将戒指放在手机旁边')}}</view>
-      <view class="lead-sub">{{scanning ? '请把戒指放在手机旁边，保持屏幕常亮' : '戒指需已开机，并处于可绑定状态'}}</view>
+      <view class="lead-title">{{errorText || (scanning ? '正在搜索附近的设备…' : (devices.length ? '选择要绑定的设备' : '未发现可绑定设备'))}}</view>
+      <view class="lead-sub">{{available ? '请将设备放在手机旁，确认已开机并处于可绑定状态。' : '你可以先使用触屏计数或手动填报，已有记录不受影响。'}}</view>
     </view>
 
     <view wx:if="{{devices.length}}" class="card list-card">
@@ -19,12 +19,13 @@
     </view>
 
     <button
-      wx:if="{{!scanning}}"
+      wx:if="{{available && !scanning}}"
       class="btn {{devices.length ? 'btn-plain' : 'btn-primary'}} btn-block"
       bindtap="startScan"
     >重新扫描</button>
 
-    <view wx:if="{{!devices.length && !scanning}}" class="foot-note">戒指没反应时，可把戒指贴近手机，或给戒指充上电后再试。</view>
+    <view wx:if="{{available && !devices.length && !scanning}}" class="foot-note">戒指没反应时，可把戒指贴近手机，或给戒指充上电后再试。</view>
+    <button wx:if="{{!available}}" class="btn btn-plain btn-block" bindtap="goBack">返回</button>
   </block>
 
   <!-- 绑定中 / 成功 -->

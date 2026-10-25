@@ -11,7 +11,7 @@ function ensureDay(state, date) {
   return state.archives[date]
 }
 
-// 取（或补建）某日的归档行；targetSnapshot 只写一次，永不覆盖
+// 取（或补建）某日行，只补齐缺失的快照。设置目标可更新今天，历史快照封存。
 function ensureRow(state, date, practiceId) {
   const day = ensureDay(state, date)
   if (!day[practiceId]) {
@@ -33,7 +33,7 @@ function ensureRow(state, date, practiceId) {
   return row
 }
 
-// 某日期的目标生效口径：当日用当前目标；历史用当日快照（无快照时近似为当前目标）
+// 今天使用随目标设置更新的快照；历史使用封存快照，未来不算。
 function effectiveTarget(state, practiceId, date) {
   const practice = findPracticeAny(state, practiceId)
   if (!practice) return undefined
@@ -175,7 +175,7 @@ function dayTotals(state, date, practiceId, ts) {
   const isDuration = practice.type === PRACTICE_TYPES.TIME
   if (isDuration) {
     durationMin += manualTotal
-    times += state.entries.filter(e => e.date === date && e.practiceId === practiceId && !e.tombstone).reduce((n, e) => n + (e.times || 1), 0)
+    times += state.entries.filter(e => e.date === date && e.practiceId === practiceId && !e.tombstone).reduce((n, e) => n + (e.times === undefined ? 1 : e.times), 0)
   }
   const total = isDuration ? durationMin : ring + phone + manualTotal
   const target = effectiveTarget(state, practiceId, date)

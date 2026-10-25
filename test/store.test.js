@@ -6,8 +6,12 @@ test('store：持久化重启、目标快照、写入失败回滚',()=>{
  const {createStore}=require('../miniprogram/services/store');const s=createStore()
  const p=s.addPractice({name:'测试',dailyTarget:108})
  s.startRound('phone',p.id);s.tap('phone');s.addEntry({practiceId:p.id,date:s.todayKey(),amount:107});s.setDailyTarget(p.id,500)
- assert.equal(s.dayTotals(s.todayKey(),p.id).target,108)
+ assert.equal(s.dayTotals(s.todayKey(),p.id).target,500)
  assert.equal(createStore().practiceTotalsAll(p.id).total,108)
+ assert.equal(createStore().dayTotals(s.todayKey(),p.id).target,500)
+ fail=true;assert.throws(()=>s.setDailyTarget(p.id,1000),/quota/)
+ assert.equal(s.dayTotals(s.todayKey(),p.id).target,500)
+ assert.equal(s.getPractice(p.id).dailyTarget,500)
  fail=true;assert.throws(()=>s.addEntry({practiceId:p.id,date:s.todayKey(),amount:10}),/quota/)
  assert.equal(s.practiceTotalsAll(p.id).total,108)
  delete global.wx

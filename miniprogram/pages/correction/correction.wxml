@@ -11,11 +11,11 @@
     <view class="cur-num">{{totalText}}</view>
     <view class="split">
       <view class="split-item">
-        <view class="split-label">戒指</view>
+        <view class="split-label">设备计数</view>
         <view class="split-value">{{ringText}}</view>
       </view>
       <view class="split-item">
-        <view class="split-label">手机</view>
+        <view class="split-label">触屏计数</view>
         <view class="split-value">{{phoneText}}</view>
       </view>
       <view class="split-item">
@@ -32,15 +32,15 @@
       class="seg-item {{source === 'ring' ? 'on' : ''}}"
       data-source="ring"
       bindtap="onSourceTap"
-    >戒指</view>
+    >设备计数</view>
     <view
       class="seg-item {{source === 'phone' ? 'on' : ''}}"
       data-source="phone"
       bindtap="onSourceTap"
-    >手机</view>
+    >触屏计数</view>
   </view>
-  <view wx:if="{{ringHint}}" class="hint">当前无戒指数据</view>
-  <view wx:if="{{isDuration}}" class="hint">计时型功课只计时：戒指 / 手机计数恒为 0，通常无需修正</view>
+  <view wx:if="{{ringHint}}" class="hint">当前没有设备计数记录</view>
+  <view wx:if="{{isDuration}}" class="hint">计时型功课只计时：戒指 / 触屏计数恒为 0，通常无需修正</view>
 
   <!-- 修改为 -->
   <view class="card input-card">
@@ -63,9 +63,9 @@
   </view>
 
   <!-- 规则说明（P10 定稿） -->
-  <view class="rules">规则：戒指 / 手机计数只许减少；如需增加，请返回用「填报」。填报记本次新增数量、可整笔撤销；修正只用于纠错、可单独恢复。</view>
+  <view class="rules">仅扣除误触产生的计数。手动记录填错时，请回到当日详情撤销对应记录。修正后也可在此恢复。</view>
 
-  <button class="btn btn-primary {{canConfirm ? '' : 'off'}}" bindtap="onConfirm">确认修正</button>
+  <button class="btn btn-primary {{canConfirm ? '' : 'off'}}" disabled="{{!canConfirm}}" bindtap="onConfirm">确认修正</button>
 
   <!-- 已有修正 -->
   <block wx:if="{{adjustments.length}}">

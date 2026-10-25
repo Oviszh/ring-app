@@ -121,8 +121,24 @@ function hex(c) {
   return [parseInt(c.slice(1, 3), 16), parseInt(c.slice(3, 5), 16), parseInt(c.slice(5, 7), 16), 255]
 }
 
-const GOLD = hex('#A9853C')
-const GRAY = hex('#A8A296')
+const GOLD = hex('#344F42')
+const GRAY = hex('#707A72')
+const WHITE = hex('#FFFFFF')
+
+// 原生 tabBar 的选中态增加松墨色圆角底，避免仅靠相近颜色区分。
+function drawSelected(draw) {
+  return (c) => {
+    const left = 6, right = 74, top = 6, bottom = 74, radius = 16
+    for (let y = top; y <= bottom; y++) {
+      for (let x = left; x <= right; x++) {
+        const cx = Math.max(left + radius, Math.min(x, right - radius))
+        const cy = Math.max(top + radius, Math.min(y, bottom - radius))
+        if ((x - cx) ** 2 + (y - cy) ** 2 <= radius ** 2) c.set(x, y, ...GOLD)
+      }
+    }
+    draw(c, WHITE)
+  }
+}
 
 // —— 莲花：中心瓣 + 两侧瓣 + 底弧 ——
 function drawLotus(c, color) {
@@ -163,9 +179,9 @@ function save(name, draw, color) {
 
 fs.mkdirSync(OUT, { recursive: true })
 save('tab-today.png', drawLotus, GRAY)
-save('tab-today-active.png', drawLotus, GOLD)
+save('tab-today-active.png', drawSelected(drawLotus), GOLD)
 save('tab-calendar.png', drawCalendar, GRAY)
-save('tab-calendar-active.png', drawCalendar, GOLD)
+save('tab-calendar-active.png', drawSelected(drawCalendar), GOLD)
 save('tab-mine.png', drawPerson, GRAY)
-save('tab-mine-active.png', drawPerson, GOLD)
+save('tab-mine-active.png', drawSelected(drawPerson), GOLD)
 save('lotus-gold.png', drawLotus, GOLD)

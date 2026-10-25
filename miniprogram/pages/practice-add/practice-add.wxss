@@ -85,3 +85,16 @@
 }
 
 .field-ph { color: var(--c-ink-3); }
+
+.custom-create { width: 100%; margin: 24rpx 0; }.search { border-radius: 16rpx; background: #fff; border: 1rpx solid var(--c-border); }.field-input { min-width: 0; }.field-label { width: 160rpx; }
+
+.row-main { min-width: 0; }
+.practice-description { white-space: normal; overflow-wrap: break-word; line-height: 1.65; }
+.practice-tibetan { font-family: 'Kailasa', 'Noto Sans Tibetan', 'Microsoft Himalaya', sans-serif; font-size: 30rpx; line-height: 1.9; color: var(--c-ink-2); margin-top: 10rpx; overflow-wrap: break-word; }
+.catalog-categories { margin: 4rpx 0 20rpx; width: 100%; }
+.category-track { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12rpx; padding-bottom: 8rpx; }
+.catalog-category { display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 80rpx; padding: 0 12rpx; border: 1rpx solid var(--c-border); border-radius: 40rpx; font-size: 28rpx; color: var(--c-ink-2); background: var(--c-card); }
+.catalog-category.on { color: #fff; border-color: var(--c-primary); background: var(--c-primary); font-weight: 500; }
+.catalog-section { display: flex; align-items: center; justify-content: space-between; }
+.catalog-count { font-size: 24rpx; color: var(--c-ink-2); }
+.row .row-arrow, .row .badge { flex-shrink: 0; }

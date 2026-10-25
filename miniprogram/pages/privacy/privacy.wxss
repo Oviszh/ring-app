@@ -1,0 +1,1 @@
+.privacy-title { font-size: 32rpx; font-weight: 600; margin-bottom: 16rpx; }.privacy-text { font-size: 28rpx; color: var(--c-ink-2); line-height: 1.9; margin-top: 16rpx; }

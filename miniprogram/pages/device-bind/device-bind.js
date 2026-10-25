@@ -12,6 +12,8 @@ Page({
   data: {
     phase: 'scan', // scan | binding
     scanning: false,
+    available: true,
+    errorText: '',
     devices: [],
 
     progressText: '',
@@ -36,6 +38,10 @@ Page({
 
   async startScan() {
     if (this._scanning || this._binding) return
+    if (store.ringAdapter().ready === false) {
+      this.setData({ scanning: false, available: false, devices: [], errorText: '配套设备尚未开放绑定' })
+      return
+    }
     this._scanning = true
 
     this.setData({ scanning: true, devices: [], progressDone: false })
@@ -66,6 +72,8 @@ Page({
       }))
     })
   },
+
+  goBack() { wx.navigateBack({ fail() { wx.switchTab({ url: '/pages/today/today' }) } }) },
 
   // —— 绑定 ——
 

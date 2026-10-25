@@ -1,0 +1,22 @@
+<block wx:if="{{visible}}">
+  <view class="sheet-mask" catchtouchmove="noop" bindtap="close"></view>
+  <view class="sheet entry-sheet">
+    <view class="sheet-close" bindtap="close" aria-label="关闭">×</view>
+    <view class="sheet-title">补录功课</view>
+    <view class="sheet-sub">选择增加或减少，按本次数量补录当日记录。</view>
+    <picker mode="date" value="{{selectedDate}}" end="{{today}}" bindchange="onDate">
+      <view class="entry-field"><text class="entry-label">日期</text><text class="entry-value">{{dateText}}{{selectedDate === today ? ' · 今天' : ''}}</text><text class="row-arrow">›</text></view>
+    </picker>
+    <picker range="{{practices}}" range-key="name" value="{{index}}" bindchange="onPractice">
+      <view class="entry-field"><text class="entry-label">功课</text><text class="entry-value">{{name}}</text><text class="row-arrow">›</text></view>
+    </picker>
+    <view class="entry-reference"><text>当前记录</text><text class="reference-value">{{currentText}}</text></view>
+    <view class="seg"><view class="seg-item {{direction === 'add' ? 'on' : ''}}" data-direction="add" bindtap="onDirection">＋ 增加</view><view class="seg-item {{direction === 'subtract' ? 'on' : ''}}" data-direction="subtract" bindtap="onDirection">− 减少</view></view>
+    <view class="amount-label">本次{{direction === 'subtract' ? '减少' : '增加'}}{{isTime ? '时长' : '数量'}}</view>
+    <view class="amount-box"><input class="amount-input" type="number" maxlength="12" value="{{amount}}" placeholder="0" bindinput="onAmount" confirm-type="done" bindconfirm="save" /><text class="amount-unit">{{unit}}</text></view>
+    <view wx:if="{{error}}" class="entry-error">{{error}}</view>
+    <view wx:if="{{afterText}}" class="entry-preview">{{afterText}}</view>
+    <view class="btn-row entry-actions"><button class="btn btn-plain" disabled="{{busy}}" bindtap="saveMore">保存并继续</button><button class="btn btn-primary" loading="{{busy}}" disabled="{{busy}}" bindtap="save">保存记录</button></view>
+    <view class="entry-note">补录单独留痕；设备与触屏原始计数保留。</view>
+  </view>
+</block>

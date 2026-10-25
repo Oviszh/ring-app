@@ -1,4 +1,4 @@
-/* P6 手机计数设置 —— 基于 app.wxss 设计系统 */
+/* P6 触屏计数设置 —— 基于 app.wxss 设计系统 */
 
 .switch {
   flex: none;

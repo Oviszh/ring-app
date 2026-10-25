@@ -1,18 +1,9 @@
 'use strict'
 
 const { fmtNum } = require('../../utils/format')
+const { displayVowName } = require('../../utils/vow-name')
 
 const store = getApp().globalData.store
-
-function nameOf(practice) {
-  return practice.displayName || practice.name
-}
-
-// 自动生成的愿名已带「功课名 · …」前缀时不重复拼接
-function vowTitle(practiceName, vowName) {
-  if (!practiceName) return vowName
-  return vowName.indexOf(practiceName + ' · ') === 0 ? vowName : `${practiceName} · ${vowName}`
-}
 
 Page({
   data: {
@@ -36,8 +27,7 @@ Page({
       if (!progress) continue
 
       const practice = store.getPracticeAny(vow.practiceId)
-      const practiceName = practice ? nameOf(practice) : ''
-      const title = vowTitle(practiceName, vow.name)
+      const title = displayVowName(vow, practice)
 
       if (progress.done) {
         done.push({ id: vow.id, title, days: progress.days })
@@ -50,7 +40,7 @@ Page({
           percent: progress.percent,
           barStyle: `width: ${progress.percent}%;`,
           avgText: fmtNum(progress.avgPerDay),
-          etaText: progress.eta ? `预计 ${progress.eta.slice(0, 7)} 圆满` : '暂无估算'
+          etaText: progress.eta ? `预计 ${progress.eta.slice(0, 7)} 圆满` : '记录一段时间后可估算'
         })
       }
     }

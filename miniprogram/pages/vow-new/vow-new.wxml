@@ -1,155 +1,32 @@
-<!-- P11 新建 / 修改大愿 -->
 <view class="page form-page">
-
-  <!-- 无功课 -->
   <view wx:if="{{noPractices}}" class="empty">
-    <view class="empty-mark">课</view>
-    <view class="empty-title">还没有功课</view>
-    <view class="empty-sub">大愿要挂在功课下，先添加一个功课</view>
-    <button class="btn btn-primary empty-btn" bindtap="goPracticeAdd">去添加功课</button>
+    <view class="empty-title">先添加一项功课</view>
+    <view class="empty-sub">再为它设定一个长期目标。</view>
+    <button class="btn btn-primary empty-btn" bindtap="goPracticeAdd">添加功课</button>
   </view>
-
   <block wx:elif="{{ready}}">
+    <view class="page-heading"><view class="eyebrow">长期大愿</view><view class="page-title">{{isEdit ? '修改愿心' : '为日常修行立愿'}}</view><view class="page-description">从开始日期起，记录自动计入进度。</view></view>
     <view class="card form-card">
-
-      <!-- 功课 -->
-      <picker
-        wx:if="{{!isEdit}}"
-        mode="selector"
-        range="{{practices}}"
-        range-key="name"
-        value="{{practiceIndex}}"
-        bindchange="onPracticeChange"
-      >
-        <view class="row">
-          <view class="f-label">功课</view>
-          <view class="f-value">{{practiceName || '请选择'}}</view>
-          <text class="row-arrow">▾</text>
-        </view>
-      </picker>
-      <view wx:else class="row">
-        <view class="f-label">功课</view>
-        <view class="f-value muted">{{practiceName || '—'}}</view>
-      </view>
-      <view class="row-sub note" wx:if="{{isEdit}}">编辑时不可更换功课</view>
-
-      <!-- 目标 -->
-      <view class="row">
-        <view class="f-label">目标</view>
-        <input
-          class="f-input"
-          type="number"
-          value="{{target}}"
-          placeholder="如 1000000"
-          placeholder-class="f-ph"
-          bindinput="onTargetInput"
-        />
-        <text class="f-unit">{{unit}}</text>
-      </view>
-      <view class="row-sub note">长年累月的总量，如 100 万声</view>
-
-      <!-- 名称 -->
-      <view class="row">
-        <view class="f-label">名称</view>
-        <input
-          class="f-input f-input-text"
-          maxlength="24"
-          value="{{name}}"
-          placeholder="大愿名称"
-          placeholder-class="f-ph"
-          bindinput="onNameInput"
-        />
-      </view>
-      <view class="row-sub note">默认按「功课 · 目标」自动带出，可自行修改</view>
-
-      <!-- 开始 -->
-      <picker
-        wx:if="{{!isEdit}}"
-        mode="selector"
-        range="{{startOptions}}"
-        value="{{startIndex}}"
-        bindchange="onStartChange"
-      >
-        <view class="row">
-          <view class="f-label">开始</view>
-          <view class="f-value">{{startText}}</view>
-          <text class="row-arrow">▾</text>
-        </view>
-      </picker>
-      <view wx:else class="row">
-        <view class="f-label">开始</view>
-        <view class="f-value muted">{{startDate}}</view>
-      </view>
-
-      <picker
-        wx:if="{{!isEdit && startIndex === 2}}"
-        mode="date"
-        value="{{startDate}}"
-        end="{{today}}"
-        bindchange="onPastDateChange"
-      >
-        <view class="sub-row">
-          <view class="f-label">选择日期</view>
-          <view class="f-value">{{startDate}}</view>
-          <text class="row-arrow">▾</text>
-        </view>
-      </picker>
-
-      <view class="row-sub note">{{startDesc}}</view>
-      <view class="row-sub note" wx:if="{{!isEdit}}">选过去则汇总已有归档</view>
-
-      <!-- 已有累计 -->
-      <view class="row">
-        <view class="f-label">已有累计</view>
-        <input
-          class="f-input"
-          type="number"
-          value="{{existingTotal}}"
-          placeholder="0"
-          placeholder-class="f-ph"
-          bindinput="onExistingInput"
-        />
-        <text class="f-unit">{{unit}}</text>
-      </view>
-      <view class="row-sub note">承接他处进度，记为手动来源</view>
-
-      <!-- 期限 -->
-      <picker
-        mode="selector"
-        range="{{deadlineOptions}}"
-        value="{{deadlineIndex}}"
-        bindchange="onDeadlineChange"
-      >
-        <view class="row">
-          <view class="f-label">期限</view>
-          <view class="f-value">{{deadlineText}}</view>
-          <text class="row-arrow">▾</text>
-        </view>
-      </picker>
-
-      <picker
-        wx:if="{{showDeadlinePicker}}"
-        mode="date"
-        value="{{deadline}}"
-        start="{{today}}"
-        bindchange="onDeadlineDateChange"
-      >
-        <view class="sub-row">
-          <view class="f-label">截止日期</view>
-          <view class="f-value">{{deadline || '请选择'}}</view>
-          <text class="row-arrow">▾</text>
-        </view>
-      </picker>
-
-      <view class="row-sub note" wx:if="{{!deadline}}">设期限则推算日均</view>
-      <view class="row-sub note note-strong" wx:if="{{dailyHint}}">{{dailyHint}}</view>
+      <picker wx:if="{{!isEdit}}" range="{{practices}}" range-key="name" value="{{practiceIndex}}" bindchange="onPracticeChange"><view class="row"><view class="f-label">功课</view><view class="f-value">{{practiceName}}</view><text class="row-arrow">›</text></view></picker>
+      <view wx:else class="row"><view class="f-label">功课</view><view class="f-value">{{practiceName}}</view></view>
+      <view class="row"><view class="f-label">总目标</view><input class="f-input" type="number" maxlength="12" value="{{target}}" placeholder="填写数量" placeholder-class="f-ph" bindinput="onTargetInput" /><text class="f-unit">{{unit}}</text></view>
+      <view class="row"><view class="f-label">名称</view><input class="f-input f-input-text" maxlength="24" value="{{name}}" placeholder="为这个大愿起个名字" placeholder-class="f-ph" bindinput="onNameInput" /></view>
     </view>
-
-    <view class="foot-note">大愿只统计该功课的计数，不影响每日目标与达标判断</view>
+    <view class="section-title">从何时开始累计</view>
+    <view class="card form-card">
+      <picker wx:if="{{!isEdit}}" range="{{startOptions}}" value="{{startIndex}}" bindchange="onStartChange"><view class="row"><view class="f-label">开始日期</view><view class="f-value">{{startText}}</view><text class="row-arrow">›</text></view></picker>
+      <view wx:else class="row"><view class="f-label">开始日期</view><view class="f-value muted">{{startDate}}</view></view>
+      <picker wx:if="{{!isEdit && startIndex === 2}}" mode="date" value="{{startDate}}" end="{{today}}" bindchange="onPastDateChange"><view class="sub-row"><view class="f-label">选择日期</view><view class="f-value">{{startDate}}</view><text class="row-arrow">›</text></view></picker>
+      <view class="row"><view class="f-label">已有累计</view><input class="f-input" type="number" maxlength="12" value="{{existingTotal}}" placeholder="0" placeholder-class="f-ph" bindinput="onExistingInput" /><text class="f-unit">{{unit}}</text></view>
+      <view class="form-help">已有累计可填写开始日期之前完成的数量，避免与小程序记录重复计算。</view>
+    </view>
+    <view class="section-title">完成期限（选填）</view>
+    <view class="card form-card">
+      <picker range="{{deadlineOptions}}" value="{{deadlineIndex}}" bindchange="onDeadlineChange"><view class="row"><view class="f-label">期限</view><view class="f-value">{{deadlineText}}</view><text class="row-arrow">›</text></view></picker>
+      <picker wx:if="{{showDeadlinePicker}}" mode="date" value="{{deadline}}" start="{{startDate}}" bindchange="onDeadlineDateChange"><view class="sub-row"><view class="f-label">截止日期</view><view class="f-value">{{deadline}}</view><text class="row-arrow">›</text></view></picker>
+      <view wx:if="{{dailyHint}}" class="form-help strong">{{dailyHint}}</view>
+    </view>
+    <view class="foot-note">大愿与每日目标分别记录。</view>
   </block>
-
-  <!-- 置底大按钮 -->
-  <view wx:if="{{ready}}" class="submit-bar">
-    <button class="btn btn-primary" bindtap="onSubmit">{{submitText}}</button>
-  </view>
+  <view wx:if="{{ready}}" class="submit-bar"><button class="btn btn-primary" disabled="{{submitting}}" bindtap="onSubmit">{{submitText}}</button></view>
 </view>

@@ -2,10 +2,6 @@ const { fmtNum } = require('../../utils/format')
 
 const store = getApp().globalData.store
 
-const TIME_OPTIONS = [15, 30, 60]
-const COUNT_OPTIONS = [108, 500, 1000]
-const BTN_NONE = '开启新一轮（不设提醒）'
-
 function pad2(n) {
   return n < 10 ? '0' + n : String(n)
 }
@@ -14,12 +10,6 @@ function pad2(n) {
 function fmtClock(ms) {
   const total = Math.max(0, Math.floor(ms / 1000))
   return pad2(Math.floor(total / 60)) + ':' + pad2(total % 60)
-}
-
-function sheetText(type, time, count) {
-  if (type === 'time') return `开启新一轮 · ${time}分钟后提醒`
-  if (type === 'count') return `开启新一轮 · ${count}声后提醒`
-  return BTN_NONE
 }
 
 Page({
@@ -34,14 +24,7 @@ Page({
     todayText: '',
     elapsedText: '00:00',
     reminderText: '',
-    tapping: false,
-    showSheet: false,
-    reminderType: 'none',
-    reminderTime: 30,
-    reminderCount: 500,
-    sheetBtnText: BTN_NONE,
-    timeOptions: TIME_OPTIONS,
-    countOptions: COUNT_OPTIONS
+    tapping: false
   },
 
   onLoad() {
@@ -54,6 +37,11 @@ Page({
   onShow() {
     this._active = false
     clearTimeout(this._backTimer)
+    if (store.state.settings.phoneEnabled === false) {
+      this.setData({ ready: false })
+      wx.switchTab({ url: '/pages/today/today' })
+      return
+    }
 
     const practices = store.practices()
     if (!practices.length) {
@@ -67,6 +55,7 @@ Page({
       return
     }
 
+    if (this.data.ended && !store.context('phone')) { this._active = true; this.refresh(); return }
     let ctx = store.context('phone')
     const current = ctx ? store.getPractice(ctx.practiceId) : null
     if (!ctx || !current) {
@@ -74,6 +63,7 @@ Page({
       ctx = store.context('phone')
     }
 
+    if (wx.setKeepScreenOn) wx.setKeepScreenOn({ keepScreenOn: true })
     this._active = true
     this._goalNotified = false
     this.refresh()
@@ -81,12 +71,15 @@ Page({
 
   onHide() {
     this._active = false
+    if (wx.setKeepScreenOn) wx.setKeepScreenOn({ keepScreenOn: false })
     this.stopTicker()
     require('../../services/audio').destroy()
   },
 
   onUnload() {
     this._active = false
+    if (wx.setKeepScreenOn) wx.setKeepScreenOn({ keepScreenOn: false })
+    require('../../services/audio').destroy()
     if (this._off) this._off()
     this.stopTicker()
     clearTimeout(this._backTimer)
@@ -130,7 +123,7 @@ Page({
     const total = totals ? totals.total : 0
     const target = totals ? totals.target : null
 
-    let todayText = `今日累积 ${fmtNum(total)} ${unit}`
+    let todayText = `今日累计 ${fmtNum(total)} ${unit}`
     if (target !== null && target !== undefined && target > 0) {
       todayText += `｜今日目标 ${fmtNum(target)}${unit}`
     }
@@ -159,8 +152,9 @@ Page({
   },
 
   reminderTextOf(reminder) {
-    if (reminder.type === 'count') return `⏱ 提醒目标生效中 · 剩 ${reminder.remaining} 声`
-    return `⏱ 提醒目标生效中 · 剩 ${fmtClock(reminder.remainingMs)}`
+    if (reminder.done) return '本座目标已达成'
+    if (reminder.type === 'count') return `再计 ${fmtNum(reminder.remaining)} ${this.data.unit} 后提醒`
+    return `距提醒 ${fmtClock(reminder.remainingMs)}`
   },
 
   syncTicker(isTime, reminder) {
@@ -206,12 +200,13 @@ Page({
 
   // —— 点按 ——
   onTapWoodfish() {
-    if (!store.context('phone')) return
+    if (store.state.settings.phoneEnabled === false || this.data.isTime || !store.context('phone')) return
     try {
       store.tap('phone')
     } catch (e) {
       return
     }
+    store.pulse()
     this.playTapAnim()
     require('../../services/audio').play(store.state.settings)
     if (store.state.settings.vibrate && wx.vibrateShort && !store.getPractice(store.context('phone').practiceId).vibrateEvery) wx.vibrateShort({ type: 'light' })
@@ -227,35 +222,6 @@ Page({
     }, 16)
   },
 
-  onUndo() {
-    const ctx = store.context('phone')
-    if (!ctx) return
-    const practice = store.getPractice(ctx.practiceId)
-    if (!practice || practice.type === 'time') return
-
-    const doUndo = () => {
-      let r
-      try {
-        r = store.undoTap('phone')
-      } catch (e) {
-        return
-      }
-      if (!r || !r.undone) wx.showToast({ title: '本轮已是 0', icon: 'none' })
-    }
-
-    if (store.state.settings.undoConfirm) {
-      wx.showModal({
-        title: '撤销一次？',
-        content: '本轮计数与今日累积各减 1。',
-        confirmText: '撤销',
-        cancelText: '取消',
-        success(res) { if (res.confirm) doUndo() }
-      })
-    } else {
-      doUndo()
-    }
-  },
-
   onEndRound() {
     const ctx = store.context('phone')
     if (!ctx) return
@@ -268,10 +234,11 @@ Page({
     this.stopTicker()
     this._goalNotified = false
     this.refresh()
-    wx.showToast({ title: `已记录 ${Math.round(ms / 60000)} 分钟`, icon: 'none' })
+    wx.showToast({ title: ms < 60000 ? '已记录本次静坐时长' : `已记录 ${Math.floor(ms / 60000)} 分钟`, icon: 'none' })
   },
 
   onStartNewSession() {
+    if (store.state.settings.phoneEnabled === false) return
     const practices = store.practices()
     const id = this._lastPracticeId || (practices[0] && practices[0].id)
     if (!id) return
@@ -281,107 +248,8 @@ Page({
       return
     }
     this._goalNotified = false
+    if (wx.setKeepScreenOn) wx.setKeepScreenOn({ keepScreenOn: true })
     this.refresh()
-  },
-
-  // —— E1 提醒目标弹层 ——
-  onOpenSheet() {
-    const last = this.readLastReminder()
-    this.setData({
-      showSheet: true,
-      reminderType: last.type,
-      reminderTime: last.time,
-      reminderCount: last.count,
-      sheetBtnText: sheetText(last.type, last.time, last.count)
-    })
-  },
-
-  readLastReminder() {
-    let saved = null
-    try {
-      saved = store.lastReminder()
-    } catch (e) {
-      saved = null
-    }
-    const timeOnly = (this.data.isTime || (this._id && store.getPractice(this._id).type === 'time'))
-    const type = !timeOnly && saved && (saved.type === 'time' || saved.type === 'count') ? saved.type : 'none'
-    const value = saved ? Number(saved.value) : 0
-    const time = type === 'time' && TIME_OPTIONS.indexOf(value) >= 0 ? value : 30
-    const count = type === 'count' && COUNT_OPTIONS.indexOf(value) >= 0 ? value : 500
-    return { type, time, count }
-  },
-
-  onPickReminderType(e) {
-    const type = e.currentTarget.dataset.type
-    this.updateSheet(type, this.data.reminderTime, this.data.reminderCount)
-  },
-
-  onPickReminderTime(e) {
-    this.updateSheet('time', Number(e.currentTarget.dataset.value), this.data.reminderCount)
-  },
-
-  onPickReminderCount(e) {
-    this.updateSheet('count', this.data.reminderTime, Number(e.currentTarget.dataset.value))
-  },
-
-  updateSheet(type, time, count) {
-    this.setData({
-      reminderType: type,
-      reminderTime: time,
-      reminderCount: count,
-      sheetBtnText: sheetText(type, time, count)
-    })
-  },
-
-  closeSheet() {
-    this.setData({ showSheet: false })
-  },
-
-  noop() {},
-
-  onConfirmRound() {
-    const pid = this._ctxPracticeId || this._lastPracticeId
-    if (!pid) {
-      this.closeSheet()
-      return
-    }
-
-    const type = this.data.reminderType
-    const time = this.data.reminderTime
-    const count = this.data.reminderCount
-    const reminder = type === 'time'
-      ? { type: 'time', value: time }
-      : type === 'count' ? { type: 'count', value: count } : null
-
-    try {
-      store.saveReminder( type === 'none'
-        ? { type: 'none', value: 0 }
-        : { type, value: type === 'time' ? time : count })
-    } catch (e) {}
-
-    const start = () => {
-      try {
-        store.startRound('phone', pid, reminder)
-      } catch (e) {
-        return
-      }
-      this._goalNotified = false
-      this.setData({ showSheet: false })
-      this.refresh()
-    }
-
-    const ctx = store.context('phone')
-    if (ctx && (ctx.roundCount > 0 || ctx.reminder || this.data.isTime)) {
-      wx.showModal({
-        title: '重新一轮？',
-        content: '将结束当前一轮并取消原提醒，今日累积不受影响。',
-        confirmText: '确认',
-        cancelText: '取消',
-        success(res) { if (res.confirm) start() }
-      })
-    } else {
-      start()
-    }
   },
 
   onSound() { store.setSetting('sound', !store.state.settings.sound); this.refresh() },

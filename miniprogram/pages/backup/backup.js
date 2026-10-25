@@ -2,7 +2,22 @@ const store = getApp().globalData.store
 const files = require('../../services/storage/backup-file')
 
 Page({
-  data: { busy: false, preview: null },
+  data: { busy: false, preview: null, hasRecovery: false, fromRecovery: false },
+
+  onShow() { this.refreshRecovery() },
+  refreshRecovery() {
+    try { this.setData({ hasRecovery: !!store.recoveryBackup() }) }
+    catch (e) { this.setData({ hasRecovery: false }) }
+  },
+  onRecovery() {
+    try {
+      const text = store.recoveryBackup()
+      if (!text) return
+      const state = store.inspectBackup(text)
+      this._text = text
+      this.setData({ fromRecovery: true, preview: { practices: state.practices.length, days: Object.keys(state.archives).length, date: state.currentDay } })
+    } catch (e) { wx.showToast({ title: '暂时无法读取恢复副本', icon: 'none' }) }
+  },
 
   async onExport() {
     if (this.data.busy) return
@@ -31,6 +46,7 @@ Page({
       const state = store.inspectBackup(text)
       this._text = text
       this.setData({
+        fromRecovery: false,
         preview: {
           practices: state.practices.length,
           days: Object.keys(state.archives).length,
@@ -41,7 +57,7 @@ Page({
       if (!/cancel/.test(e.errMsg || '')) {
         wx.showModal({
           title: '无法读取备份',
-          content: e.message || '请选择完整的 JSON 备份文件。',
+          content: '未能校验这个文件。请选择由本小程序导出的完整备份文件。',
           showCancel: false
         })
       }
@@ -63,11 +79,12 @@ Page({
           store.resume()
           this._text = null
           this.setData({ preview: null })
+          this.refreshRecovery()
           wx.showToast({ title: '已恢复' })
         } catch (e) {
           wx.showModal({
             title: '恢复失败',
-            content: e.message || '请检查文件和存储空间',
+            content: '暂时未能恢复，请检查备份文件和手机存储空间后重试。',
             showCancel: false
           })
         }

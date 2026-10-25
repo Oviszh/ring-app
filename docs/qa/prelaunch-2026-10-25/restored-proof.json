@@ -1,0 +1,19 @@
+{
+  "phase": "restored",
+  "checkedFields": [
+    "practices",
+    "todayCounts",
+    "entries",
+    "adjustments",
+    "archives",
+    "deviceSnapshots",
+    "vows",
+    "devices",
+    "settings"
+  ],
+  "contextsMatch": true,
+  "temporaryHooksRemoved": true,
+  "temporaryFilesRemoved": true,
+  "originalExportedFileMatches": true,
+  "checkedAt": "2026-10-25T06:17:09.720Z"
+}

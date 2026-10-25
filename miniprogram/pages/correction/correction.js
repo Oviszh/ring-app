@@ -3,7 +3,7 @@ const { fmtNum, fmtDayCN, fmtMinutes } = require('../../utils/format')
 
 const store = getApp().globalData.store
 
-const SOURCE_LABEL = { ring: '戒指', phone: '手机' }
+const SOURCE_LABEL = { ring: '设备计数', phone: '触屏计数' }
 
 function nameOf(practice) {
   return practice.displayName || practice.name
@@ -33,7 +33,7 @@ Page({
     manualText: '0',
 
     source: 'phone',
-    sourceLabel: '手机',
+    sourceLabel: '触屏计数',
     ringHint: false,
     fromValue: 0,
     fromText: '0',
@@ -87,7 +87,7 @@ Page({
 
     const adjustments = store.adjustmentsFor(date, pid).map(a => ({
       id: a.id,
-      text: `删减${SOURCE_LABEL[a.source] || a.source}来源 ${fmtNum(a.delta)} · ${fmtClock(a.createdAt)}`
+      text: `${SOURCE_LABEL[a.source] || a.source}减少 ${fmtNum(-a.delta)} · ${fmtClock(a.createdAt)}`
     }))
 
     this.setData({
@@ -129,17 +129,17 @@ Page({
       this.setData({ deltaText: '', errorText: '请输入数字', canConfirm: false })
       return
     }
-    if (!Number.isInteger(num) || num < 0) {
+    if (!Number.isSafeInteger(num) || num < 0) {
       this.setData({ deltaText: '', errorText: '请输入不小于 0 的整数', canConfirm: false })
       return
     }
     if (num >= from) {
-      this.setData({ deltaText: '', errorText: '只许减少；如需增加请用填报', canConfirm: false })
+      this.setData({ deltaText: '', errorText: '修正后的数量需小于当前数量。新增请用手动记录。', canConfirm: false })
       return
     }
 
     this.setData({
-      deltaText: `→ 差额 ${fmtNum(num - from)}，记为「删减」`,
+      deltaText: `本次将减少 ${fmtNum(from - num)} ${this.data.unit}`,
       errorText: '',
       canConfirm: true
     })
@@ -179,7 +179,7 @@ Page({
           store.addAdjustment({ date, practiceId: pid, source, toValue: num })
         } catch (err) {
           const msg = err && err.message === 'REDUCE_ONLY'
-            ? '只许减少；如需增加请用填报'
+            ? '修正后的数量需小于当前数量。新增请用手动记录。'
             : '修正失败，请重试'
           wx.showToast({ title: msg, icon: 'none' })
           this.refresh()
@@ -196,7 +196,7 @@ Page({
     const id = e.currentTarget.dataset.id
     wx.showModal({
       title: '恢复这笔修正？',
-      content: '恢复后该来源数量回到修正前的数值',
+      content: '将加回这笔修正扣除的数量，之后的其他记录不受影响。',
       confirmText: '恢复',
       cancelText: '取消',
       success: res => {

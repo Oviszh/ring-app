@@ -4,11 +4,12 @@ const { dayTotals } = require('./archive')
 
 // 日历「全部功课」口径的日状态：●全达标 ◐部分 ○有缺 ·无功课
 // 无每日目标的功课不参与"全部达标"判断
-function calendarDayStatus(state, date, ts) {
+function calendarDayStatus(state, date, ts, group) {
   let anyTargeted = false
   let allMet = true
   let anyProgress = false
   for (const p of state.practices) {
+    if (group && (p.group || 'main') !== group) continue
     const t = dayTotals(state, date, p.id, ts)
     if (!t || t.target === null || t.target === undefined) continue
     anyTargeted = true

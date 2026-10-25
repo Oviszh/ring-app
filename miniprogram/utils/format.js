@@ -25,4 +25,14 @@ function fmtMinutes(min) {
   return m ? `${h}小时${m}分钟` : `${h}小时`
 }
 
-module.exports = { fmtNum, fmtDayCN, fmtMinutes }
+function fmtCompact(n) {
+  if (n < 10000) return String(Math.round(n))
+  if (n < 100000000) return (n / 10000).toFixed(1).replace(/\.0$/, '') + '万'
+  return (n / 100000000).toFixed(1).replace(/\.0$/, '') + '亿'
+}
+function sourceText(t) {
+  return [['设备计数', t.ring], ['触屏计数', t.phone], ['补录', t.manual]]
+    .filter(pair => pair[1] !== 0 && pair[1] != null)
+    .map(pair => pair[0] + ' ' + fmtNum(pair[1])).join(' · ')
+}
+module.exports = { sourceText, fmtNum, fmtDayCN, fmtMinutes, fmtCompact }

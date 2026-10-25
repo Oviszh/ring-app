@@ -24,3 +24,4 @@
   line-height: 1.7;
   color: var(--c-ink-2);
 }
+.mode-note { font-size: 26rpx; color: var(--c-ink-2); margin: -8rpx 4rpx 24rpx; line-height: 1.8; }

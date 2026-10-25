@@ -1,8 +1,8 @@
-<!-- P9 当日详情：来源拆分、手动填报展开/撤销，点行进修正 -->
+<!-- P9 当日详情：来源拆分、补录展开/撤销，点行进修正 -->
 <view class="page">
   <view class="day-head">
     <view class="day-head-title">{{dateLabel}}</view>
-    <view class="day-head-sub">点功课行可修正来源数量</view>
+    <view class="day-head-sub">点击数字修改当日合计，自动补录差额。</view>
   </view>
 
   <view wx:if="{{empty}}" class="empty">
@@ -10,9 +10,12 @@
     <view class="empty-sub">这一天还没有任何功课数据</view>
   </view>
 
-  <view wx:else class="card list-card">
+  <block wx:else>
+  <block wx:for="{{groups}}" wx:for-item="group" wx:key="id">
+  <view class="section-title day-group-title">{{group.title}}</view>
+  <view class="card list-card">
     <view
-      wx:for="{{rows}}"
+      wx:for="{{group.rows}}"
       wx:key="id"
       class="item {{item.highlight ? 'on' : ''}}"
     >
@@ -21,27 +24,28 @@
           <view class="row-title">
             <view class="st st-{{item.statusClass}}"></view>
             <text class="name">{{item.name}}</text>
-            <text wx:if="{{item.isDuration}}" class="tag">计时</text>
           </view>
           <view class="row-sub">{{item.sourceText}}</view>
+          <view class="row-sub">{{item.groupName}}{{item.isDuration ? ' · 时长按分钟填写' : ''}}{{item.timingActive ? ' · 计时中请先结束本座' : ''}}</view>
           <view
             wx:if="{{item.hasEntries}}"
             class="entry-toggle"
-            data-index="{{index}}"
+            data-index="{{item.rowIndex}}"
             catchtap="onToggleEntries"
           >
-            手动填报 {{item.entries.length}} 笔
+            补录 {{item.entries.length}} 笔
             <text class="toggle-arrow">{{item.expanded ? '收起 ▴' : '展开 ▾'}}</text>
           </view>
         </view>
         <view class="nums">
           <view class="amount">
-            <text wx:if="{{item.isDuration}}" class="check">✓</text>
-            <text>{{item.amountText}}</text>
+            <input wx:if="{{item.canEdit}}" class="total-input" type="number" maxlength="16" value="{{item.inputValue}}" data-id="{{item.id}}" catchtap="noop" bindfocus="onTotalFocus" bindinput="onTotalInput" bindblur="onTotalCommit" bindconfirm="onTotalCommit" confirm-type="done" aria-label="{{item.name}}当日合计" />
+            <text wx:else>{{item.amountText}}</text>
           </view>
+          <view wx:if="{{item.canEdit}}" class="edit-caption">{{item.unit}} · 可编辑</view>
           <view wx:if="{{item.targetText}}" class="target">{{item.targetText}}</view>
         </view>
-        <text class="row-arrow">›</text>
+
       </view>
 
       <view wx:if="{{item.expanded}}" class="entries">
@@ -54,8 +58,9 @@
             class="entry"
           >
             <view class="entry-main">
-              <text class="entry-amount">＋{{entry.amountText}} {{item.unit}}</text>
+              <text class="entry-amount">{{entry.amountText}} {{item.unit}}</text>
               <text class="entry-time">{{entry.timeText}}</text>
+              <text wx:if="{{entry.changeText}}" class="entry-change">{{entry.changeText}}</text>
             </view>
             <view
               class="btn btn-ghost btn-sm"
@@ -67,8 +72,13 @@
             >撤销</view>
           </view>
         </view>
-        <view class="entries-note">撤销 = 移除该笔填报，不产生反向账目</view>
+        <view class="entries-note">撤销后，当日总数将恢复这笔补录的变化。</view>
       </view>
     </view>
   </view>
+  </block>
+  </block>
 </view>
+
+<view wx:if="{{canEntry}}" class="page day-entry"><button class="btn btn-plain" bindtap="openEntry">按增减数量补录</button></view>
+<entry-sheet id="entry-sheet" visible="{{entryVisible}}" date="{{date}}" bind:close="closeEntry" bind:saved="onEntrySaved" />

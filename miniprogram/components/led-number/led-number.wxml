@@ -1,0 +1,9 @@
+<view class="led-display size-{{size}} {{dimmed ? 'dimmed' : ''}}" role="text" aria-label="{{label}}">
+  <block wx:for="{{digits}}" wx:key="key" wx:for-item="digit">
+    <view wx:if="{{digit.colon}}" class="led-colon"><view></view><view></view></view>
+    <view wx:elif="{{digit.dot}}" class="led-dot"></view>
+    <view wx:else class="led-digit {{digit.muted ? 'muted' : ''}}" aria-hidden="true">
+      <view wx:for="{{digit.segments}}" wx:for-item="bar" wx:key="segment" class="led-segment segment-{{bar.segment}} {{bar.on ? 'lit' : ''}}"></view>
+    </view>
+  </block>
+</view>

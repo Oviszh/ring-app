@@ -19,6 +19,9 @@ function createPractice(state, input, ts) {
     unit: input.type === 'time' ? '分钟' : (input.unit || '声'),
     alias: input.alias || '',
     public: !!input.public,
+    publicId: input.publicId || '',
+    desc: input.desc || '',
+    group: input.group === 'common' ? 'common' : 'main',
     dailyTarget: input.dailyTarget === undefined ? (input.type === 'time' ? 30 : 108) : input.dailyTarget,
     vibrateEvery: input.vibrateEvery || 0,
     showOnHome: input.showOnHome !== false,
@@ -45,14 +48,18 @@ function removePractice(state, practiceId, ts) {
   p.deleted = true // 软删除：不影响历史统计与历史达标判断
 }
 
-// 修改每日目标：次日生效（当日及历史用快照，见 archive.effectiveTarget）
+// 修改每日目标立即用于今天；先归档跨日数据，只允许更新当日目标快照。
 function setDailyTarget(state, practiceId, target, ts) {
   if (ts !== undefined) settleUpTo(state, ts)
   const p = findPractice(state, practiceId)
   if (!p) throw new Error('NO_PRACTICE')
   if (target !== null && (!Number.isSafeInteger(target) || target <= 0)) throw new Error('TARGET_POSITIVE_OR_NULL')
-  ensureRow(state, state.currentDay, p.id)
+  const row = ensureRow(state, state.currentDay, p.id)
   p.dailyTarget = target
+  if (row.targetSnapshot !== target) {
+    row.targetSnapshot = target
+    row.version += 1
+  }
 }
 
 function displayNameOf(practice) {

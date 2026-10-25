@@ -1,13 +1,14 @@
 <!-- P1' 日历（月视图）：全部功课 / 单功课两种口径 + 长期大愿 -->
 <view class="page">
-  <view class="page-cap">回望来路 · 日日相续</view>
+  <view class="page-heading"><view class="eyebrow">每日回顾</view><view class="page-title">修行日历</view></view>
 
   <!-- 月份切换 -->
   <view class="month-bar">
-    <view class="month-arrow" bindtap="onPrevMonth">‹</view>
-    <view class="month-label">{{monthLabel}}</view>
+    <view class="month-arrow {{canPrev ? '' : 'off'}}" bindtap="onPrevMonth">‹</view>
+    <picker class="month-picker" mode="date" fields="month" value="{{monthValue}}" start="{{monthStart}}" end="{{monthEnd}}" bindchange="onMonthPick"><view class="month-label" aria-label="选择年份和月份"><text>{{monthLabel}}</text><text class="month-picker-arrow">▾</text></view></picker>
     <view class="month-arrow {{canNext ? '' : 'off'}}" bindtap="onNextMonth">›</view>
   </view>
+  <view wx:if="{{!isTodaySelected}}" class="month-tools"><view class="today-link" role="button" bindtap="onToday">回到今天</view></view>
 
   <!-- 查看口径：当前选择用 chip 呈现，点开系统选择器 -->
   <view class="view-bar">
@@ -43,7 +44,7 @@
         bindtap="onDayTap"
       >
         <block wx:if="{{!item.blank}}">
-          <view class="cell-mark {{item.today ? 'on' : ''}}">
+          <view class="cell-mark {{item.selected ? 'on' : ''}}">
             <block wx:if="{{viewAll}}">
               <text class="cell-day {{item.future ? 'dim' : ''}}">{{item.dayText}}</text>
               <view wx:if="{{!item.future}}" class="cell-dot dot-{{item.dot}}"></view>
@@ -66,15 +67,28 @@
     </view>
     <view class="legend-item">
       <view class="cell-dot dot-partial"></view>
-      <text>部分</text>
+      <text>有进度</text>
     </view>
     <view class="legend-item">
       <view class="cell-dot dot-missed"></view>
-      <text>未完成</text>
+      <text>未达标</text>
     </view>
   </view>
   <view wx:else class="stats">{{statsText}}</view>
 
+  <view class="day-overview-head"><view class="section-title">{{dayLabel}}</view><view class="day-entry-link" role="button" bindtap="onDayDetails">补录 ›</view></view>
+  <block wx:for="{{dayGroups}}" wx:for-item="group" wx:key="name">
+    <block wx:if="{{group.rows.length}}">
+      <view class="section-title">{{group.name}}</view>
+      <view class="card">
+        <view class="day-practice" wx:for="{{group.rows}}" wx:key="id">
+          <view class="day-practice-head"><text class="day-practice-name">{{item.name}}</text><text class="day-practice-total">{{item.amount}}</text></view>
+          <view class="row-sub" wx:if="{{item.detail}}">{{item.detail}}</view>
+          <view class="day-practice-foot"><text>{{item.target}}</text><text class="{{item.met ? 'day-met' : ''}}">{{item.status}}</text></view>
+        </view>
+      </view>
+    </block>
+  </block>
   <!-- 长期大愿 -->
   <view class="section-title">长期大愿</view>
 
@@ -100,5 +114,5 @@
     </view>
   </block>
 
-  <view wx:else class="card vow-empty" bindtap="onVowNew">＋ 发一个大愿</view>
+  <view wx:else class="card vow-empty" bindtap="onVowNew">设立长期大愿</view>
 </view>

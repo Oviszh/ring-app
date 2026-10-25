@@ -1,0 +1,27 @@
+{
+  "unitTests": {
+    "passed": 100,
+    "failed": 0
+  },
+  "uiFlows": 29,
+  "static": {
+    "js": 52,
+    "json": 25,
+    "assets": 0,
+    "routes": 20,
+    "problems": []
+  },
+  "compile": {
+    "wxml": {
+      "files": 23,
+      "exitCode": 0,
+      "diagnostic": ""
+    },
+    "wxss": {
+      "files": 24,
+      "exitCode": 0,
+      "diagnostic": ""
+    }
+  },
+  "realDeviceTested": false
+}

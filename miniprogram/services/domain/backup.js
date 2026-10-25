@@ -18,14 +18,19 @@ function validateState(s) {
     if (!p || typeof p.id !== 'string' || ids.has(p.id) || typeof p.name !== 'string' || !p.name.trim() || !['time','count'].includes(p.type) || !nonnegative(p.createdAt) || (p.dailyTarget !== null && !nonnegative(p.dailyTarget))) fail()
     ids.add(p.id)
   }
-  for (const e of s.entries) if (!e || !ids.has(e.practiceId) || !validDay(e.date) || !Number.isSafeInteger(e.amount) || e.amount <= 0) fail()
+  for (const e of s.entries) {
+    if (!e || !ids.has(e.practiceId) || !validDay(e.date) || !Number.isFinite(e.amount) || e.amount === 0) fail()
+    const p = s.practices.find(p => p.id === e.practiceId)
+    if (!Number.isSafeInteger(e.amount) && !(p.type === 'time' && e.method === 'set-total')) fail()
+  }
   for (const a of s.adjustments) if (!a || !ids.has(a.practiceId) || !validDay(a.date) || !['phone','ring'].includes(a.source) || !Number.isSafeInteger(a.delta) || a.delta >= 0) fail()
   for (const v of s.vows) { if (!v || !ids.has(v.practiceId)) fail(); require('./vow').validateVow(v) }
   for (const [date, rows] of Object.entries(s.archives)) {
     if (!validDay(date) || !obj(rows)) fail()
     for (const [id,row] of Object.entries(rows)) {
       if (!ids.has(id) || !obj(row)) fail()
-      for (const k of ['ringRaw','phoneRaw','manualTotal','durationMin','times','version']) if (!nonnegative(row[k])) fail()
+      for (const k of ['ringRaw','phoneRaw','durationMin','times','version']) if (!nonnegative(row[k])) fail()
+      if (!Number.isFinite(row.manualTotal)) fail()
       if (row.targetSnapshot !== null && !nonnegative(row.targetSnapshot)) fail()
     }
   }

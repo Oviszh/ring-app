@@ -1,6 +1,7 @@
 'use strict'
 
 const { fmtNum, fmtDayCN } = require('../../utils/format')
+const { displayVowName } = require('../../utils/vow-name')
 const { addDays } = require('../../services/domain/index')
 
 const store = getApp().globalData.store
@@ -8,18 +9,8 @@ const store = getApp().globalData.store
 const CHART_DAYS = 30
 const CHART_HEIGHT = 180
 
-function nameOf(practice) {
-  return practice.displayName || practice.name
-}
-
-// 自动生成的愿名已带「功课名 · …」前缀时不重复拼接
-function vowTitle(practiceName, vowName) {
-  if (!practiceName) return vowName
-  return vowName.indexOf(practiceName + ' · ') === 0 ? vowName : `${practiceName} · ${vowName}`
-}
-
 function etaLabel(eta) {
-  return eta ? eta.slice(0, 7) : '尚无法估算'
+  return eta ? eta.slice(0, 7) : '记录一段时间后可估算'
 }
 
 Page({
@@ -63,9 +54,8 @@ Page({
     }
 
     const practice = store.getPracticeAny(vow.practiceId)
-    const practiceName = practice ? nameOf(practice) : ''
     const unit = practice ? practice.unit || '声' : '声'
-    const title = vowTitle(practiceName, vow.name)
+    const title = displayVowName(vow, practice)
     wx.setNavigationBarTitle({ title })
 
     if (progress.done) {
@@ -74,6 +64,7 @@ Page({
         done: true,
         totalText: fmtNum(progress.total),
         unit,
+        title,
         days: progress.days,
         practiceId: vow.practiceId
       })
@@ -106,6 +97,7 @@ Page({
 
     this.setData({
       ready: true,
+      title,
       done: false,
       totalText: fmtNum(progress.total),
       targetText: fmtNum(progress.target),

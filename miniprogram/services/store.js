@@ -13,7 +13,7 @@ function createStore(now) {
   // 旧数据迁移：补齐后加字段
   if (!state.userToken) state.userToken = domain.genId('u', now)
   if (!state.settings) state.settings = {}
-  if (state.settings.bleMock === undefined) state.settings.bleMock = true
+  if (state.settings.bleMock === undefined) state.settings.bleMock = false
   // 恢复上次前台心跳；意外退出期间不虚计禅坐时间。
   if (state.contexts.phone && state.foregroundTs) domain.pausePhone(state, state.foregroundTs)
   domain.settleUpTo(state, now) // 启动补归档
@@ -42,13 +42,15 @@ function createStore(now) {
       domain.settleUpTo(state, ts)
       const ctx = state.contexts.phone
       const reminder = domain.reminderRemaining(state, 'phone', ts)
-      if (ctx && reminder && reminder.done) {
-        const message = `本轮已完成 ${ctx.roundCount} 次计数。`
-        const isTime = this.getPractice(ctx.practiceId).type === 'time'
-        domain.cancelReminder(state, 'phone')
+      if (ctx && reminder && reminder.done && !ctx.reminderNotified) {
+        const practice = this.getPractice(ctx.practiceId)
+        const message = `本座已完成 ${ctx.roundCount} ${practice.unit || '声'}，可继续计数或结束本座专修。`
+        const isTime = practice.type === 'time'
+        // 目标达成只提醒一次；专修保留到用户明确结束，静坐也不会因此丢失结束入口。
+        ctx.reminderNotified = true
         commit()
         if (wx.vibrateLong) wx.vibrateLong()
-        wx.showModal({ title: '提醒目标已达成', content: isTime ? '本次计时已达到设定时长，可继续静坐或结束本座。' : message, showCancel: false })
+        wx.showModal({ title: '本座目标已达成', content: isTime ? '本次计时已达到设定时长，可继续静坐或结束本座。' : message, showCancel: false })
       }
       state.foregroundTs = ts
       if (ctx && ts - (this._lastCheckpoint || 0) >= 10000) { this._lastCheckpoint = ts; commit() }
@@ -58,10 +60,16 @@ function createStore(now) {
     allPractices() { return state.practices.slice().sort((a,b) => a.sort-b.sort) },
     getPracticeAny(id) { return state.practices.find(p => p.id === id) || null },
     backup() { return require('./domain/backup').exportBackup(state, Date.now()) },
+    recoveryBackup() {
+      const recovery = require('./storage/local').loadRecovery()
+      if (!recovery) return null
+      const previous = recovery.state || recovery
+      return require('./domain/backup').exportBackup(previous, recovery.savedAt || previous.foregroundTs || Date.now())
+    },
     inspectBackup(text) { return require('./domain/backup').importBackup(text) },
     restoreBackup(text) {
       const restored = this.inspectBackup(text)
-      require('./storage/local').saveRecovery(state)
+      require('./storage/local').saveRecovery(state, Date.now())
       state = restored
       domain.settleUpTo(state, Date.now())
       commit()
@@ -144,6 +152,13 @@ function createStore(now) {
       p.vibrateEvery = n > 0 ? Math.floor(n) : 0
       commit()
     },
+    setPracticeGroup(practiceId, group) {
+      const p = domain.findPractice(state, practiceId)
+      if (!p) throw new Error('NO_PRACTICE')
+      if (!['main', 'common'].includes(group)) throw new Error('BAD_GROUP')
+      p.group = group
+      commit()
+    },
     setShowOnHome(practiceId, show) {
       const p = domain.findPractice(state, practiceId)
       if (!p) throw new Error('NO_PRACTICE')
@@ -168,9 +183,17 @@ function createStore(now) {
       commit()
       return e
     },
+    setDayTotal(input) {
+      const entry = domain.setDayTotal(state, Object.assign({}, input, { ts: Date.now() }))
+      if (entry) commit()
+      return entry
+    },
+    mainDayStatus(date) {
+      return domain.calendarDayStatus(state, date, Date.now(), 'main')
+    },
     undoEntry(entryId) {
       domain.settleUpTo(state, Date.now())
-      domain.undoEntry(state, entryId)
+      domain.undoEntry(state, entryId, Date.now())
       commit()
     },
     entriesFor(date, practiceId) {
@@ -261,12 +284,14 @@ function createStore(now) {
       return out
     },
 
-    // —— 戒指（BLE；默认 mock 适配器） ——
-    ringAdapter() { return require('./ble').getAdapter(state) },
+    // —— 设备（BLE；预览与正式配置禁用模拟设备） ——
+    ringAdapter() { return require('./ble/index').getAdapter(state) },
     devices() { return state.devices.slice() },
     currentDevice() { return domain.currentDevice(state) },
     ringSetCurrent(deviceId) {
+      const previous = domain.currentDevice(state)
       domain.setCurrentDevice(state, deviceId)
+      if (previous && previous.id !== deviceId) state.contexts.ring = null
       commit()
     },
 
@@ -311,11 +336,11 @@ function createStore(now) {
       }
       if (dev.currentPracticeId) {
         state.contexts.ring = {
-          side: 'ring', practiceId: dev.currentPracticeId,
+          side: 'ring', deviceId, practiceId: dev.currentPracticeId,
           startTs: dev.roundStartTs || ts, lastTs: ts,
           roundCount: dev.roundCount || 0, reminder: dev.reminder || null
         }
-      }
+      } else state.contexts.ring = null
       commit()
       return device
     },
@@ -345,11 +370,11 @@ function createStore(now) {
       }
       if (dev.currentPracticeId) {
         state.contexts.ring = {
-          side: 'ring', practiceId: dev.currentPracticeId,
+          side: 'ring', deviceId: device.id, practiceId: dev.currentPracticeId,
           startTs: dev.roundStartTs || ts, lastTs: ts,
           roundCount: dev.roundCount || 0, reminder: dev.reminder || null
         }
-      }
+      } else state.contexts.ring = null
       commit()
       return { ok: true }
     },
@@ -362,6 +387,7 @@ function createStore(now) {
       if (!ble.isConnected()) await ble.connect(device.id)
       await ble.startNewRound({ practiceId, reminder: reminder || null, opId: domain.genId('op', Date.now()) })
       domain.startNewRound(state, 'ring', practiceId, { ts: Date.now(), reminder: reminder || null })
+      state.contexts.ring.deviceId = device.id
       commit()
     },
 
@@ -399,7 +425,7 @@ function createStore(now) {
     ringUnbind(deviceId) {
       // 解绑只解除本机绑定；戒指内数据保留
       domain.removeDevice(state, deviceId)
-      if (state.contexts.ring) state.contexts.ring = null
+      if (state.contexts.ring && (!state.contexts.ring.deviceId || state.contexts.ring.deviceId === deviceId)) state.contexts.ring = null
       commit()
     }
   }

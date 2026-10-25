@@ -6,7 +6,7 @@ const assert = require('node:assert')
 const domain = require('../miniprogram/services/domain')
 const { D1_0800, D2_0820 } = require('./helpers')
 
-test('归档：settle 快照当日目标；修改目标次日生效，历史判断用快照', () => {
+test('归档：修改目标立即生效，历史仍按封存快照判断', () => {
   const state = domain.createInitialState(D1_0800)
   const p = domain.createPractice(state, { id: 'p1', name: '阿弥陀佛', dailyTarget: 108 }, D1_0800)
   domain.startNewRound(state, 'phone', p.id, { ts: D1_0800 })
@@ -20,7 +20,7 @@ test('归档：settle 快照当日目标；修改目标次日生效，历史判�
 
   domain.setDailyTarget(state, p.id, 500)
   assert.strictEqual(domain.effectiveTarget(state, p.id, '2026-10-21'), 108) // 历史：快照
-  assert.strictEqual(domain.effectiveTarget(state, p.id, '2026-10-22'), 108) // 当日快照不变，次日新目标
+  assert.strictEqual(domain.effectiveTarget(state, p.id, '2026-10-22'), 500) // 只更新今天
   assert.strictEqual(domain.effectiveTarget(state, p.id, '2026-10-23'), null) // 未来：不算
 })
 
@@ -71,7 +71,7 @@ test('dayTotals 公式：总数 = 戒指 + 手机 + 手动 + 修正；状态判�
   assert.strictEqual(t.status, 'met')  // 110 >= 100
 
   domain.setDailyTarget(state, p.id, 500)
-  assert.strictEqual(domain.dayTotals(state, '2026-10-21', p.id).status, 'met')
+  assert.strictEqual(domain.dayTotals(state, '2026-10-21', p.id).status, 'partial')
 })
 
 test('状态口径：零计数有目标 = missed；无目标 = none', () => {

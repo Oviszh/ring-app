@@ -10,27 +10,27 @@
     "pages/practice-settings/practice-settings",
     "pages/phone-settings/phone-settings",
     "pages/day-detail/day-detail",
-    "pages/correction/correction",
     "pages/vow-new/vow-new",
     "pages/vow-list/vow-list",
     "pages/vow-detail/vow-detail",
     "pages/summary/summary",
     "pages/settings/settings",
     "pages/backup/backup",
+    "pages/privacy/privacy",
     "pages/device-list/device-list",
     "pages/device-detail/device-detail",
     "pages/device-bind/device-bind"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#EFEAE1",
+    "navigationBarBackgroundColor": "#F6F7F3",
     "navigationBarTitleText": "念佛计数",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#EFEAE1"
+    "backgroundColor": "#F6F7F3"
   },
   "tabBar": {
-    "color": "#A8A296",
-    "selectedColor": "#A9853C",
-    "backgroundColor": "#FFFFFF",
+    "color": "#707A72",
+    "selectedColor": "#344F42",
+    "backgroundColor": "#F6F7F3",
     "borderStyle": "white",
     "list": [
       {

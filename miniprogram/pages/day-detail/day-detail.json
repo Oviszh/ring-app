@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "当日详情"
+  "navigationBarTitleText": "当日详情",
+  "usingComponents": {
+    "entry-sheet": "/components/entry-sheet/entry-sheet"
+  }
 }

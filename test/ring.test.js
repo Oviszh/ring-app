@@ -14,12 +14,15 @@ global.wx = {
 }
 
 const { createStore } = require('../miniprogram/services/store')
+require('../miniprogram/services/config').allowMockDevices = true
 const ble = require('../miniprogram/services/ble/mock-adapter')
 
 function freshStore() {
   for (const k of Object.keys(mem)) delete mem[k]
   ble._reset()
-  return createStore()
+  const store = createStore()
+  store.setSetting('bleMock', true)
+  return store
 }
 
 test('戒指全流程：绑定 → 离线计数 → 同步入今日 → 次日归档', async () => {

@@ -1,0 +1,5 @@
+{
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'pages/today/today'\n- 'pages/device-bind/device-bind'\n         ^\n",
+  "steps": [],
+  "errors": []
+}

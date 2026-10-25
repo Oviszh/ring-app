@@ -74,6 +74,7 @@ Page({
     const vibrateIndex = vibrateIndexOf(practice.vibrateEvery)
     return {
       ready: true,
+      group: practice.group || 'main',
       name: practice.name,
       isPublic: !!practice.public,
       displayName: practice.displayName || '',
@@ -113,7 +114,7 @@ Page({
 
     store.setDisplayName(this._id, value)
     this.setData({ displayName: value })
-    wx.showToast({ title: value ? '已保存' : '已恢复实名显示', icon: 'none' })
+    wx.showToast({ title: value ? '已保存' : '已恢复功课原名', icon: 'none' })
   },
 
   // —— 每日目标 ——
@@ -140,12 +141,12 @@ Page({
       const alreadyEmpty = practice.dailyTarget === null || practice.dailyTarget === undefined
       store.setDailyTarget(this._id, null)
       this.setData({ dailyTargetInput: '' })
-      if (!alreadyEmpty) wx.showToast({ title: '已设为无目标', icon: 'none' })
+      if (!alreadyEmpty) wx.showToast({ title: '已取消每日目标', icon: 'none' })
       return
     }
 
     const target = Number(text)
-    if (!Number.isInteger(target) || target <= 0) {
+    if (!Number.isSafeInteger(target) || target <= 0) {
       wx.showToast({ title: '请输入大于 0 的整数', icon: 'none' })
       this.setData({
         dailyTargetInput: practice.dailyTarget === null || practice.dailyTarget === undefined
@@ -155,14 +156,15 @@ Page({
       return
     }
 
-    if (practice.dailyTarget === target) {
+    const todayTotals = store.dayTotals(store.todayKey(), this._id)
+    if (practice.dailyTarget === target && todayTotals && todayTotals.target === target) {
       this.setData({ dailyTargetInput: String(target) })
       return
     }
 
     store.setDailyTarget(this._id, target)
     this.setData({ dailyTargetInput: String(target) })
-    wx.showToast({ title: '已保存，次日生效', icon: 'none' })
+    wx.showToast({ title: '已保存，立即生效', icon: 'none' })
   },
 
   // —— 震动提醒 ——
@@ -226,6 +228,12 @@ Page({
   },
 
   // —— 首页显示 / 删除 ——
+
+  onGroup(e) {
+    const group = e.currentTarget.dataset.group
+    store.setPracticeGroup(this._id, group)
+    this.setData({ group })
+  },
 
   onShowOnHomeChange(e) {
     const checked = !!e.detail.value

@@ -7,6 +7,7 @@ const NOT_IMPLEMENTED = () => Promise.reject(new Error('BLE_NOT_IMPLEMENTED'))
 
 module.exports = {
   kind: 'wechat',
+  ready: false,
   scan: NOT_IMPLEMENTED,
   connect: NOT_IMPLEMENTED,
   disconnect: NOT_IMPLEMENTED,

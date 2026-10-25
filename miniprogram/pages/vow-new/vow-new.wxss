@@ -114,3 +114,11 @@ picker { display: block; }
 }
 
 .empty-btn { width: 60%; }
+
+.note { padding-left: 4rpx; font-size: 26rpx; padding-bottom: 24rpx; }.f-label { width: 160rpx; font-size: 28rpx; }.f-input { font-size: 36rpx; font-weight: 500; }.f-input-text { font-size: 30rpx; }.form-card .row { padding-top: 16rpx; padding-bottom: 8rpx; }.submit-bar .btn { width: 100%; }.submit-bar { box-shadow: none; border-top: 1rpx solid var(--c-border); background: var(--c-bg); }
+.form-card .row { border-bottom: 1rpx solid var(--c-border); padding: 18rpx 0; }
+.form-card .row:last-child { border-bottom: none; }
+.form-help { font-size: 26rpx; color: var(--c-ink-2); line-height: 1.8; padding: 12rpx 0 24rpx; }
+.form-help.strong { color: var(--c-primary); }
+.f-label { width: 150rpx; }
+.form-page .page-heading { margin-bottom: 28rpx; }

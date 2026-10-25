@@ -1,6 +1,7 @@
 'use strict'
 
 const { fmtNum } = require('../../utils/format')
+const { displayVowName } = require('../../utils/vow-name')
 const { dayKey, addDays, diffDays } = require('../../services/domain/index')
 
 const store = getApp().globalData.store
@@ -24,7 +25,7 @@ function fmtTarget(n, unit) {
 }
 
 function autoName(practiceName, target, unit) {
-  return target > 0 ? `${practiceName} · ${fmtTarget(target, unit)}` : practiceName
+  return `${practiceName}${target > 0 ? fmtTarget(target, unit) : ''}`
 }
 
 function addYears(key, n) {
@@ -75,7 +76,8 @@ Page({
     showDeadlinePicker: false,
     dailyHint: '',
 
-    submitText: '发愿'
+    submitText: '发愿',
+    submitting: false
   },
 
   onLoad(options) {
@@ -87,6 +89,8 @@ Page({
   },
 
   onShow() {
+    this._submitting = false
+    this.setData({ submitting: false })
     // 从「添加功课」返回时重新初始化
     if (this.data.noPractices) this.initCreate(this._pid)
   },
@@ -126,7 +130,7 @@ Page({
       practiceName: practice.name,
       unit: practice.unit,
       target: '',
-      name: practice.name,
+      name: autoName(practice.name, 0, practice.unit),
       existingTotal: '0',
       today,
       startIndex: 0,
@@ -176,7 +180,7 @@ Page({
       practiceName,
       unit: practice ? practice.unit || '声' : '声',
       target: String(vow.targetTotal),
-      name: vow.name,
+      name: displayVowName(vow, practice),
       existingTotal: String(vow.existingTotal || 0),
       today,
       startIndex,
@@ -209,7 +213,7 @@ Page({
     if (days <= 0) return '期限需晚于开始日期'
     const remain = Math.max(0, target - existing)
     if (remain === 0) return '已有累计已达目标'
-    return `设期限则推算日均：约 ${fmtNum(Math.ceil(remain / days))} ${unit}／天`
+    return `平均每天约需完成 ${fmtNum(Math.ceil(remain / days))} ${unit}`
   },
 
   startDescFor(startDate) {
@@ -336,8 +340,9 @@ Page({
   // —— 提交 ——
 
   onSubmit() {
+    if (this._submitting) return
     const targetRaw = String(this.data.target).trim()
-    if (!/^\d+$/.test(targetRaw) || Number(targetRaw) <= 0) {
+    if (!/^\d+$/.test(targetRaw) || !Number.isSafeInteger(Number(targetRaw)) || Number(targetRaw) <= 0) {
       wx.showToast({ title: '目标需为大于 0 的整数', icon: 'none' })
       return
     }
@@ -349,7 +354,7 @@ Page({
     }
 
     const existingRaw = String(this.data.existingTotal).trim() || '0'
-    if (!/^\d+$/.test(existingRaw)) {
+    if (!/^\d+$/.test(existingRaw) || !Number.isSafeInteger(Number(existingRaw))) {
       wx.showToast({ title: '已有累计需为整数', icon: 'none' })
       return
     }
@@ -363,6 +368,9 @@ Page({
     const targetTotal = Number(targetRaw)
     const existingTotal = Number(existingRaw)
 
+    this._submitting = true
+    this.setData({ submitting: true })
+    try {
     if (this.data.isEdit) {
       store.updateVow(this.data.editId, {
         name,
@@ -377,6 +385,8 @@ Page({
 
     const practice = this.data.practices[this.data.practiceIndex]
     if (!practice) {
+      this._submitting = false
+      this.setData({ submitting: false })
       wx.showToast({ title: '请选择功课', icon: 'none' })
       return
     }
@@ -391,6 +401,11 @@ Page({
     })
     wx.showToast({ title: '已发愿' })
     wx.navigateBack()
+    } catch (e) {
+      this._submitting = false
+      this.setData({ submitting: false })
+      wx.showToast({ title: '未能保存，请检查填写内容后重试', icon: 'none' })
+    }
   },
 
   goPracticeAdd() {

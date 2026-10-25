@@ -1,4 +1,4 @@
-<!-- P6 手机计数设置：音效 / 音效选择 / 震动 / 外观 / 撤销确认 -->
+<!-- P6 触屏计数设置：音效 / 音效选择 / 震动 / 外观 / 撤销确认 -->
 <view class="page">
 
   <view class="section-title">计数体验</view>
@@ -8,7 +8,7 @@
         <view class="row-title">音效</view>
         <view class="row-sub">每计数一次播放提示音</view>
       </view>
-      <switch class="switch" checked="{{sound}}" color="#C05B2A" bindchange="onSoundChange" />
+      <switch class="switch" checked="{{sound}}" color="#344F42" bindchange="onSoundChange" />
     </view>
 
     <view class="row">
@@ -34,12 +34,12 @@
       <view class="row-main">
         <view class="row-title">震动反馈</view>
       </view>
-      <switch class="switch" checked="{{vibrate}}" color="#C05B2A" bindchange="onVibrateChange" />
+      <switch class="switch" checked="{{vibrate}}" color="#344F42" bindchange="onVibrateChange" />
     </view>
 
     <view class="row">
       <view class="row-main">
-        <view class="row-title">外观</view>
+        <view class="row-title">计数图案</view>
       </view>
       <picker
         class="picker"
@@ -56,14 +56,8 @@
       </picker>
     </view>
 
-    <view class="row">
-      <view class="row-main">
-        <view class="row-title">撤销确认</view>
-        <view class="row-sub">撤销前先询问</view>
-      </view>
-      <switch class="switch" checked="{{undoConfirm}}" color="#C05B2A" bindchange="onUndoConfirmChange" />
-    </view>
+
   </view>
 
-  <view class="note">音效与震动只影响手机计数，戒指计数由戒指自身提示。</view>
+  <view class="note">音效和震动用于手机点按计数，可按习惯独立设置。</view>
 </view>

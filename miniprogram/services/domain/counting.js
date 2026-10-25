@@ -41,6 +41,7 @@ function tap(state, side, ts, amount = 1) {
 
 // 开启新一轮 = 该侧切功课 + 本轮清零 + 可选提醒目标（跨零点继续，不随日切丢失）
 function startNewRound(state, side, practiceId, opts = {}) {
+  if (!['phone', 'ring'].includes(side)) throw new Error('BAD_SIDE')
   const ts = opts.ts
   settleUpTo(state, ts)
   const practice = findPractice(state, practiceId)
@@ -77,7 +78,7 @@ function cancelReminder(state, side) {
   ctx.reminder = null // 只取消提醒，计数继续
 }
 
-// 提醒目标进度；到点由调用方 cancelReminder（过期不补发）
+// 专修目标进度；调用方负责只提醒一次，用户结束专修时再 cancelReminder。
 function reminderRemaining(state, side, ts) {
   const ctx = state.contexts[side]
   if (!ctx || !ctx.reminder) return null

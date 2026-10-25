@@ -1,40 +1,40 @@
-<!-- P4 功课管理：↑ ↓ 调整顺序，开关控制首页是否显示 -->
+<!-- P4 功课管理：调整分组与顺序，移除功课但保留历史记录 -->
 <view class="page">
 
-  <view class="section-title">调整顺序 · 控制首页显示</view>
+  <view class="section-title">管理功课分组与顺序</view>
 
-  <view class="card" wx:if="{{rows.length}}">
-    <view class="row" wx:for="{{rows}}" wx:key="id">
+  <block wx:if="{{rows.length}}"><block wx:for="{{groups}}" wx:for-item="group" wx:key="name"><view wx:if="{{group.rows.length}}" class="section-title">{{group.name}}</view>
+  <view class="card" wx:if="{{group.rows.length}}">
+    <view class="row" wx:for="{{group.rows}}" wx:key="id">
       <view class="order">
         <view
           class="order-btn {{item.isFirst ? 'off' : ''}}"
-          data-index="{{index}}"
+          data-index="{{item.orderIndex}}"
           bindtap="onMoveUp"
           hover-class="order-btn-hover"
         >↑</view>
         <view
           class="order-btn {{item.isLast ? 'off' : ''}}"
-          data-index="{{index}}"
+          data-index="{{item.orderIndex}}"
           bindtap="onMoveDown"
           hover-class="order-btn-hover"
         >↓</view>
       </view>
 
-      <view class="row-main tap" data-id="{{item.id}}" bindtap="onOpenSettings" hover-class="tap-hover">
-        <view class="row-title">{{item.name}}</view>
-        <view class="row-sub">点此修改功课设置</view>
+      <view class="row-main">
+        <view class="row-title tap" data-id="{{item.id}}" bindtap="onOpenSettings" hover-class="tap-hover">{{item.name}}</view>
+        <picker class="group-picker" range="{{groupOptions}}" value="{{item.groupIndex}}" data-id="{{item.id}}" bindchange="onGroupChange"><view class="group-choice">{{item.group === 'common' ? '常用功课' : '主修功课'}}<text>　▾</text></view></picker>
       </view>
 
-      <switch
-        class="switch"
-        checked="{{item.showOnHome}}"
-        color="#C05B2A"
+      <button
+        class="delete-practice"
         data-id="{{item.id}}"
-        bindchange="onToggleShow"
-      />
+        bindtap="onDelete"
+      >删除</button>
     </view>
   </view>
 
+  </block></block>
   <view wx:else class="empty">
     <view class="empty-title">还没有功课</view>
     <view class="empty-sub">添加一个常修的功课，开始今天的修行</view>

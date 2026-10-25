@@ -1,4 +1,6 @@
 {
-  "navigationBarTitleText": "手机计数",
-  "usingComponents": {}
+  "navigationBarTitleText": "触屏计数",
+  "usingComponents": {
+    "led-number": "/components/led-number/led-number"
+  }
 }

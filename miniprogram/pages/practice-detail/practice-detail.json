@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "功课详情",
-  "usingComponents": {}
+  "usingComponents": {
+    "entry-sheet": "/components/entry-sheet/entry-sheet"
+  }
 }

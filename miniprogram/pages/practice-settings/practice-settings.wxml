@@ -19,7 +19,7 @@
         bindconfirm="onDisplayNameConfirm"
       />
     </view>
-    <view class="row-note">留空则显示实名；首页、计数页与详情页使用此名。</view>
+    <view class="row-note">留空使用功课原名，仅更改显示方式。</view>
   </view>
 
   <view class="card">
@@ -38,7 +38,7 @@
       />
       <view class="row-unit">{{unit}}</view>
     </view>
-    <view class="row-note">修改次日生效，历史按当时目标算</view>
+    <view class="row-note">修改立即生效，过去日期仍按当时目标计算</view>
   </view>
 
   <view class="card">
@@ -58,16 +58,19 @@
 
     <view class="row">
       <view class="row-label">首页显示</view>
-      <switch class="row-switch" checked="{{showOnHome}}" color="#C05B2A" bindchange="onShowOnHomeChange" />
+      <switch class="row-switch" checked="{{showOnHome}}" color="#344F42" bindchange="onShowOnHomeChange" />
     </view>
 
     <view wx:if="{{isTime}}" class="row">
-      <view class="row-label">锁计数</view>
-      <view class="badge badge-primary lock-badge">已锁定</view>
+      <view class="row-label">记录方式</view>
+      <view class="badge badge-primary lock-badge">仅计时</view>
     </view>
-    <view wx:if="{{isTime}}" class="row-note">计时型功课只计时，恒为锁定</view>
+    <view wx:if="{{isTime}}" class="row-note">此功课只记录时长，不使用点按计数。</view>
   </view>
 
+  <view class="section-title">功课分组</view>
+  <view class="seg"><view class="seg-item {{group === 'main' ? 'on' : ''}}" data-group="main" bindtap="onGroup">主修功课</view><view class="seg-item {{group === 'common' ? 'on' : ''}}" data-group="common" bindtap="onGroup">常用功课</view></view>
+  <view class="row-note">主修功课每天展示；常用功课在日历中有记录时展示。</view>
   <view class="danger-zone">
     <button class="btn btn-danger" bindtap="onDelete">删除功课</button>
     <view class="danger-note">删除不影响历史统计与历史记录</view>

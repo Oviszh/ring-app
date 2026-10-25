@@ -1,202 +1,29 @@
-/* 木鱼页（P2）—— 基于 app.wxss 设计系统 v2 */
+.wf-page { min-height: calc(100vh - 88px); display: flex; flex-direction: column; padding-top: 8rpx; }
+.wf-toolbar { display: flex; align-items: center; justify-content: space-between; }
+.wf-toolbar .settings-link { width: auto; margin: 0; font-size: 26rpx; line-height: 80rpx; background: transparent; color: var(--c-primary); padding: 0 8rpx 0 24rpx; }
+.stage { display: flex; flex: 1; flex-direction: column; align-items: center; padding-top: 12rpx; }
+.practice-name { font-family: 'Songti SC', 'STSong', serif; font-size: 42rpx; font-weight: 600; letter-spacing: 2rpx; text-align: center; overflow-wrap: break-word; }
+.round-label { color: var(--c-ink-2); font-size: 26rpx; margin-top: 32rpx; }
+.round-number { font-size: 124rpx; font-weight: 350; line-height: 1.25; font-variant-numeric: tabular-nums; letter-spacing: -4rpx; text-align: center; overflow-wrap: anywhere; max-width: 100%; }
+.round-unit { font-size: 28rpx; font-weight: 400; color: var(--c-ink-2); margin-left: 14rpx; letter-spacing: 0; }
+.today-line { color: var(--c-ink-2); font-size: 26rpx; margin-top: 10rpx; text-align: center; }
+.wf-page .tap-zone { width: 500rpx; max-width: 100%; height: 500rpx; max-height: 40vh; flex-shrink: 0; border-radius: 50%; margin: 28rpx 0 0; background: #E7EDE3; border: 1rpx solid #D5DFD0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--c-primary); transition: transform 120ms ease, background 120ms ease; }
+.tap-zone--down, .tap-hover { transform: scale(.97); background: #D9E3D4; }
+.tap-main { font-size: 34rpx; font-weight: 500; margin-top: 20rpx; letter-spacing: 3rpx; }
+.tap-sub { font-size: 24rpx; margin-top: 10rpx; color: #57694F; }
+.tap-art { position: relative; width: 84rpx; height: 68rpx; }
+.art-ring { position: absolute; left: 8rpx; top: 6rpx; width: 68rpx; height: 48rpx; border: 2rpx solid var(--c-primary); border-radius: 50% 50% 40% 40%; transform: rotate(-14deg); }
+.art-line { position: absolute; width: 46rpx; height: 2rpx; background: var(--c-primary); left: 36rpx; top: 18rpx; transform: rotate(-32deg); }
+.art-dot { position: absolute; width: 10rpx; height: 10rpx; background: var(--c-primary); border-radius: 50%; left: 32rpx; top: 40rpx; }
+.theme-lotus .art-ring { width: 40rpx; height: 56rpx; left: 22rpx; top: 0; border-radius: 90% 10% 70% 30%; transform: rotate(-45deg); }
+.theme-lotus .art-line { width: 64rpx; height: 20rpx; left: 10rpx; top: 42rpx; transform: none; background: transparent; border-bottom: 2rpx solid var(--c-primary); border-radius: 50%; }.theme-lotus .art-dot { display: none; }
+.theme-beads .art-ring { border: 6rpx dotted var(--c-primary); width: 62rpx; height: 62rpx; left: 10rpx; top: 0; border-radius: 50%; transform: none; }.theme-beads .art-line { display: none; }.theme-beads .art-dot { top: 62rpx; left: 38rpx; }
+.sound-control { display: flex; align-items: center; gap: 12rpx; margin: 12rpx 0 16rpx; padding: 20rpx 32rpx; font-size: 26rpx; color: var(--c-ink-2); min-height: 80rpx; }
+.sound-indicator { width: 12rpx; height: 12rpx; border: 1rpx solid var(--c-ink-3); border-radius: 50%; }.sound-indicator.on { background: var(--c-primary); border-color: var(--c-primary); }
+.wf-footer { width: 100%; margin-top: auto; padding-top: 12rpx; }
+.foreground-note { color: var(--c-ink-2); font-size: 24rpx; text-align: center; margin: 12rpx 0 24rpx; }
+.reminder-block { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20rpx; color: var(--c-primary); font-size: 26rpx; }.cancel-link { padding: 20rpx 0; text-decoration: underline; }
+.quiet-stage { display: flex; flex-direction: column; align-items: center; margin: 48rpx 0; }.quiet-circle { width: 230rpx; height: 230rpx; border: 1rpx solid #C7D2C1; border-radius: 50%; padding: 18rpx; }.quiet-inner { height: 100%; border-radius: 50%; background: #E7EDE3; }.quiet-caption { margin-top: 24rpx; font-family: 'Songti SC', serif; letter-spacing: 8rpx; color: var(--c-ink-2); font-size: 30rpx; }
+.ended-stage { padding: 120rpx 12rpx; text-align: center; }.ended-title { font-size: 38rpx; margin-top: 40rpx; }.ended-sub { font-size: 28rpx; color: var(--c-ink-2); margin: 20rpx 0 52rpx; }.ended-stage .btn { width: 100%; }
 
-.wf-page {
-  min-height: 100vh;
-  box-sizing: border-box;
-  padding-top: 8rpx;
-  display: flex;
-  flex-direction: column;
-}
-
-/* 顶部仅放 ⚙；返回与标题用原生导航栏 */
-.topbar {
-  height: 88rpx;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.gear {
-  width: 88rpx;
-  height: 88rpx;
-  line-height: 84rpx;
-  text-align: center;
-  font-size: 40rpx;
-  color: var(--c-ink-2);
-  border-radius: 50%;
-}
-.gear-hover { background: var(--c-card); }
-
-/* —— 垂直居中主体 —— */
-.stage {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8rpx 0 24rpx;
-}
-
-.practice-name {
-  font-size: var(--fs-title);
-  font-weight: 500;
-  letter-spacing: 2rpx;
-  text-align: center;
-}
-
-.round-number,
-.timer {
-  margin-top: 20rpx;
-  font-size: var(--fs-hero);
-  line-height: 1.1;
-  font-weight: 200;
-  letter-spacing: -1rpx;
-  color: var(--c-led);
-  font-variant-numeric: tabular-nums;
-}
-
-.round-label {
-  font-size: var(--fs-small);
-  color: var(--c-ink-2);
-}
-
-.today-line {
-  margin-top: 18rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-2);
-  text-align: center;
-}
-
-/* —— 大圆形触摸区 —— */
-.tap-zone {
-  margin-top: 44rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tap-circle {
-  width: 420rpx;
-  height: 420rpx;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background: var(--c-card);
-  border: 3rpx solid var(--c-primary);
-  box-shadow: 0 18rpx 48rpx rgba(192, 91, 42, 0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: transform 120ms ease-out, background 120ms ease-out;
-}
-.tap-circle--down {
-  transform: scale(0.96);
-  background: var(--c-primary-weak);
-}
-
-.tap-main {
-  font-size: 52rpx;
-  font-weight: 300;
-  letter-spacing: 4rpx;
-  color: var(--c-primary);
-}
-.tap-sub {
-  margin-top: 16rpx;
-  font-size: var(--fs-small);
-  letter-spacing: 6rpx;
-  color: var(--c-ink-3);
-}
-
-/* —— 音效开关 —— */
-.sound-pill {
-  margin-top: 36rpx;
-  min-height: 108rpx;
-  line-height: 104rpx;
-  box-sizing: border-box;
-  padding: 0 44rpx;
-  border-radius: 999rpx;
-  background: var(--c-card);
-  border: 2rpx solid var(--c-border);
-  color: var(--c-ink-2);
-  font-size: var(--fs-small);
-}
-.sound-pill.on {
-  background: var(--c-primary-weak);
-  border-color: var(--c-primary-weak);
-  color: var(--c-primary);
-}
-
-/* —— 计时型 —— */
-.timer-action {
-  width: 560rpx;
-  margin-top: 56rpx;
-}
-.timer-action .btn { width: 100%; }
-
-/* —— 底部：提醒状态 + 操作 —— */
-.foot {
-  width: 100%;
-  flex-shrink: 0;
-}
-
-.reminder-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 4rpx;
-}
-.reminder-badge {
-  font-size: var(--fs-small);
-  padding: 14rpx 28rpx;
-  text-align: center;
-}
-.cancel-link {
-  min-height: 80rpx;
-  line-height: 80rpx;
-  padding: 0 24rpx;
-  font-size: var(--fs-small);
-  color: var(--c-primary);
-}
-
-.foreground-note {
-  text-align: center;
-  font-size: var(--fs-mini);
-  color: var(--c-ink-3);
-  margin: 8rpx 0 20rpx;
-}
-
-.actions { margin-top: 4rpx; }
-
-/* —— 本轮已结束 —— */
-.ended { text-align: center; }
-.ended-title {
-  font-size: var(--fs-title);
-  font-weight: 500;
-}
-.ended-sub {
-  margin: 18rpx 0 64rpx;
-  font-size: var(--fs-body);
-  color: var(--c-ink-2);
-}
-.ended-btn { width: 70%; }
-
-/* —— E1 提醒目标弹层 —— */
-.sheet {
-  max-height: 88vh;
-  overflow-y: auto;
-}
-.sheet-label {
-  margin: 36rpx 4rpx 16rpx;
-  font-size: var(--fs-small);
-  color: var(--c-ink-2);
-}
-.chips-3 .chip {
-  flex: 1;
-  min-width: 0;
-  padding: 0 8rpx;
-}
-.sheet-btn {
-  width: 100%;
-  margin-top: 44rpx;
-}
+.round-led { width: 100%; max-width: 640rpx; margin: 18rpx 0 8rpx; padding: 24rpx; background: #EAEFDF; border: 1rpx solid #D7DECD; border-radius: 16rpx; }

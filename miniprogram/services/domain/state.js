@@ -30,7 +30,7 @@ function createInitialState(ts) {
       vibrate: true,
       theme: 'muyu',
       undoConfirm: true,
-      bleMock: true // 真机协议就绪后置 false 走真实蓝牙
+      bleMock: false
     }
   }
 }

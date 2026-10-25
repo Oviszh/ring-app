@@ -1,128 +1,37 @@
 <view class="page" wx:if="{{ready}}">
-  <view class="topbar">
-    <view class="more" hover-class="more-hover" bindtap="onMore">⋯</view>
+  <view class="detail-heading"><view class="detail-name">{{practiceName}}</view><button class="detail-settings" bindtap="onSettings">设置</button></view>
+  <view class="card totals-card"><view class="card-label">今日累计</view><view class="today-main"><text class="today-total">{{totalText}}</text><text class="today-unit">{{unit}}</text><text wx:if="{{hasTarget}}" class="today-target">/ {{targetText}} {{unit}}</text></view>
+    <view wx:if="{{hasTarget}}" class="today-progress"><view class="progress"><view class="progress-fill" style="{{barStyle}}"></view></view><text class="today-percent">{{percent}}%</text></view><view class="today-breakdown">{{breakdownText}}</view>
   </view>
-
-  <!-- 状态区 -->
-  <view class="card status-card {{statusActive ? 'is-active' : ''}}">
-    <view class="status-text">{{statusText}}</view>
-
-    <view wx:if="{{reminderText}}" class="status-reminder">
-      <view class="badge badge-primary">{{reminderText}}</view>
-      <view class="reminder-cancel" bindtap="onCancelReminder">取消提醒（手机）</view>
-    </view>
+  <view wx:if="{{countAvailable}}" class="card start-card"><view wx:if="{{ringEnabled && phoneEnabled}}" class="seg detail-mode-tabs"><view class="seg-item {{side === 'ring' ? 'on' : ''}}" data-side="ring" bindtap="onCountSide">设备计数</view><view class="seg-item {{side === 'phone' ? 'on' : ''}}" data-side="phone" bindtap="onCountSide">触屏计数</view></view><view wx:else class="card-label">{{side === 'ring' ? '设备计数' : '触屏计数'}}</view><view class="status-text">{{statusText}}</view><view wx:if="{{reminderText}}" class="status-reminder"><text>{{reminderText}}</text><view class="reminder-cancel" bindtap="onCancelReminder">结束本座专修</view></view>
+    <button class="btn btn-primary" bindtap="onContinue">{{side === 'ring' ? (statusActive ? '设备管理' : '开始设备计数') : (isTime ? (statusActive ? '继续静坐' : '开始静坐') : (statusActive ? '继续计数' : '开始计数'))}}</button>
+    <view class="detail-actions"><view bindtap="openEntry">补录功课</view><view bindtap="onOpenSheet">一座专修</view></view>
   </view>
-
-  <!-- 今日累积 -->
-  <view class="card">
-    <view class="card-label">今日累积</view>
-    <view class="today-main">
-      <text class="today-total">{{totalText}}</text>
-      <text wx:if="{{hasTarget}}" class="today-target">/ {{targetText}}</text>
-      <text class="today-unit">{{unit}}</text>
-    </view>
-
-    <view wx:if="{{hasTarget}}" class="today-progress">
-      <view class="progress"><view class="progress-fill" style="{{barStyle}}"></view></view>
-      <view class="today-percent">{{percent}}%</view>
-    </view>
-
-    <view class="row-sub today-breakdown">{{breakdownText}}</view>
-  </view>
-
-  <!-- 开启新一轮 -->
-  <view class="card start-card">
-    <view class="card-title">{{cardTitle}}</view>
-
-    <view class="row">
-      <view class="row-main"><view class="row-title">计数方式</view></view>
-      <view class="method">手机</view>
-    </view>
-
-    <view class="row no-border" hover-class="row-hover" bindtap="onOpenSheet">
-      <view class="row-main"><view class="row-title">提醒目标</view></view>
-      <view class="row-right">{{reminderRowText}}</view>
-      <text class="row-arrow">›</text>
-    </view>
-
-    <button class="btn btn-primary start-btn" bindtap="onStartRound">{{mainBtnText}}</button>
-  </view>
-
-  <!-- 长期大愿 -->
-  <view class="card">
-    <view class="card-label">长期大愿</view>
-
-    <view wx:if="{{vow}}" class="vow" hover-class="row-hover" bindtap="onVowTap">
-      <view class="vow-head">
-        <view class="row-title vow-name">{{vow.name}}</view>
-        <text class="row-arrow">›</text>
-      </view>
-      <view class="vow-nums">{{vow.totalText}}<text class="vow-slash"> / {{vow.targetText}}</text></view>
-      <view class="progress"><view class="progress-fill" style="{{vow.barStyle}}"></view></view>
-      <view class="row-sub vow-meta">{{vow.percent}}% · 日均 {{vow.avgText}}</view>
-    </view>
-
-    <view wx:else class="vow-add" hover-class="row-hover" bindtap="onCreateVow">＋ 发一个大愿</view>
-  </view>
-
-  <!-- 近 7 日 -->
-  <view class="card">
-    <view class="recent-head">
-      <view class="card-label">近 7 日</view>
-      <view class="recent-legend">● 达标 ◐ 部分 ○ 未达标</view>
-    </view>
-    <view class="days">
-      <view wx:for="{{recentDays}}" wx:key="date" class="day">
-        <view class="day-dot day-dot--{{item.status}}">{{item.symbol}}</view>
-        <view class="day-label">{{item.label}}</view>
-      </view>
-    </view>
-  </view>
-
-  <view class="btn-row footer-links">
-    <button class="btn btn-plain" bindtap="onHistory">历史记录</button>
-    <button class="btn btn-plain" bindtap="onSettings">功课设置</button>
-  </view>
+  <button wx:if="{{!countAvailable}}" class="btn btn-primary fill-only-entry" bindtap="openEntry">补录功课</button>
+  <view class="card"><view class="recent-head"><text class="card-label">近七日</text><text class="history-link" bindtap="onHistory">全部记录 ›</text></view><view class="days"><view wx:for="{{recentDays}}" wx:key="date" class="day"><view class="day-dot day-dot--{{item.status}}">{{item.symbol}}</view><view class="day-label">{{item.label}}</view></view></view><view class="recent-note">● 达标　◐ 有记录　○ 未达标</view></view>
+  <view class="card"><view class="card-label">长期大愿</view><view wx:if="{{vow}}" class="vow" bindtap="onVowTap"><view class="vow-head"><view class="row-title vow-name">{{vow.name}}</view><text class="row-arrow">›</text></view><view class="vow-nums">{{vow.totalText}}<text class="vow-slash"> / {{vow.targetText}}</text></view><view class="progress"><view class="progress-fill" style="{{vow.barStyle}}"></view></view><view class="row-sub vow-meta">已完成 {{vow.percent}}%</view></view><view wx:else class="vow-add" bindtap="onCreateVow">设立长期大愿 ›</view></view>
 </view>
-
-<!-- E1 提醒目标 -->
+<entry-sheet id="entry-sheet" visible="{{entryVisible}}" practice-id="{{practiceId}}" bind:close="closeEntry" bind:saved="onEntrySaved" />
+<!-- 一座专修 -->
 <view wx:if="{{showSheet}}" class="sheet-mask" bindtap="closeSheet" catchtouchmove="noop"></view>
 <view wx:if="{{showSheet}}" class="sheet" catchtap="noop">
-  <view class="sheet-close" bindtap="closeSheet">✕</view>
-  <view class="sheet-title">提醒目标</view>
-  <view class="sheet-sub">从本轮起点算</view>
-
-  <view class="seg">
-    <view class="seg-item {{reminderType === 'none' ? 'on' : ''}}" data-type="none" bindtap="onPickReminderType">不限</view>
+  <view class="sheet-close" bindtap="closeSheet">×</view>
+  <view class="sheet-title">一座专修</view>
+  <view class="seg session-modes">
     <view class="seg-item {{reminderType === 'time' ? 'on' : ''}}" data-type="time" bindtap="onPickReminderType">按时间</view>
     <view wx:if="{{!isTime}}" class="seg-item {{reminderType === 'count' ? 'on' : ''}}" data-type="count" bindtap="onPickReminderType">按次数</view>
   </view>
-
   <block wx:if="{{reminderType === 'time'}}">
-    <view class="sheet-label">时长</view>
-    <view class="chips chips-3">
-      <view
-        wx:for="{{timeOptions}}"
-        wx:key="*this"
-        class="chip {{reminderTime === item ? 'on' : ''}}"
-        data-value="{{item}}"
-        bindtap="onPickReminderTime"
-      >{{item}}分钟</view>
+    <view class="chips incense-options">
+      <view wx:for="{{timeOptions}}" wx:key="value" class="chip {{!reminderTimeCustom && reminderTime == item.value ? 'on' : ''}}" data-value="{{item.value}}" bindtap="onPickReminderTime"><view>{{item.name}}</view><view wx:if="{{item.value === 35}}" class="incense-minutes">35 分钟</view></view>
+      <view class="chip {{reminderTimeCustom ? 'on' : ''}}" data-custom="true" bindtap="onPickReminderTime">自定义</view>
     </view>
+    <view wx:if="{{reminderTimeCustom}}" class="session-custom"><text>自定义时长</text><input class="session-input" type="number" maxlength="9" value="{{reminderTime}}" bindinput="onCustomTime" confirm-type="done" /><text>分钟</text></view>
   </block>
-
   <block wx:if="{{reminderType === 'count'}}">
-    <view class="sheet-label">次数</view>
-    <view class="chips chips-3">
-      <view
-        wx:for="{{countOptions}}"
-        wx:key="*this"
-        class="chip {{reminderCount === item ? 'on' : ''}}"
-        data-value="{{item}}"
-        bindtap="onPickReminderCount"
-      >{{item}}</view>
-    </view>
+    <view class="chips chips-3 count-options"><view wx:for="{{countOptions}}" wx:key="*this" class="chip {{reminderCount == item ? 'on' : ''}}" data-value="{{item}}" bindtap="onPickReminderCount">{{item}} {{unit}}</view></view>
+    <view class="session-custom"><text>自定义次数</text><input class="session-input" type="number" maxlength="12" value="{{reminderCount}}" bindinput="onCustomCount" confirm-type="done" /><text>{{unit}}</text></view>
   </block>
-
-  <button class="btn btn-primary sheet-btn" bindtap="onStartRound">{{sheetBtnText}}</button>
+  <view wx:if="{{reminderError}}" class="session-error">{{reminderError}}</view>
+  <button class="btn btn-primary sheet-btn" bindtap="onStartRound">开始新一轮</button>
 </view>

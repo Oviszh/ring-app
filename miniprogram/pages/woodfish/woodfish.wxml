@@ -1,101 +1,18 @@
 <view class="page wf-page" wx:if="{{ready}}">
-  <view class="topbar">
-    <view class="gear" bindtap="onSettings" hover-class="gear-hover">⚙</view>
+  <view class="wf-toolbar"><view class="eyebrow">{{isTime ? '静坐' : '触屏计数'}}</view><button class="settings-link" bindtap="onSettings">计数设置</button></view>
+  <view class="stage" wx:if="{{!ended}}">
+    <view class="practice-name">{{practiceName}}</view>
+    <view class="round-label">{{isTime ? '本座时长' : '本轮计数'}}</view>
+    <view class="round-led"><led-number value="{{isTime ? elapsedText : roundText}}" min-digits="{{isTime ? 0 : 6}}" /></view>
+    <view class="today-line">{{todayText}}</view>
+    <view wx:if="{{isTime}}" class="quiet-stage"><view class="quiet-circle"><view class="quiet-inner"></view></view><view class="quiet-caption">安心静坐</view></view>
+    <button wx:else class="tap-zone theme-{{theme}} {{tapping ? 'tap-zone--down' : ''}}" bindtap="onTapWoodfish" hover-class="tap-hover" aria-label="计数加一">
+      <view class="tap-art"><view class="art-ring"></view><view class="art-line"></view><view class="art-dot"></view></view><view class="tap-main">轻触计数</view><view class="tap-sub">每次增加 1 {{unit}}</view>
+    </button>
+    <view wx:if="{{!isTime}}" class="sound-control" bindtap="onSound"><view class="sound-indicator {{sound ? 'on' : ''}}"></view>音效{{sound ? '开启' : '关闭'}}</view>
+    <view class="wf-footer"><view wx:if="{{reminderText}}" class="reminder-block"><text>{{reminderText}}</text><view class="cancel-link" bindtap="onCancelReminder">取消提醒</view></view><view class="foreground-note">{{isTime || reminderText ? '保持小程序在前台，计时与提醒才会继续。' : '本轮记录自动保存'}}</view>
+      <view wx:if="{{isTime}}" class="btn-row"><button class="btn btn-primary" bindtap="onEndRound">结束静坐</button></view>
+    </view>
   </view>
-
-  <block wx:if="{{!ended}}">
-    <view class="stage">
-      <view class="practice-name">{{practiceName}}</view>
-
-      <block wx:if="{{!isTime}}">
-        <view class="round-number">{{roundText}}</view>
-        <view class="round-label">本轮计数</view>
-      </block>
-
-      <view class="today-line">{{todayText}}</view>
-
-      <block wx:if="{{isTime}}">
-        <view class="timer">{{elapsedText}}</view>
-        <view class="round-label">本座计时</view>
-        <view class="timer-action">
-          <button class="btn btn-primary" bindtap="onEndRound">结束一座</button>
-        </view>
-      </block>
-
-      <block wx:else>
-        <view class="tap-zone" bindtap="onTapWoodfish">
-          <view class="tap-circle {{tapping ? 'tap-circle--down' : ''}}">
-            <view class="tap-main">轻触 +1</view>
-            <view class="tap-sub">{{themeName}}</view>
-          </view>
-        </view>
-
-        <view class="sound-pill {{sound ? 'on' : ''}}" bindtap="onSound">音效 {{sound ? '已开启' : '已关闭'}}</view>
-      </block>
-    </view>
-
-    <view class="foot">
-      <view wx:if="{{reminderText}}" class="reminder-block">
-        <view class="badge badge-primary reminder-badge">{{reminderText}}</view>
-        <view class="cancel-link" bindtap="onCancelReminder">取消本轮提醒</view>
-      </view>
-
-      <view class="foreground-note">仅前台计时与提醒 · 切后台暂停</view>
-
-      <view class="btn-row actions">
-        <button wx:if="{{!isTime}}" class="btn btn-plain" bindtap="onUndo">↩ 撤销一次</button>
-        <button class="btn btn-plain" bindtap="onOpenSheet">⟳ 重新一轮</button>
-      </view>
-    </view>
-  </block>
-
-  <block wx:else>
-    <view class="stage ended">
-      <view class="ended-title">{{practiceName}}</view>
-      <view class="ended-sub">本轮已结束</view>
-      <button class="btn btn-primary ended-btn" bindtap="onStartNewSession">{{isTime ? '开始新一座' : '开始新一轮'}}</button>
-    </view>
-  </block>
-</view>
-
-<!-- E1 提醒目标 -->
-<view wx:if="{{showSheet}}" class="sheet-mask" bindtap="closeSheet" catchtouchmove="noop"></view>
-<view wx:if="{{showSheet}}" class="sheet" catchtap="noop">
-  <view class="sheet-close" bindtap="closeSheet">✕</view>
-  <view class="sheet-title">提醒目标</view>
-  <view class="sheet-sub">从本轮起点算</view>
-
-  <view class="seg">
-    <view class="seg-item {{reminderType === 'none' ? 'on' : ''}}" data-type="none" bindtap="onPickReminderType">不限</view>
-    <view class="seg-item {{reminderType === 'time' ? 'on' : ''}}" data-type="time" bindtap="onPickReminderType">按时间</view>
-    <view wx:if="{{!isTime}}" class="seg-item {{reminderType === 'count' ? 'on' : ''}}" data-type="count" bindtap="onPickReminderType">按次数</view>
-  </view>
-
-  <block wx:if="{{reminderType === 'time'}}">
-    <view class="sheet-label">时长</view>
-    <view class="chips chips-3">
-      <view
-        wx:for="{{timeOptions}}"
-        wx:key="*this"
-        class="chip {{reminderTime === item ? 'on' : ''}}"
-        data-value="{{item}}"
-        bindtap="onPickReminderTime"
-      >{{item}}分钟</view>
-    </view>
-  </block>
-
-  <block wx:if="{{reminderType === 'count'}}">
-    <view class="sheet-label">次数</view>
-    <view class="chips chips-3">
-      <view
-        wx:for="{{countOptions}}"
-        wx:key="*this"
-        class="chip {{reminderCount === item ? 'on' : ''}}"
-        data-value="{{item}}"
-        bindtap="onPickReminderCount"
-      >{{item}}</view>
-    </view>
-  </block>
-
-  <button class="btn btn-primary sheet-btn" bindtap="onConfirmRound">{{sheetBtnText}}</button>
+  <view wx:else class="ended-stage"><view class="practice-name">{{practiceName}}</view><view class="ended-title">本次已记录</view><view class="ended-sub">可在日历中查看今日的修行记录。</view><button class="btn btn-primary" bindtap="onStartNewSession">{{isTime ? '再次静坐' : '开始计数'}}</button></view>
 </view>

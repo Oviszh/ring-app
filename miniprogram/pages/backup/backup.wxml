@@ -11,13 +11,13 @@
 
   <view class="card import">
     <view class="row-title">从备份恢复</view>
-    <view class="row-sub">从微信会话中选择此前导出的 JSON 文件，校验通过后可先查看内容，再确认恢复。</view>
+    <view class="row-sub">从微信会话中选择此前导出的备份，核对内容后再恢复。</view>
     <button class="btn btn-plain big-btn-in" disabled="{{busy}}" bindtap="onChoose">选择备份文件</button>
   </view>
 
   <!-- 结果反馈 -->
   <view wx:if="{{preview}}" class="card result">
-    <view class="result-title">备份内容</view>
+    <view class="result-title">{{fromRecovery ? '上次导入前的记录' : '备份内容'}}</view>
 
     <view class="result-list">
       <view class="result-row">
@@ -36,5 +36,10 @@
 
     <button class="btn btn-primary big-btn" bindtap="onRestore">确认恢复此备份</button>
     <button class="btn btn-plain big-btn-in" bindtap="onCancelPreview">暂不恢复</button>
+  </view>
+  <view wx:if="{{hasRecovery && !preview}}" class="card recovery-card">
+    <view class="row-title">导入了错误的备份？</view>
+    <view class="row-sub">本机保留了上次导入前的记录，可以核对后恢复。</view>
+    <button class="btn btn-plain big-btn-in" disabled="{{busy}}" bindtap="onRecovery">查看导入前的记录</button>
   </view>
 </view>

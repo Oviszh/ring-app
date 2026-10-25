@@ -1,4 +1,4 @@
-// P12-L 设备列表：当前戒指 / 电量 / 归属异常；进入单枚戒指页或绑定流程
+// P12-L 设备列表：当前设备 / 电量 / 归属异常；进入单枚戒指页或绑定流程
 const store = getApp().globalData.store
 
 function metaOf(device) {
@@ -53,10 +53,13 @@ Page({
     wx.navigateTo({ url: '/pages/device-bind/device-bind' })
   },
 
-  // 没有戒指时回首页用手机计数：列表页可能由「我的」进入，无上一页则切到今日
+  // 没有戒指时回首页用触屏计数：列表页可能由「我的」进入，无上一页则切到今日
   goPhoneCount() {
-    wx.navigateBack({
-      fail() { wx.switchTab({ url: '/pages/today/today' }) }
-    })
+    if (store.state.settings.phoneEnabled === false) {
+      wx.navigateTo({ url: '/pages/settings/settings' })
+      return
+    }
+    store.setSetting('countSide', 'phone')
+    wx.switchTab({ url: '/pages/today/today' })
   }
 })

@@ -19,6 +19,7 @@
 /* —— 功课列表 —— */
 
 .list-card { padding-top: 4rpx; padding-bottom: 4rpx; }
+.day-group-title { margin-top: 28rpx; margin-bottom: 16rpx; }
 
 .item { border-bottom: 2rpx solid var(--c-border); }
 .item:last-child { border-bottom: none; }
@@ -174,3 +175,10 @@
   color: var(--c-ink-2);
   line-height: 1.6;
 }
+
+.day-entry { padding-top: 0; }.day-entry .btn { width: 100%; }.row-title .name { white-space: normal; overflow-wrap: break-word; }
+.total-input { width: 200rpx; min-height: 84rpx; height: 84rpx; border: 1rpx solid var(--c-border); border-radius: 12rpx; background: var(--c-bg); padding: 0 16rpx; font-size: 36rpx; color: var(--c-primary); text-align: right; font-weight: 600; }
+.edit-caption { font-size: 22rpx; color: var(--c-ink-2); padding-top: 6rpx; }
+.entry-main { flex-wrap: wrap; gap: 4rpx 0; }
+.entry-change { width: 100%; font-size: 24rpx; color: var(--c-ink-2); }
+.row-main { min-width: 0; }.name { max-width: 100%; }

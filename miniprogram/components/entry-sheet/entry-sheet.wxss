@@ -1,0 +1,13 @@
+.entry-field { display: flex; align-items: center; min-height: 104rpx; border-bottom: 1rpx solid var(--c-border); }
+.entry-label { width: 110rpx; color: var(--c-ink-2); font-size: 28rpx; }
+.entry-value { flex: 1; min-width: 0; font-size: 32rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.amount-label { color: var(--c-ink-2); font-size: 28rpx; margin: 32rpx 0 12rpx; }
+.amount-box { display: flex; align-items: center; background: var(--c-bg); border: 1rpx solid var(--c-border); border-radius: 16rpx; padding: 16rpx 24rpx; }
+.amount-input { flex: 1; min-width: 0; height: 100rpx; font-size: 56rpx; font-weight: 500; }
+.amount-unit { font-size: 28rpx; color: var(--c-ink-2); margin-left: 16rpx; }
+.entry-error { color: var(--c-danger); font-size: 26rpx; padding-top: 16rpx; }
+.entry-actions { margin-top: 32rpx; }
+.entry-note { text-align: center; font-size: 26rpx; color: var(--c-ink-2); margin-top: 24rpx; }
+.entry-reference { display: flex; justify-content: space-between; gap: 24rpx; padding: 24rpx 0; color: var(--c-ink-2); font-size: 28rpx; }
+.reference-value { color: var(--c-ink); font-weight: 500; }
+.entry-preview { color: var(--c-primary); font-size: 28rpx; margin-top: 16rpx; }

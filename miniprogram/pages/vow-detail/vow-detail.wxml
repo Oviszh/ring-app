@@ -1,6 +1,7 @@
 <!-- P8 大愿详情：进行中 / 已圆满 -->
 <view class="page" wx:if="{{ready}}">
 
+  <view class="page-heading"><view class="eyebrow">长期大愿</view><view class="page-title">{{title}}</view></view>
   <!-- 进行中 -->
   <block wx:if="{{!done}}">
     <!-- 大字进度 -->
@@ -64,7 +65,7 @@
   </block>
 
   <view wx:else class="card done-card">
-    <view class="done-emoji">🎉</view>
+    <view class="done-emoji">✓</view>
     <view class="done-title">已圆满</view>
     <view class="done-sub">{{totalText}} {{unit}}</view>
     <view class="done-meta">历时 {{days}} 天</view>

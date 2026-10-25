@@ -35,6 +35,13 @@
   font-weight: 600;
   color: var(--c-ink);
 }
+.month-picker { flex: 1; min-width: 0; }
+.month-label { display: flex; justify-content: center; align-items: center; gap: 14rpx; min-height: 96rpx; border-radius: 16rpx; }
+.month-label:active { background: var(--c-primary-weak); }
+.month-picker-arrow { color: var(--c-ink-2); font-size: 26rpx; }
+.month-tools { display: flex; justify-content: flex-end; margin: -8rpx 0 8rpx; }
+.today-link { min-height: 80rpx; line-height: 80rpx; padding: 0 24rpx; color: var(--c-primary); font-size: 28rpx; border-radius: 12rpx; }
+.today-link:active { background: var(--c-primary-weak); }
 
 /* —— 查看口径 —— */
 
@@ -240,3 +247,16 @@
   background: transparent;
   padding: 44rpx 32rpx;
 }
+
+.month-label { font-size: 36rpx; font-weight: 500; }.month-arrow { font-size: 46rpx; }.cell-mark { border-width: 1rpx; border-radius: 16rpx; }.cell-mark.on { background: var(--c-primary-weak); }.cell-day-mini { color: var(--c-ink-2); font-size: 24rpx; margin-bottom: 6rpx; }.cell-dot { width: 12rpx; height: 12rpx; margin-top: 10rpx; }.dot-missed { border-width: 1rpx; }.legend { gap: 32rpx; margin-top: 20rpx; }.vow-foot { flex-wrap: wrap; gap: 8rpx; }.vow-sub { margin-left: 0; }.chip-view { font-size: 28rpx; min-height: 80rpx; }.dim { opacity: .45; }.vow-empty { border: 1rpx solid var(--c-border); background: #fff; padding: 28rpx; font-size: 30rpx; }
+
+.day-overview-head, .day-practice-head, .day-practice-foot { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; }
+.day-overview-head { margin-top: 36rpx; }
+.day-overview-head .section-title { margin: 0; }
+.day-practice { padding: 28rpx; border-bottom: 1rpx solid var(--c-border); }
+.day-practice:last-child { border-bottom: 0; }
+.day-practice-name { flex: 1; font-size: var(--fs-body); font-weight: 600; }
+.day-practice-total { font-size: var(--fs-body); font-weight: 600; color: var(--c-primary); }
+.day-practice-foot { margin-top: 16rpx; font-size: 26rpx; color: var(--c-ink-2); }
+.day-met { color: var(--c-primary); }
+.day-entry-link { flex-shrink: 0; min-height: 80rpx; line-height: 80rpx; padding: 0 8rpx 0 24rpx; font-size: 28rpx; color: var(--c-primary); }

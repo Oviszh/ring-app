@@ -60,7 +60,7 @@ Page({
       if (this._gone) return
       this._gone = true
       this.setData({ ready: false })
-      toast('戒指已解绑')
+      toast('设备已解绑')
       setTimeout(() => this.leave(), 400)
       return
     }
@@ -69,7 +69,7 @@ Page({
     const practices = store.practices().map(p => ({
       id: p.id,
       name: p.displayName || p.name,
-      active: !!ringCtx && ringCtx.practiceId === p.id
+      active: !!ringCtx && ringCtx.practiceId === p.id && (ringCtx.deviceId ? ringCtx.deviceId === device.id : device.isCurrent)
     }))
 
     this.setData({
@@ -88,7 +88,7 @@ Page({
     wx.setNavigationBarTitle({ title: device.name || '念佛戒指' })
   },
 
-  // store 的戒指操作都作用于「当前戒指」：操作本页戒指前先把它设为当前
+  // store 的戒指操作都作用于「当前设备」：操作本页戒指前先把它设为当前
   ensureCurrent() {
     const current = store.currentDevice()
     if (current && current.id === this.data.id) return
@@ -107,10 +107,10 @@ Page({
   onSetCurrent() {
     try {
       this.ensureCurrent()
-      toast('已设为当前戒指')
+      toast('已设为当前设备')
       this.refresh()
     } catch (err) {
-      toast('戒指未连接')
+      toast('设备未连接')
     }
   },
 
@@ -138,7 +138,7 @@ Page({
       wx.showToast({ title: '已下发', icon: 'success' })
       this.refresh()
     } catch (err) {
-      toast('戒指未连接')
+      toast('设备未连接')
     }
   },
 
@@ -150,11 +150,11 @@ Page({
       this.ensureCurrent()
       const locked = await store.ringSetLocked(target)
       this.setData({ locked: !!locked })
-      toast(locked ? '戒指已锁定' : '戒指已解锁')
+      toast(locked ? '设备已锁定' : '设备已解锁')
       this.refresh()
     } catch (err) {
       this.setData({ locked: !target })
-      toast('戒指未连接')
+      toast('设备未连接')
     }
   },
 
@@ -166,11 +166,11 @@ Page({
       this.ensureCurrent()
       const result = await store.ringSync()
       wx.hideLoading()
-      toast(result && result.ok ? '同步完成' : '戒指未连接')
+      toast(result && result.ok ? '同步完成' : '设备未连接')
       this.refresh()
     } catch (err) {
       wx.hideLoading()
-      toast('戒指未连接')
+      toast('设备未连接')
     }
   },
 
@@ -187,7 +187,7 @@ Page({
         try {
           store.ringUnbind(this.data.id)
         } catch (err) {
-          toast('戒指未连接')
+          toast('设备未连接')
           return
         }
         wx.showToast({ title: '已解绑', icon: 'none' })
@@ -207,15 +207,15 @@ Page({
       if (result && result.ok) {
         toast(`戒指 +${n}，已同步`)
       } else if (result && result.reason === 'LOCKED') {
-        toast('戒指已锁定')
+        toast('设备已锁定')
       } else if (result && result.reason === 'NO_PRACTICE') {
         toast('请先开启一轮功课')
       } else {
-        toast('戒指未连接')
+        toast('设备未连接')
       }
       this.refresh()
     } catch (err) {
-      toast('戒指未连接')
+      toast('设备未连接')
     }
   }
 })

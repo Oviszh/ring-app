@@ -6,8 +6,8 @@
     <view wx:if="{{!total}}" class="empty">
       <view class="empty-mark">愿</view>
       <view class="empty-title">还没有大愿</view>
-      <view class="empty-sub">发一个大愿，把长年累月的修行记在一起</view>
-      <button class="btn btn-primary empty-btn" bindtap="goNew">＋ 发一个大愿</button>
+      <view class="empty-sub">为一项功课设定长期目标，持续记录进度。</view>
+      <button class="btn btn-primary empty-btn" bindtap="goNew">设立长期大愿</button>
     </view>
 
     <block wx:else>
@@ -58,7 +58,7 @@
             data-id="{{item.id}}"
             bindtap="goDetail"
           >
-            <text class="done-emoji">🎉</text>
+            <text class="done-emoji">✓</text>
             <view class="row-main">
               <view class="row-title">{{item.title}}</view>
               <view class="row-sub">历时 {{item.days}} 天</view>

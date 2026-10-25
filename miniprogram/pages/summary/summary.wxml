@@ -1,28 +1,28 @@
 <!-- P15 计数汇总（历史累计） -->
-<view class="page">
+<view class="page"><view class="page-heading"><view class="eyebrow">日积月累</view><view class="page-title">累计记录</view></view>
   <block wx:if="{{ready}}">
 
     <block wx:if="{{practices.length}}">
-      <view wx:for="{{practices}}" wx:key="id" class="card sum-card">
+      <view wx:for="{{practices}}" wx:key="id" class="card sum-card" data-id="{{item.id}}" bindtap="onHistory">
         <view class="sum-name">{{item.name}}</view>
 
         <view class="sum-hero">
-          <text class="sum-total">{{item.totalText}}</text>
+          <text class="sum-total">{{item.totalText}}</text><text wx:if="{{!item.isTime}}" class="sum-unit">{{item.unit}}</text>
           <text class="badge sum-badge" wx:if="{{item.isTime}}">{{item.timesText}}</text>
           <text class="badge sum-badge" wx:else>{{item.daysText}}</text>
         </view>
 
         <view wx:if="{{!item.isTime}}" class="sum-sources">
-          <view class="src">
-            <text class="src-label">戒指</text>
+          <view wx:if="{{item.hasRing}}" class="src">
+            <text class="src-label">设备计数</text>
             <text class="src-val">{{item.ringText}}</text>
           </view>
-          <view class="src">
-            <text class="src-label">手机</text>
+          <view wx:if="{{item.hasPhone}}" class="src">
+            <text class="src-label">触屏计数</text>
             <text class="src-val">{{item.phoneText}}</text>
           </view>
-          <view class="src">
-            <text class="src-label">手动</text>
+          <view wx:if="{{item.hasManual}}" class="src">
+            <text class="src-label">补录</text>
             <text class="src-val">{{item.manualText}}</text>
           </view>
         </view>

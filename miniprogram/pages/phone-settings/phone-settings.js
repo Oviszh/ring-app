@@ -5,7 +5,7 @@ const store = getApp().globalData.store
 const SOUND_OPTIONS = [
   { key: 'muyu', name: '木鱼' },
   { key: 'qing', name: '引磬' },
-  { key: 'silent', name: '静音震动' }
+  { key: 'silent', name: '无声' }
 ]
 
 const THEME_OPTIONS = [
@@ -66,7 +66,7 @@ Page({
     const option = SOUND_OPTIONS[Number(e.detail.value)] || SOUND_OPTIONS[0]
     store.setSetting('soundName', option.key)
     this.refresh()
-    toast('音效选择：' + option.name)
+    require('../../services/audio').play(Object.assign({}, store.state.settings, { sound: true }))
   },
 
   onVibrateChange(e) {
@@ -80,7 +80,7 @@ Page({
     const option = THEME_OPTIONS[Number(e.detail.value)] || THEME_OPTIONS[0]
     store.setSetting('theme', option.key)
     this.refresh()
-    toast('外观：' + option.name)
+    toast('已保存')
   },
 
   onUndoConfirmChange(e) {

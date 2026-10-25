@@ -1,0 +1,5 @@
+<view class="page privacy-page"><view class="page-heading"><view class="page-title">记录由你保管</view><view class="page-description">本地记录版的数据使用说明</view></view>
+<view class="card"><view class="privacy-title">记录保存在哪里</view><view class="privacy-text">你添加的功课、计数、静坐时长、手动记录和大愿，以及使用偏好，保存在当前微信的本机存储中。本版本不提供账号登录或云端同步。</view></view>
+<view class="card"><view class="privacy-title">备份与恢复</view><view class="privacy-text">备份文件包含你的修行记录。导出时由你选择发送对象，请妥善保管。恢复备份会替换本机现有记录。</view><view class="privacy-text">换手机、清理微信数据或卸载微信前，请先导出备份。本机数据丢失后，需要你此前保存的备份文件才能恢复。</view></view>
+<view class="card"><view class="privacy-title">使用到的能力</view><view class="privacy-text">音效与震动用于计数反馈；保持屏幕常亮用于前台计数和静坐。你可以在计数偏好中关闭音效和震动。</view><view class="privacy-text">选择备份文件时，仅读取你主动选择的文件。本版本不请求通讯录、定位、相机或麦克风权限，不设置广告或第三方统计。</view></view>
+<view class="card"><view class="privacy-title">管理你的记录</view><view class="privacy-text">补录可增加或减少，并在日历中逐笔查看、撤销。删除功课会保留已有历史，避免误删修行记录。</view></view></view>
